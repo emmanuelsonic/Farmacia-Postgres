@@ -25,33 +25,29 @@ class encabezado {
 
 class conexion {
 
-    function conectar() {
-        mysql_connect("localhost", "farma", "farm4");
-        mysql_select_db("siap_desarrollo");
-    }
-
-    function desconectar() {
-        mysql_close();
-    }
-
-    function conectar2() {
-        $link = mysql_connect("localhost", "farma", "farm4") or die("Ocurrió un error al intentar conectar. Verifica que estén correctamente los datos dentro de <strong>config.php</strong>.");
-        mysql_select_db("siap_desarrollo", $link) or die("Error al seleccionar la base de datos. Posiblemente no existe.");
-        return $link;
-    }
-
-    function Conecta() {
-        $nombreddbb = "siap_desarrollo";
-        if (!($link = mysql_connect("localhost", "farma", "farm4"))) {
-            echo "Error al conectar con la base de datos.";
-            exit();
+    function conectar()
+      {
+         $coneccion=pg_connect("host=localhost port=5432 dbname=siap_ultimate user=postgres password=admin");
+         return $coneccion;
+      }
+      
+	function consulta($sql)
+    {
+        $coneccion=$this->conectar();
+        if(!$coneccion)
+			return 0; //Si no se pudo conectar
+        else
+        {
+			//Valor es resultado de base de dato y Consulta es la Consulta a realizar
+            $resultado=pg_query($coneccion,$sql);
+            return $resultado;// retorna si fue afectada una fila
         }
-        if (!mysql_select_db($nombreddbb, $link)) {
-            echo "Error al elegir la base de datos.";
-            exit();
-        }
-        return $link;
     }
+	  
+	function desconectar()
+	{
+		pg_close();
+	}
 
 }
 

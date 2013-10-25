@@ -20,24 +20,25 @@ include 'Clases/class.php';
 $usuario=$_REQUEST["usuario"];
 $contra=$_REQUEST["contra"];
 $contra=md5($contra);
-conexion::conectar();
-$result3 = mysql_query("SELECT * FROM farm_usuarios where nick='$usuario' and password='$contra'");
-
-if($row = mysql_fetch_array($result3)){
-	 			 		$id=$row["IdPersonal"];         
-						$nombre=$row["Nombre"];
-						$nick=$row["nick"];
-						$farmacia=$row["IdFarmacia"];
-						$nivel=$row["Nivel"]; 
-						$datos=$row["Datos"];
-						$reporte=$row["Reportes"];
-						$Administracion=$row["Administracion"];
-						$primera=$row["primeraVez"];
-						$IdArea=$row["IdArea"];
-						$IdEstadoCuenta=$row["IdEstadoCuenta"];
-						$IdEstablecimiento=$row["IdEstablecimiento"];
-                                                $IdModalidad=$row["IdModalidad"];
+$db=new conexion();
+$logear="SELECT * FROM fos_user_user where username='$usuario' and password='$contra'";
+$result3 =$db->consulta($logear);
+if($row = pg_fetch_array($result3, null, PGSQL_ASSOC)){
+	 			 		$id=$row["id"];         
+						$nombre=$row["firstname"];
+						$nick=$row["username"];
+						$farmacia=$row["idfarmacia"];
+						$nivel=$row["nivel"]; 
+						$datos=$row["datos"];
+						$reporte=$row["reportes"];
+						$Administracion=$row["administracion"];
+						$primera=$row["primeravez"];
+						$IdArea=$row["idarea"];
+						$IdEstadoCuenta=$row["estadocuenta"];
+						$IdEstablecimiento=$row["id_establecimiento"];
+                        $IdModalidad=$row["id_area_mod_estab"];
 					    //$NombreFarmacia=$row["Farmacia"];
+
 
 
 //$resp=mysql_query("select Farmacia from mnt_farmacia where IdFarmacia='$farmacia'");
@@ -50,11 +51,12 @@ $query2="select Area from mnt_areafarmacia
         on mnt_areafarmaciaxestablecimiento.IdArea=mnt_areafarmacia.IdArea
         where mnt_areafarmaciaxestablecimiento.IdArea=$IdArea and IdEstablecimiento=$IdEstablecimiento and IdModalidad=$IdModalidad";
 
-$NombreEstablecimiento1=mysql_fetch_array(mysql_query($query));
-$Area=mysql_fetch_array(mysql_query($query2));
+$NombreEstablecimiento1=pg_fetch_array($db->consulta($query));
+$Area=pg_fetch_array($db->consulta($query2));
 
-mysql_query("update farm_usuarios set Conectado='S' where IdPersonal=".$id);
-mysql_query("update farm_usuarios set UltimaConexion=now() where IdPersonal=".$id);
+$db->consulta("update farm_usuarios set Conectado='S' where IdPersonal=".$id);
+$db->consulta("update farm_usuarios set UltimaConexion=now() where IdPersonal=".$id);		
+		
 
 	$NombreEstablecimiento=$NombreEstablecimiento1["Nombre"];
 	$IdTipoFarmacia=$NombreEstablecimiento1["IdTipoFarmacia"];
