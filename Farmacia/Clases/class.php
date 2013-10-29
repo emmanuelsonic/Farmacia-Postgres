@@ -27,7 +27,7 @@ class conexion {
 
     function conectar()
       {
-         $coneccion=pg_connect("host=localhost port=5432 dbname=siap_ultimate user=postgres password=admin");
+         $coneccion=pg_connect("host=localhost port=5432 dbname=SIAP user=postgres password=b4s3s14p");
          return $coneccion;
       }
       
