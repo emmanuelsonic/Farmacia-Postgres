@@ -1,4 +1,5 @@
 <?php
+/*Archivo que contiente conexiones a la bd y otras funciones*/
 /*CONEXION A LA DB*/
 class conexion{
 	function conectar()
