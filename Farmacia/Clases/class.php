@@ -1,5 +1,5 @@
 <?php
-
+//require_once 'conn.php';
 class encabezado {
 
     function top($NombreDeFarmacia, $tipoUsuario, $nick, $nombre) {
@@ -24,10 +24,10 @@ class encabezado {
 /* CONEXION A LA DB */
 
 class conexion {
-
+	//public $coneccion;
     function conectar()
       {
-         $coneccion=pg_connect("host=localhost port=5432 dbname=siap_ultimate user=postgres password=admin");
+         $coneccion=pg_connect("host=192.168.100.253 port=5432 dbname=SIAP user=postgres password=b4s3s14p");
          return $coneccion;
       }
       
@@ -54,41 +54,48 @@ class conexion {
 //fin de la clase conexion
 /* * ***************** */
 
-class queries {
+class queries{
+	//private static $instancia;
+    private $db;
+	private function __construct()
+	{
+		$this->db = NEW conexion();
+	}
 
+//private $db= NEW conexion();
 //FECHAS ATRAS (3 DIAS HABILES)
 
     function ComboGrupoTerapeutico() {
         $query = "select IdTerapeutico, GrupoTerapeutico from mnt_grupoterapeutico where GrupoTerapeutico <>'--'";
-        $resp = mysql_query($query);
+        $resp = $db->consulta($query);
         return($resp);
     }
 
     function Atras() {
-        $selectNombreFecha = "select dayname(curdate()) as NombreFechaActual";
-        $NombreDiaActual = mysql_query($selectNombreFecha);
-        $rowNombre = mysql_fetch_array($NombreDiaActual);
-        $NombreFecha = $rowNombre["NombreFechaActual"];
+        $selectNombreFecha = "select date_part('dow',CURRENT_DATE) as NombreFechaActual";
+        $NombreDiaActual = $db->consulta($selectNombreFecha);
+        $rowNombre = pg_fetch_row($NombreDiaActual);
+        $NombreFecha = $rowNombre[0];
         switch ($NombreFecha) {
-            case "Monday":
-                $querySelect = "select adddate(curdate(), interval -5 day) as FechaAtras"; //Dia Lunes
-                $dates = mysql_query($querySelect);
-                $rowFechaA = mysql_fetch_array($dates);
-                $FechaAtras = $rowFechaA["FechaAtras"];
+            case 1:
+                $querySelect = "select current_date -'5 days'::interval as FechaAtras"; //Dia Lunes
+                $dates = $db->consulta($querySelect);
+                $rowFechaA = pg_fetch_row($dates);
+                $FechaAtras = $rowFechaA[0];
                 break;
 
-            case "Tuesday":
-                $querySelect = "select adddate(curdate(), interval -4 day) as FechaAtras"; //Dia martes
-                $dates = mysql_query($querySelect);
-                $rowFechaA = mysql_fetch_array($dates);
-                $FechaAtras = $rowFechaA["FechaAtras"];
+            case 2:
+                $querySelect = "select current_date-'4 days'::interval as FechaAtras"; //Dia martes
+                $dates = $db->consulta($querySelect);
+                $rowFechaA = pg_fetch_row($dates);
+                $FechaAtras = $rowFechaA[0];
                 break;
 
             default:
-                $querySelect = "select adddate(curdate(), interval -3 day) as FechaAtras"; //los demas dias de la semana
-                $dates = mysql_query($querySelect);
-                $rowFechaA = mysql_fetch_array($dates);
-                $FechaAtras = $rowFechaA["FechaAtras"];
+                $querySelect = "select current_date-'3 days'::interval as FechaAtras"; //los demas dias de la semana
+                $dates = $db->consulta($querySelect);
+                $rowFechaA = mysql_fetch_row($dates);
+                $FechaAtras = $rowFechaA[0];
                 break;
         }//fin switch
         return($FechaAtras);
@@ -97,30 +104,30 @@ class queries {
 //atras
 
     function Adelante() {
-        $selectNombreFecha = "select dayname(curdate()) as NombreFechaActual";
-        $NombreDiaActual = mysql_query($selectNombreFecha);
-        $rowNombre = mysql_fetch_array($NombreDiaActual);
-        $NombreFecha = $rowNombre["NombreFechaActual"];
+        $selectNombreFecha = "select date_part('dow',CURRENT_DATE) as NombreFechaActual";
+        $NombreDiaActual = $db->consulta($selectNombreFecha);
+        $rowNombre = pg_fetch_row($NombreDiaActual);
+        $NombreFecha = $rowNombre[0];
         switch ($NombreFecha) {
-            case "Friday":
-                $querySelect = "select adddate(curdate(), interval 4 day) as FechaAdelante"; //Dia Lunes
-                $dates = mysql_query($querySelect);
-                $rowFechaA = mysql_fetch_array($dates);
-                $FechaAdelante = $rowFechaA["FechaAdelante"];
+            case 5: //viernes
+                $querySelect = "select current_date+'4 days'::interval  as FechaAdelante"; //Dia Lunes
+                $dates = $db->consulta($querySelect);
+                $rowFechaA = pg_fetch_row($dates);
+                $FechaAdelante = $rowFechaA[0];
                 break;
 
-            case "Thursday":
-                $querySelect = "select adddate(curdate(), interval 4 day) as FechaAdelante"; //Dia martes
-                $dates = mysql_query($querySelect);
-                $rowFechaA = mysql_fetch_array($dates);
-                $FechaAdelante = $rowFechaA["FechaAdelante"];
+            case 4: //jueves
+                $querySelect = "select current_date+'4 days'::interval  as FechaAdelante"; //Dia martes
+                $dates = $db->consulta($querySelect);
+                $rowFechaA = pg_fetch_row($dates);
+                $FechaAdelante = $rowFechaA[0];
                 break;
 
             default:
-                $querySelect = "select adddate(curdate(), interval 2 day) as FechaAdelante"; //los demas dias de la semana
-                $dates = mysql_query($querySelect);
-                $rowFechaA = mysql_fetch_array($dates);
-                $FechaAdelante = $rowFechaA["FechaAdelante"];
+                $querySelect = "select current_date+'2 days'::interval  as FechaAdelante"; //los demas dias de la semana
+                $dates = $db->consulta($querySelect);
+                $rowFechaA = pg_fetch_row($dates);
+                $FechaAdelante = $rowFechaA[0];
                 break;
         }//fin switch
         return($FechaAdelante);
@@ -130,11 +137,11 @@ class queries {
 
     function vacaciones($FechaAtras, $FechaAdelante) {
         $query = "SELECT min( FechaIni ) AS inicio, max( FechaFin ) AS fin
-            FROM cit_eventos
+            FROM cit_evento
             WHERE IdEmpleado = 'Todos'
-            AND (FechaIni BETWEEN '$FechaAtras' AND '$FechaAdelante' OR FechaFin BETWEEN '$FechaAtras' AND '$FechaAdelante')";
+            AND (FechaIni BETWEEN '$FechaAtras' AND '$FechaAdelante' OR FechaFin BETWEEN '$FechaAtras' AND '$FechaAdelante')"; //verificar IdEmpleado = 'Todos'
 
-        $resp = mysql_fetch_array(mysql_query($query));
+        $resp = pg_fetch_array($db->consulta($query));
         return $resp;
     }
 
@@ -142,7 +149,7 @@ class queries {
 
     function EstableceNuevoPrecio($NuevoPrecio, $IdMedicina) {
         $queryUpdate = "update farm_catalogoproductos set PrecioActual='$NuevoPrecio' where IdMedicina='$IdMedicina'";
-        mysql_query($queryUpdate);
+        $db->consulta($queryUpdate);
     }
 
 //fin de NuevoPrecio
@@ -150,8 +157,8 @@ class queries {
     function NombreEmpleado($IdEmpleado) {
         $querySelect = "select mnt_empleados.NombreEmpleado
 			from mnt_empleados
-			where mnt_empleados.IdEmpleado='$IdEmpleado'";
-        $resp = mysql_fetch_array(mysql_query($querySelect));
+			where mnt_empleados.id='$IdEmpleado'";
+        $resp = pg_fetch_row($db->consulta($querySelect));
         return($resp[0]);
     }
 

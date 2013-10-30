@@ -48,14 +48,14 @@ $query="select Nombre,IdTipoFarmacia,TipoExpediente from mnt_establecimiento
         where mnt_establecimiento.IdEstablecimiento=".$IdEstablecimiento;
 $query2="select Area from mnt_areafarmacia
         inner join mnt_areafarmaciaxestablecimiento 
-        on mnt_areafarmaciaxestablecimiento.IdArea=mnt_areafarmacia.IdArea
+        on mnt_areafarmaciaxestablecimiento.IdArea=mnt_areafarmacia.Id
         where mnt_areafarmaciaxestablecimiento.IdArea=$IdArea and IdEstablecimiento=$IdEstablecimiento and IdModalidad=$IdModalidad";
 
 $NombreEstablecimiento1=pg_fetch_array($db->consulta($query));
 $Area=pg_fetch_array($db->consulta($query2));
 
-$db->consulta("update farm_usuarios set Conectado='S' where IdPersonal=".$id);
-$db->consulta("update farm_usuarios set UltimaConexion=now() where IdPersonal=".$id);		
+$db->consulta("update fos_user_user set conectado='S' where Id=".$id);
+$db->consulta("update fos_user_user set last_login=now() where Id=".$id);		
 		
 
 	$NombreEstablecimiento=$NombreEstablecimiento1["Nombre"];
