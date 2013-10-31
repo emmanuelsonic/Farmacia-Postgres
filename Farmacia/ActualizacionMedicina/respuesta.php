@@ -1,26 +1,26 @@
 <?php 
 include('../Clases/class.php');
-conexion::conectar();
+//sconexion::conectar();
 $Busqueda=$_GET['q'];
-$querySelect="select Codigo, Nombre, Concentracion, FormaFarmaceutica,IdMedicina,Presentacion,IdUnidadMedida,IdTerapeutico
+$querySelect="select Codigo, Nombre, Concentracion, FormaFarmaceutica,Id,Presentacion,IdUnidadMedida,IdTerapeutico
 			from farm_catalogoproductos
 where (Nombre like '%$Busqueda%' or Codigo ='$Busqueda') and IdEstado ='H'";
-	$resp=mysql_query($querySelect);
-while($row=mysql_fetch_array($resp)){
-	$Nombre=$row["Nombre"]." - ".$row["Concentracion"]." - ".$row["FormaFarmaceutica"]." - ".$row["Presentacion"];
-	$Nombre1=$row["Nombre"];
-	$IdMedicina=$row["IdMedicina"];
-	$Concentracion=$row["Concentracion"];
-	$Presentacion=$row["Presentacion"];
-	$FormaFarmaceutica=$row["FormaFarmaceutica"];
-	$IdTerapeutico=$row["IdTerapeutico"];
-	$IdUnidadMedida=$row["IdUnidadMedida"];
+	$resp=conexion::consultar($querySelect);  /*Consulta que no esta utilizando la clase Queries incluida en el archivo class.php*/
+while($row=pg_fetch_array($resp)){
+	$Nombre=$row["nombre"]." - ".$row["concentracion"]." - ".$row["formafarmaceutica"]." - ".$row["presentacion"];
+	$Nombre1=$row["nombre"];
+	$IdMedicina=$row["Id"];
+	$Concentracion=$row["concentracion"];
+	$Presentacion=$row["presentacion"];
+	$FormaFarmaceutica=$row["formafarmaceutica"];
+	$IdTerapeutico=$row["idterapeutico"];
+	$IdUnidadMedida=$row["idunidadmedida"];
 	
-	$Codigo=strtoupper($row["Codigo"]);
+	$Codigo=strtoupper($row["codigo"]);
 	
 	//Informacion de Grupo Terapetico y Unidad de Medida
-	$grupo=mysql_fetch_array(mysql_query("select GrupoTerapeutico from mnt_grupoterapeutico where IdTerapeutico='$IdTerapeutico'"));
-	$Medida=mysql_fetch_array(mysql_query("select Descripcion from farm_unidadmedidas where IdUnidadMedida='$IdUnidadMedida'"));
+	$grupo=pg_fetch_array(pg_query("select GrupoTerapeutico from mnt_grupoterapeutico where Id='$IdTerapeutico'"));
+	$Medida=pg_fetch_array(pg_query("select Descripcion from farm_unidadmedidas where Id='$IdUnidadMedida'"));
 
 ?>
 

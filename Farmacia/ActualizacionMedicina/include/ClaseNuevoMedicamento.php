@@ -1,15 +1,15 @@
 <?php
 class NuevoMedicamento{
 	function ActualizarDatosGenerales($IdMedicina,$codigo,$nombre,$concentracion,$FormaFarmaceutica,$presentacion){
-		$query="update farm_catalogoproductos set Codigo='$codigo',Nombre='$nombre', Concentracion='$concentracion', FormaFarmaceutica='$FormaFarmaceutica',Presentacion='$presentacion' where IdMedicina='$IdMedicina'";
-		mysql_query($query);
+		$query="update farm_catalogoproductos set codigo='$codigo', nombre='$nombre', concentracion='$concentracion', formafarmaceutica='$FormaFarmaceutica', presentacion='$presentacion' where id='$IdMedicina'";
+		pg_query($query);
 	}
 	function ActualizarGrupo($IdGrupo,$IdMedicina){
-		$query="update farm_catalogoproductos set IdTerapeutico='$IdGrupo' where IdMedicina='$IdMedicina'";
+		$query="update farm_catalogoproductos set idterapeutico='$IdGrupo' where id='$IdMedicina'";
 		mysql_query($query);
 	}
 	function ActualizarUnidadMedida($IdUnidadMedida,$IdMedicina){
-		$query="update farm_catalogoproductos set IdUnidadMedida='$IdUnidadMedida' where IdMedicina='$IdMedicina'";
+		$query="update farm_catalogoproductos set idunidadmedida='$IdUnidadMedida' where id='$IdMedicina'";
 		mysql_query($query);
 	}
 

@@ -191,7 +191,7 @@ if ($nivel == 3 or $nivel == 4) {
         <div>
             <?php
             $ok = MedicamentoVencimiento::ExisteVencimiento($IdEstablecimiento,$IdModalidad);
-            if ($rowV = mysql_fetch_array($ok)) {
+            if ($rowV = pg_fetch_array($ok)) {
                 echo "<br><table><tr><td rowspan=2><img src='../images/aviso.png'></td><td><strong>Existen medicamentos proximos a vecer <br> Desea ver el listado de estos?<br><br><strong></td></tr>
 		<tr><td align='center'><input type='button' id='' name='' value='Ver Listado' onClick='VentanaBusqueda();'></td></tr>";
             }

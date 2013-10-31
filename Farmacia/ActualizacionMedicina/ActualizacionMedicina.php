@@ -73,9 +73,9 @@ if (!isset($_SESSION["nivel"])) {
                             <select name="select" id="IdUnidadMedida">
                                 <option value="0">[Seleccione ...]</option>
                                 <?php
-                                conexion::conectar();
+                                include '../Clases/class.php';  /*Inclusion del archivo class que contiene la conexion a la BD y las Querys*/
                                 $resp = queries::UnidadMedidas();
-                                while ($row = mysql_fetch_array($resp)) {
+                                while ($row = pg_fetch_row($resp)) {
                                     ?>
                                     <option value="<?php echo $row[0]; ?>"><?php echo $row[1]; ?></option>
         <?php } ?>
@@ -88,9 +88,9 @@ if (!isset($_SESSION["nivel"])) {
                             <select name="IdTerapeutico" id="IdTerapeutico">
                                 <option value="0">[Seleccione ...]</option>
                                 <?php
-                                conexion::conectar();
+                                include '../Clases/class.php'; 
                                 $resp = queries::ComboGrupoTerapeutico();
-                                while ($row = mysql_fetch_array($resp)) {
+                                while ($row = pg_fetch_row($resp)) {
                                     ?>
                                     <option value="<?php echo $row[0]; ?>"><?php echo $row[1]; ?></option>
         <?php } ?>

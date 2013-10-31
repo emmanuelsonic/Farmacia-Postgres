@@ -4,10 +4,10 @@ class Actualizacion{
 
 	function IniciarPantallaP1(){
 		
-		$query="select IdTerapeutico,GrupoTerapeutico 
+		$query="select Id,GrupoTerapeutico 
 				from mnt_grupoterapeutico
 				where GrupoTerapeutico <> '--'";
-		$resp=mysql_query($query);
+		$resp=pg_query($query);
 		return($resp);
 	
 	}//Iniciar Pantalla Paso1
@@ -15,11 +15,11 @@ class Actualizacion{
 
 	function IniciarPantallaP2($IdTerapeutico){
 		
-		$query="select IdMedicina,Codigo,Nombre,Concentracion,FormaFarmaceutica,Presentacion
+		$query="select Id,Codigo,Nombre,Concentracion,FormaFarmaceutica,Presentacion
 				from farm_catalogoproductos
 				where IdEstado='H'
 				and IdTerapeutico=".$IdTerapeutico;
-		$resp=mysql_query($query);
+		$resp=pg_query($query);
 		return($resp);
 		
 	}//Iniciar Pantalla Paso 2
@@ -27,13 +27,14 @@ class Actualizacion{
 	
 	function ObtenerPrecioActual($IdMedicina,$Ano){
 		$Ano2=$Ano-1;
-		$query="select Precio 
-				from farm_preciosxano
-				where IdMedicina='$IdMedicina'
+		// La Query era hacia la tabla farm_preciosxano
+		$query="select precioactual 
+				from farm_catalogoproductos
+				where id='$IdMedicina'
 				and (Ano='$Ano' or Ano ='$Ano2')
 				order by Ano desc
 				limit 1";
-		$resp=mysql_fetch_array(mysql_query($query));
+		$resp=pg_fetch_row(pg_query($query));
 		if($resp[0]!=NULL and $resp[0]!=''){$respuesta=$resp[0];}else{$respuesta=false;}
 		return($respuesta);
 		

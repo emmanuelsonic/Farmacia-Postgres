@@ -27,7 +27,7 @@ if (!isset($_SESSION["nivel"])) {
 			<td align="center"><strong>Recetas Digitadas</strong></td>
 		</tr>';
             $respPersonal = $mon->ObtenerInformacion($IdEstablecimiento,$IdModalidad);
-            while ($rowPersonal = mysql_fetch_array($respPersonal)) {
+            while ($rowPersonal = pg_fetch_array($respPersonal, null, PGSQL_ASSOC)) {
                 $Nombre = $rowPersonal[0];
                 $NumeroRecetas = $rowPersonal[1];
 
@@ -52,17 +52,17 @@ if (!isset($_SESSION["nivel"])) {
 			<td align="center"><strong><h5>Estado</h5></strong></td>
 		</tr>';
             $respPersonal = $mon->ObtenerInformacionEnLinea($_SESSION["IdPersonal"],$IdEstablecimiento,$IdModalidad);
-            if ($rowPersonal = mysql_fetch_array($respPersonal)) {
+            if ($rowPersonal = pg_fetch_array($respPersonal, null, PGSQL_ASSOC)) {
                 $sonido = "NO";
                 do {
-                    $IdPersonal = $rowPersonal["IdPersonal"];
-                    $Nombre = $rowPersonal["Nombre"];
-                    $Estado = $rowPersonal["Estado"];
+                    $IdPersonal = $rowPersonal["id"];
+                    $Nombre = $rowPersonal["nombre"];
+                    $Estado = $rowPersonal["estado"];
 
                     $chat = $mon->Chat($_SESSION["IdPersonal"], $IdPersonal,$IdEstablecimiento,$IdModalidad);
                     $Activo = "";
-                    if ($rowChat = mysql_fetch_array($chat)) {
-                        $Activo = "<strong>tiene " . $rowChat["Numero"] . " mensaje(s) NUEVO(S) o< </strong>";
+                    if ($rowChat = pg_fetch_array($chat, null, PGSQL_ASSOC)) {
+                        $Activo = "<strong>tiene " . $rowChat["numero"] . " mensaje(s) NUEVO(S) o< </strong>";
                         if ($_SESSION["nivel"] == 1) {
                             $sonido = "OK";
                         } else {
@@ -74,7 +74,7 @@ if (!isset($_SESSION["nivel"])) {
                     $tabla.='<td align="center"><strong><h5>' . $Estado . '</h5></strong></td>';
 
                     $tabla.=' </tr>';
-                } while ($rowPersonal = mysql_fetch_array($respPersonal));
+                } while ($rowPersonal = pg_fetch_array($respPersonal, null, PGSQL_ASSOC));
             } else {//while
                 $tabla.='<tr style="background:#CCCCCC;"><td colspan=2><h5>No hay usuarios conectados!</h5></td>';
                 $tabla.=' </tr>';
@@ -91,27 +91,27 @@ if (!isset($_SESSION["nivel"])) {
 			<td colspan="2" align="center"><strong><h5>Chat(s)</h5></strong></td>
 		</tr>
 	 	 ';
-            $respPersonal = $mon->ObtenerInformacionEnLinea($_SESSION["IdPersonal"]);
+            $respPersonal = $mon->ObtenerInformacionEnLinea($_SESSION["id"]);
 
-            if ($rowPersonal = mysql_fetch_array($respPersonal)) {
+            if ($rowPersonal = pg_fetch_array($respPersonal, null, PGSQL_ASSOC)) {
                 $sonido = "NO";
                 do {
-                    $IdPersonal = $rowPersonal["IdPersonal"];
-                    $Nombre = $rowPersonal["Nombre"];
-                    $Estado = $rowPersonal["Estado"];
+                    $IdPersonal = $rowPersonal["id"];
+                    $Nombre = $rowPersonal["nombre"];
+                    $Estado = $rowPersonal["estado"];
 
-                    $chat = $mon->Chat($_SESSION["IdPersonal"], $IdPersonal);
+                    $chat = $mon->Chat($_SESSION["id"], $IdPersonal);
                     $Activo = "";
 
-                    if ($rowChat = mysql_fetch_array($chat)) {
-                        $Activo = "<strong>tiene " . $rowChat["Numero"] . " mensaje(s) NUEVO(S) o< </strong>";
+                    if ($rowChat = pg_fetch_array($chat, null, PGSQL_ASSOC)) {
+                        $Activo = "<strong>tiene " . $rowChat["numero"] . " mensaje(s) NUEVO(S) o< </strong>";
                         $sonido = "OK";
                     }
                     $tabla.='<tr style="background:#CCCCCC;"><td><span id="' . $IdPersonal . '" onclick="AbrirChat(this.id);"; style="font-size:9px;">' . htmlentities($Nombre) . '<span style="font-size:xx-small;">' . $Activo . '</span></span></td>';
                     //$tabla.='<td align="center"><strong><h5>'.$Estado.'</h5></strong></td>';
 
                     $tabla.=' </tr>';
-                } while ($rowPersonal = mysql_fetch_array($respPersonal));
+                } while ($rowPersonal = pg_fetch_array($respPersonal, null, PGSQL_ASSOC));
             } else {//while
                 $tabla.='<tr style="background:#CCCCCC;"><td colspan=2><h5>No hay usuarios conectados!</h5></td>';
                 $tabla.=' </tr>';

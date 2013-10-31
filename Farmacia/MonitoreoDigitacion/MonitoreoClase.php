@@ -31,42 +31,47 @@ class Monitoreo {
     }
 
     function ObtenerInformacion($IdEstablecimiento,$IdModalidad) {
-        $query = "select farm_usuarios.Nombre,count(IdMedicinaRecetada)
+        $query = "select farm_usuarios.Nombre,count(farm_usuarios.Id)
 				from farm_usuarios
 				inner join farm_recetas
-				on farm_recetas.IdPersonalIntro=farm_usuarios.IdPersonal
-							
+				on farm_recetas.IdPersonal=farm_usuarios.Id
+					
 				inner join farm_medicinarecetada
-				on farm_recetas.IdReceta=farm_medicinarecetada.IdReceta
+				on farm_recetas.Id=farm_medicinarecetada.Id
 				inner join sec_historial_clinico
 				on sec_historial_clinico.IdHistorialClinico=farm_recetas.IdHistorialClinico
 				
 				where FechaHoraReg is not null
-				and date(FechaHoraReg)=curdate()
+				and date(FechaHoraReg)=current_date
 				and farm_recetas.IdEstablecimiento=$IdEstablecimiento
                                 and farm_recetas.IdModalidad=$IdModalidad
-                                and sec_historial_clinico.IdEstablecimiento=$IdEstablecimiento
-                                and sec_historial_clinico.IdModalidad=$IdModalidad
+								and sec_historial_clinico.IdEstablecimiento=$IdEstablecimiento
+                               
                                 and farm_medicinarecetada.IdEstablecimiento=$IdEstablecimiento
                                 and farm_medicinarecetada.IdModalidad=$IdModalidad
                                 and farm_usuarios.IdEstablecimiento=$IdEstablecimiento
                                 and farm_usuarios.IdModalidad=$IdModalidad
-                                group by farm_recetas.IdPersonalIntro
-                                order by farm_recetas.IdPersonalIntro";
-        $resp = mysql_query($query);
+                                group by farm_usuarios.Nombre,farm_recetas.IdPersonal
+                                order by farm_recetas.IdPersonal";
+        $resp = pg_query($query);
         return($resp);
     }
 
 //Informacion
 
     function ObtenerInformacionEnLinea($IdPersonal,$IdEstablecimiento,$IdModalidad) {
-        $query = "select IdPersonal,farm_usuarios.Nombre,case Conectado when 'S' then 'En Linea' when 'N' then '-' end as Estado
-				from farm_usuarios
-				where Conectado='S'
-				and IdPersonal <> '$IdPersonal'
-                                and IdEstablecimiento=$IdEstablecimiento
-                                and IdModalidad=$IdModalidad";
-        $resp = mysql_query($query);
+        $query = "select fos_user_user.id,farm_usuarios.nombre,
+				case farm_usuarios.conectado 
+				when 'S' then 'En Linea' 
+				when 'N' then '-' 
+				end as Estado
+				from farm_usuarios, fos_user_user
+				where farm_usuarios.conectado='S'
+				and fos_user_user.id<> '$IdPersonal'
+				
+				and IdEstablecimiento=$IdEstablecimiento
+                and IdModalidad=$IdModalidad";
+        $resp = pg_query($query);
         return($resp);
     }
 

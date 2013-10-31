@@ -2120,27 +2120,32 @@ class meses {
 
 class MedicamentoVencimiento {
 
+private $db;
+
     function ExisteVencimiento($IdEstablecimiento, $IdModalidad) {
-        conexion::conectar();
+      conexion::conectar();
         $SQL = "select farm_catalogoproductos.Nombre,farm_medicinaexistenciaxarea.Existencia, 
 					farm_lotes.Lote,farm_lotes.FechaVencimiento,farm_unidadmedidas.Descripcion,
 					farm_unidadmedidas.UnidadesContenidas as Divisor
 					from farm_lotes
 					inner join farm_medicinaexistenciaxarea
-					on farm_medicinaexistenciaxarea.IdLote=farm_lotes.IdLote
+					on farm_medicinaexistenciaxarea.IdLote=farm_lotes.Id
 					inner join farm_catalogoproductos
-					on farm_catalogoproductos.IdMedicina=farm_medicinaexistenciaxarea.IdMedicina
+					on farm_catalogoproductos.Id=farm_medicinaexistenciaxarea.IdMedicina
 					inner join farm_unidadmedidas
-					on farm_unidadmedidas.IdUnidadMedida=farm_catalogoproductos.IdUnidadMedida
-					where left(farm_lotes.FechaVencimiento,7) between left(adddate(curdate(),interval 1 month),7) and left(adddate(curdate(),interval 5 month),7)
+					on farm_unidadmedidas.Id=farm_catalogoproductos.IdUnidadMedida
+					where substr(to_char(farm_lotes.FechaVencimiento,'YYYY-MM-DD'),1,7) between 
+					substr(to_char(current_date + '1 month'::interval, 'YYYY-MM-DD'), 1,7) and 
+					substr(to_char(current_date + '5 month'::interval, 'YYYY-MM-DD'), 1,7)
+                                                                          
                                         and farm_lotes.IdEstablecimiento=$IdEstablecimiento
                                         and farm_lotes.IdModalidad=$IdModalidad
                                         and farm_medicinaexistenciaxarea.IdEstablecimiento=$IdEstablecimiento
                                         and farm_medicinaexistenciaxarea.IdModalidad=$IdModalidad
-                                        
+                      
 					order by farm_lotes.FechaVencimiento";
-        $resp = mysql_query($SQL);
-        conexion::desconectar();
+        $resp=pg_query($SQL);
+       conexion::desconectar();
         return($resp);
     }
 

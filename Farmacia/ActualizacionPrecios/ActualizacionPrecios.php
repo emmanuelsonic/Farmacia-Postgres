@@ -56,30 +56,30 @@ include('IncludeFiles/ClasesActualizacion.php');
 	conexion::conectar();
 	$resp1=Actualizacion::IniciarPantallaP1();
 	$Ano=date('Y');
-	while($row1=mysql_fetch_array($resp1)){
-	$NombreGrupo=$row1["GrupoTerapeutico"];
-	$IdTerapeutico=$row1["IdTerapeutico"];
+	while($row1=pg_fetch_array($resp1)){
+	$NombreGrupo=$row1["grupoterapeutico"];
+	$IdTerapeutico=$row1["id"];
 	?>  
     <tr class="MYTABLE">
 	  <td colspan="5" align="center"><strong><h2><?php echo $NombreGrupo;?></h2></strong></td>
 	</tr>
 	<tr>
-	  <td width="116" class="FONDO" align="center"><strong>Codigo</strong></td>
+	  <td width="116" class="FONDO" align="center"><strong>C&oacute;digo</strong></td>
       <td width="184" class="FONDO" align="center"><strong>Nombre</strong></td>
-      <td width="183" class="FONDO" align="center"><strong>Concentracion</strong></td>
-      <td width="262" class="FONDO" align="center"><strong>Presentacion</strong></td>
+      <td width="183" class="FONDO" align="center"><strong>Concentraci&oacute;n</strong></td>
+      <td width="262" class="FONDO" align="center"><strong>Presentaci&oacute;n</strong></td>
       <td width="80" class="FONDO" align="center"><strong>Precio ($) </strong></td>
 	</tr>
 			<!--	MOSTAR MEDICINAS HABILITADAS POR FARMACIA PARA LA ACTUALIZACION DE PRECIOS-->
 			<?php 
 			$resp2=Actualizacion::IniciarPantallaP2($IdTerapeutico);
-			while($row2=mysql_fetch_array($resp2)){
-				$IdMedicina=$row2["IdMedicina"];
-				$Codigo=$row2["Codigo"];
-				$NombreMedicina=$row2["Nombre"];
-				$Concentracion=$row2["Concentracion"];
-				$Presentacion=$row2["FormaFarmaceutica"]."".$row2["Presentacion"];
-					$Precio=Actualizacion::ObtenerPrecioActual($IdMedicina,$Ano);
+			while($row2=pg_fetch_array($resp2)){
+				$IdMedicina=$row2["id"];
+				$Codigo=$row2["codigo"];
+				$NombreMedicina=$row2["nombre"];
+				$Concentracion=$row2["concentracion"];
+				$Presentacion=$row2["formafarmaceutica"]."".$row2["presentacion"];
+				$Precio=Actualizacion::ObtenerPrecioActual($IdMedicina,$Ano);
 			?>
 			<tr>
 			  <td class="FONDO"><?php echo $Codigo;?></td>
