@@ -91,7 +91,7 @@ if (!isset($_SESSION["nivel"])) {
 			<td colspan="2" align="center"><strong><h5>Chat(s)</h5></strong></td>
 		</tr>
 	 	 ';
-            $respPersonal = $mon->ObtenerInformacionEnLinea($_SESSION["id"]);
+            $respPersonal = $mon->ObtenerInformacionEnLinea($_SESSION["IdPersonal"]);
 
             if ($rowPersonal = pg_fetch_array($respPersonal, null, PGSQL_ASSOC)) {
                 $sonido = "NO";

@@ -69,7 +69,7 @@ class Monitoreo {
 				where farm_usuarios.conectado='S'
 				and fos_user_user.id<> '$IdPersonal'
 				
-				and IdEstablecimiento=$IdEstablecimiento
+				and IdEstablecimiento=$IdEstablecimiento       /*Aqui hace  falata ver de donde se va a sacar  el establacimiento*/ 
                 and IdModalidad=$IdModalidad";
         $resp = pg_query($query);
         return($resp);

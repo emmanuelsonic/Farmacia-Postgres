@@ -32,11 +32,11 @@ if (!isset($_SESSION["nivel"])) {
 
             function ComboTerapeutico() {
                 $SQL = "select * from mnt_grupoterapeutico where GrupoTerapeutico <>'--'";
-                $resp = mysql_query($SQL);
+                $resp = pg_query($SQL);
                 $combo = "<select Id='Terapeutico' name='Terapeutico' onchange='MedicamentoPorGrupo();'>
 		<option value='0'>[SELECCIONE UN GRUPO TERAPEUTICO]</option>";
-                while ($row = mysql_fetch_array($resp)) {
-                    $combo.="<option value='" . $row["IdTerapeutico"] . "'>" . $row["IdTerapeutico"] . ' - ' . $row["GrupoTerapeutico"] . "</option>";
+                while ($row = pg_fetch_array($resp, null, PGSQL_ASSOC)) {
+                    $combo.="<option value='" . $row["id"] . "'>" . $row["id"] . ' - ' . $row["grupoterapeutico"] . "</option>";
                 }
                 $combo.="</select>";
 
