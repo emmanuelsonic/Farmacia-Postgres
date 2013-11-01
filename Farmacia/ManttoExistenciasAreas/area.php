@@ -11,7 +11,9 @@ alert('No posee permisos para accesar a esta opcion!');
 window.location='../Principal/index.php';
 </script>
 <?php
-}else{
+}
+else{
+echo $_SESSION["Administracion"]." algo".$_SESSION["Datos"];
 $IdFarmacia2=0;
 	if($IdFarmacia2!=0){?>
 		<script language="javascript">window.location='estableceArea.php';</script>
@@ -31,7 +33,8 @@ if($_SESSION["TipoFarmacia"]==1 and $nivel!=1){?>
 <?php }
 
 		require('../Clases/class.php');
-		$conexion=new conexion;
+		conexion::conectar();
+		//$conexion=new conexion;
                 $IdModalidad=$_SESSION["IdModalidad"];
 ?>
 <html>
@@ -75,19 +78,19 @@ return(false);
       <td colspan="2" class="FONDO">&nbsp;<select id="farmacia" name="farmacia" onChange="cargaContenido8(this.id)">
 	  <option value="0">Seleccione una Farmacia</option>
 	  <?php
-	  $conexion->conectar();
-		  $resp=mysql_query("select mfe.IdFarmacia,Farmacia
+	  //$conexion->conectar();
+		  $resp=pg_query("select mfe.IdFarmacia,Farmacia
                                      from mnt_farmacia 
                                      inner join mnt_farmaciaxestablecimiento mfe
-                                     on mfe.IdFarmacia=mnt_farmacia.IdFarmacia
+                                     on mfe.IdFarmacia=mnt_farmacia.id
                                      where mfe.HabilitadoFarmacia='S' 
                                      and mfe.IdEstablecimiento=".$_SESSION["IdEstablecimiento"]."
                                      and mfe.IdModalidad=$IdModalidad
                                      and mfe.IdFarmacia <> 4");
-	  $conexion->desconectar();
-	  while($row=mysql_fetch_array($resp)){
-		  $IdFarmacia=$row["IdFarmacia"];
-		  $Farmacia=$row["Farmacia"]; ?>
+	  conexion::desconectar();
+	  while($row=pg_fetch_array($resp,null,PGSQL_ASSOC)){
+		  $IdFarmacia=$row["idfarmacia"];
+		  $Farmacia=$row["farmacia"]; ?>
 	  <option value="<?php echo"$IdFarmacia";?>"><?php echo"$Farmacia";?></option>
 <?php }//fin de while ?>
       </select>      </td>

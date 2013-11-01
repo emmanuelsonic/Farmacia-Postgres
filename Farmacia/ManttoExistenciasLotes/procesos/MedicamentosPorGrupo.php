@@ -47,8 +47,8 @@ if (!isset($_SESSION["IdPersonal"])) {
         $IdTerapeutico = $_GET["IdTerapeutico"];
         $Nombre = $_GET["Nombre"];
 
-        $selectGrupo = "select * from mnt_grupoterapeutico where IdTerapeutico=" . $IdTerapeutico;
-        $Grupo = mysql_query($selectGrupo);
+        $selectGrupo = "select * from mnt_grupoterapeutico where Id=" . $IdTerapeutico;
+        $Grupo = pg_query($selectGrupo);
 
         $count = 0;
 
@@ -69,11 +69,11 @@ if (!isset($_SESSION["IdPersonal"])) {
                 $comp1 = "";
             }
 
-            $querySelect = "select farm_catalogoproductos.IdMedicina,Codigo ,farm_catalogoproductos.Nombre,farm_catalogoproductos.FormaFarmaceutica,
+            $querySelect = "select farm_catalogoproductos.Id,Codigo ,farm_catalogoproductos.Nombre,farm_catalogoproductos.FormaFarmaceutica,
 	farm_catalogoproductos.Concentracion,Presentacion,IdTerapeutico
 	from farm_catalogoproductos
 	inner join farm_catalogoproductosxestablecimiento cpe
-	on cpe.IdMedicina=farm_catalogoproductos.IdMedicina
+	on cpe.IdMedicina=farm_catalogoproductos.Id
 	
 	where cpe.Condicion='H'
 	" . $comp1 . "
@@ -81,12 +81,12 @@ if (!isset($_SESSION["IdPersonal"])) {
 	and cpe.IdEstablecimiento=" . $_SESSION["IdEstablecimiento"] . "
         and cpe.IdModalidad=$IdModalidad
 	order by Codigo";
-            $resp = mysql_query($querySelect);
+            $resp = pg_query($querySelect);
 
-            if ($Datos = mysql_fetch_array($resp)) {
+            if ($Datos = pg_fetch_array($resp,null,PGSQL_ASSOC)) {
                 if($IdTerapeutico!='0') {
-                    $NombreGrupo1 = mysql_fetch_array(mysql_query("select GrupoTerapeutico from mnt_grupoterapeutico
-                                                                    where IdTerapeutico=" . $Datos["IdTerapeutico"]));
+                    $NombreGrupo1 = pg_fetch_row(pg_query("select GrupoTerapeutico from mnt_grupoterapeutico
+                                                                    where IdTerapeutico=" . $Datos["iderapeutico"]));
                     $NombreGrupo = $NombreGrupo1[0];
                 } else {
                     $NombreGrupo = "";

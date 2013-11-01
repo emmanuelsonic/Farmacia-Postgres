@@ -85,7 +85,7 @@ class Monitoreo {
                     and IdEstablecimiento=$IdEstablecimiento
                     and IdModalidad=$IdModalidad
                     group by whosays";
-        $resp = mysql_query($SQL);
+        $resp = pg_query($SQL);
         return($resp);
     }
 

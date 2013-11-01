@@ -62,14 +62,14 @@ require('../Clases/class.php');
           <td colspan="4"  class="FONDO">&nbsp;<select id="farmacia" name="farmacia" tabindex="3" onChange="CargarAreas(this.value)">
 	  <option value="0">Seleccione Farmacia</option>
  	  <?php 
-	  $conexion=new conexion;
-	  $conexion->conectar();	  
-	  $resp=mysql_query("select mnt_farmacia.IdFarmacia,mnt_farmacia.Farmacia from mnt_farmacia 
+	  
+	  conexion::conectar();	  
+	  $resp=pg_query("select mnt_farmacia.Id,mnt_farmacia.Farmacia from mnt_farmacia 
                             inner join mnt_farmaciaxestablecimiento 
-                            on mnt_farmacia.IdFarmacia=mnt_farmaciaxestablecimiento.IdFarmacia
+                            on mnt_farmacia.Id=mnt_farmaciaxestablecimiento.IdFarmacia
                             where IdEstablecimiento=$IdEstablecimiento and IdModalidad=$IdModalidad");
-	  $conexion->desconectar();
-	   while($row=mysql_fetch_array($resp)){
+	  conexion::desconectar();
+	   while($row=pg_fetch_row($resp)){
 	  $IdFarmacia=$row[0];
 	  $Farmacia=$row[1];
 	  ?>

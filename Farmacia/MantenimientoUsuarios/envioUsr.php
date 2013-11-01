@@ -9,9 +9,9 @@ switch($_GET["Bandera"]){
 case 1:
    //Obtencion de usuarios introducidos en la DB
 	$usuario=$_GET["usuario"];
-	$SQL="select * from farm_usuarios where nick ='".$usuario."'";
-	$resp=mysql_query($SQL);
-	if($row=mysql_fetch_array($resp)){
+	$SQL="select * from fos_user_user where nick ='".$usuario."'";
+	$resp=pg_query($SQL);
+	if($row=pg_fetch_row($resp)){
 	   echo "SI";
 	}else{
 	   echo "NO";
@@ -22,16 +22,16 @@ case 2:
 //Obtencion de areas de Farmacia
     
 	if($_GET["IdFarmacia"]==3){$comp="limit 1";}else{$comp="";}
-	if($_GET["Nivel"]==3){$supr=" and mnt_areafarmacia.IdArea <> 7";}else{$supr="";}
-	$SQL=   "select mnt_areafarmacia.IdArea, mnt_areafarmacia.Area from mnt_areafarmacia 
-                inner join mnt_areafarmaciaxestablecimiento on mnt_areafarmaciaxestablecimiento.IdArea=mnt_areafarmacia.IdArea
+	if($_GET["Nivel"]==3){$supr=" and mnt_areafarmacia.Id <> 7";}else{$supr="";}
+	$SQL=   "select mnt_areafarmacia.Id, mnt_areafarmacia.Area from mnt_areafarmacia 
+                inner join mnt_areafarmaciaxestablecimiento on mnt_areafarmaciaxestablecimiento.IdArea=mnt_areafarmacia.Id
                 where IdFarmacia=".$_GET["IdFarmacia"]." and mnt_areafarmaciaxestablecimiento.Habilitado='S' 
                 and IdEstablecimiento=$IdEstablecimiento and IdModalidad=$IdModalidad ".$comp." ".$supr ;
-	$resp=mysql_query($SQL);
+	$resp=pg_query($SQL);
 	
 	$out='<select id="area" name="area" tabindex="4">
 	      <option value="0">Seleccione una Area</option>';
-	while($row=mysql_fetch_array($resp)){
+	while($row=pg_fetch_row($resp)){
 	   $out.="<option value='".$row[0]."'>".$row[1]."</option>";
 	}
 	$out.="</select>";

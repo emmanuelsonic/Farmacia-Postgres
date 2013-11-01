@@ -58,7 +58,7 @@ if (!isset($_SESSION["nivel"])) {
                     $IdPersonal = $rowPersonal["id"];
                     $Nombre = $rowPersonal["nombre"];
                     $Estado = $rowPersonal["estado"];
-
+/* el chat no esta disponible en la version postgres
                     $chat = $mon->Chat($_SESSION["IdPersonal"], $IdPersonal,$IdEstablecimiento,$IdModalidad);
                     $Activo = "";
                     if ($rowChat = pg_fetch_array($chat, null, PGSQL_ASSOC)) {
@@ -74,7 +74,10 @@ if (!isset($_SESSION["nivel"])) {
                     $tabla.='<td align="center"><strong><h5>' . $Estado . '</h5></strong></td>';
 
                     $tabla.=' </tr>';
+para habilitar el chat remover los comentarios
+					*/ 
                 } while ($rowPersonal = pg_fetch_array($respPersonal, null, PGSQL_ASSOC));
+
             } else {//while
                 $tabla.='<tr style="background:#CCCCCC;"><td colspan=2><h5>No hay usuarios conectados!</h5></td>';
                 $tabla.=' </tr>';
