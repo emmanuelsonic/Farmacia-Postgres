@@ -23,16 +23,16 @@ case 70:
 	if($Lote!=''){
 		$Lote=strtoupper($Lote);
 		$queryUpdate="update farm_lotes set Lote='$Lote' where IdLote='$LoteOld'";
-		mysql_query($queryUpdate);
+		pg_query($queryUpdate);
 	}
 	if($PrecioLote!=0){
 		$queryUpdate="update farm_lotes set PrecioLote='$PrecioLote' where IdLote='$LoteOld'";
-		mysql_query($queryUpdate);
+		pg_query($queryUpdate);
 	}
 	
 	if($Vencimiento!='Ventto.'){
 		$queryUpdate="update farm_lotes set FechaVencimiento='$Vencimiento' where IdLote='$LoteOld'";
-		mysql_query($queryUpdate);
+		pg_query($queryUpdate);
 	}
 	
 	}//funcion ActualizaDatosLotes

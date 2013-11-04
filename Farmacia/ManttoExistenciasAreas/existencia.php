@@ -28,11 +28,11 @@ if($IdFarmacia2!=0){?>
 
 function ComboTerapeutico(){
     $SQL="select * from mnt_grupoterapeutico where GrupoTerapeutico <>'--'";
-    $resp=mysql_query($SQL);
+    $resp=pg_query($SQL);
 	$combo="<select Id='Terapeutico' name='Terapeutico' onchange='MedicamentoPorGrupo();'>
 		<option value='0'>[SELECCIONE UN GRUPO TERAPEUTICO]</option>";
-	while($row=mysql_fetch_array($resp)){
-	   $combo.="<option value='".$row["IdTerapeutico"]."'>".$row["IdTerapeutico"].' - '.$row["GrupoTerapeutico"]."</option>";
+	while($row=pg_fetch_array($resp)){
+	   $combo.="<option value='".$row["id"]."'>".$row["id"].' - '.$row["grupoterapeutico"]."</option>";
 	}
 	$combo.="</select>";
 	
@@ -92,15 +92,15 @@ function PosicionTerapeutico(IdTerapeutico){
 <?php
 
 
-$querySelectFarmacia="select mnt_farmacia.Farmacia from mnt_farmacia where mnt_farmacia.IdFarmacia='$farmacia'";
-$querySelectArea="select mnt_areafarmacia.Area from mnt_areafarmacia where mnt_areafarmacia.IdArea='$area'";
+$querySelectFarmacia="select mnt_farmacia.Farmacia from mnt_farmacia where mnt_farmacia.Id='$farmacia'";
+$querySelectArea="select mnt_areafarmacia.Area from mnt_areafarmacia where mnt_areafarmacia.Id='$area'";
 $selectGrupo="select * from mnt_grupoterapeutico where GrupoTerapeutico <> '--'";
-$Dfarmacia=mysql_query($querySelectFarmacia);
-$Darea=mysql_query($querySelectArea);
-$Grupo=mysql_query($selectGrupo);
+$Dfarmacia=pg_query($querySelectFarmacia);
+$Darea=pg_query($querySelectArea);
+$Grupo=pg_query($selectGrupo);
 
-$dataFarmacia=mysql_fetch_array($Dfarmacia);
-$dataArea=mysql_fetch_array($Darea);
+$dataFarmacia=pg_fetch_row($Dfarmacia);
+$dataArea=pg_fetch_row($Darea);
 $NomFarmacia=$dataFarmacia[0];
 $NomArea=$dataArea[0];
 $count=0;

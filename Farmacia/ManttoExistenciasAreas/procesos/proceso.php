@@ -30,15 +30,14 @@ $selectDestino=$_REQUEST["select"]; $opcionSeleccionada=$_REQUEST["opcion"];
 	$tabla=$listadoSelects[$selectDestino];
 	
 	if ($tabla == "mnt_farmacia"){
-	$conexion=new conexion;
-	$conexion->conectar();
-	$consulta=mysql_query("SELECT * FROM $tabla'") or die(mysql_error());
-	$conexion->desconectar();
+	conexion::conectar();
+	$consulta=pg_query("SELECT * FROM $tabla'") or die(pg_error());
+	conexion::desconectar();
 	
 	// Comienzo a imprimir el select
 	echo "<select name='".$selectDestino."' id='".$selectDestino."' onChange='cargaContenido8(this.id)'>";
 	echo "<option value='0'>TODOS LOS GRUPOS</option>";
-	while($registro=mysql_fetch_row($consulta))
+	while($registro=pg_fetch_row($consulta))
 	{
 		// Convierto los caracteres conflictivos a sus entidades HTML correspondientes para su correcta visualizacion
 		$registro[1]=htmlentities($registro[1]);
@@ -50,25 +49,24 @@ $selectDestino=$_REQUEST["select"]; $opcionSeleccionada=$_REQUEST["opcion"];
 	
 	
 	if($tabla=="mnt_areafarmacia"){
-	$conexion=new conexion;	
-	$conexion->conectar();
-	$consulta=mysql_query("SELECT $tabla.IdArea,$tabla.Area
+	conexion::conectar();
+	$consulta=pg_query("SELECT $tabla.Id,$tabla.Area
 						   FROM $tabla
 						   inner join mnt_farmacia 
-						   on mnt_farmacia.IdFarmacia=$tabla.IdFarmacia
+						   on mnt_farmacia.Id=$tabla.IdFarmacia
                                                    inner join mnt_areafarmaciaxestablecimiento mafe
-                                                   on mafe.IdArea=$tabla.IdArea
-						   WHERE mnt_farmacia.IdFarmacia='$opcionSeleccionada'
+                                                   on mafe.IdArea=$tabla.Id
+						   WHERE mnt_farmacia.Id='$opcionSeleccionada'
 						   and mafe.Habilitado='S' and mafe.IdArea <> 7
                                                    and mafe.IdEstablecimiento=".$_SESSION["IdEstablecimiento"]."
-                                                    and mafe.IdModalidad=".$_SESSION["IdModalidad"]) or die(mysql_error());
+                                                    and mafe.IdModalidad=".$_SESSION["IdModalidad"]) or die(pg_error());
 	
-	$conexion->desconectar();
+	conexion::desconectar();
 	
 	// Comienzo a imprimir el select
 	echo "&nbsp;<select name='".$selectDestino."' id='".$selectDestino."' onChange='cargaContenido8(this.id)'>";
 	echo "<option value='0'>Seleccione una area</option>";
-	while($registro=mysql_fetch_row($consulta))
+	while($registro=pg_fetch_row($consulta))
 	{
 		// Convierto los caracteres conflictivos a sus entidades HTML correspondientes para su correcta visualizacion
 		$registro[1]=htmlentities($registro[1]);
@@ -85,19 +83,18 @@ $esta2="";
 }
 else{
 $esta2=$_SESSION["estaCod"]; }
-      $conexion=new conexion;
-	$conexion->conectar();
+    conexion::conectar();
 	//$consulta2=mysql_query("SELECT NOMBRE FROM $tabla WHERE sib='$opcionSeleccionada' ORDER BY nombre") or die(mysql_error());
 	if($esta2!='' && $esta2!='0' && $seguridad!='1'){
-	$consulta2=mysql_query("SELECT estasib.NOMBRE, tipo_establecimiento.tipo FROM estasib, tipo_establecimiento WHERE estasib.idest='$esta2' and estasib.id_tipo=tipo_establecimiento.id_tipo ORDER BY tipo, NOMBRE") or die(mysql_error());
+	$consulta2=pg_query("SELECT estasib.NOMBRE, tipo_establecimiento.tipo FROM estasib, tipo_establecimiento WHERE estasib.idest='$esta2' and estasib.id_tipo=tipo_establecimiento.id_tipo ORDER BY tipo, NOMBRE") or die(mysql_error());
 	}else{
-	$consulta2=mysql_query("SELECT estasib.NOMBRE, tipo_establecimiento.tipo FROM estasib, tipo_establecimiento WHERE estasib.sib='$opcionSeleccionada' and estasib.id_tipo=tipo_establecimiento.id_tipo ORDER BY tipo, NOMBRE") or die(mysql_error());}
-	$conexion->desconectar();
+	$consulta2=pg_query("SELECT estasib.NOMBRE, tipo_establecimiento.tipo FROM estasib, tipo_establecimiento WHERE estasib.sib='$opcionSeleccionada' and estasib.id_tipo=tipo_establecimiento.id_tipo ORDER BY tipo, NOMBRE") or die(mysql_error());}
+	conexion::desconectar();
 	
 	// Comienzo a imprimir el select
 	echo "<select name='".$selectDestino."' id='".$selectDestino."' onChange='cargaContenido8(this.id)'>";
 	echo "<option value='0'>Elige</option>";
-	while($registro2=mysql_fetch_row($consulta2))
+	while($registro2=pg_fetch_row($consulta2))
 	{
 		// Convierto los caracteres conflictivos a sus entidades HTML correspondientes para su correcta visualizacion
 		//$registro2[1]=htmlentities($registro2[0]);

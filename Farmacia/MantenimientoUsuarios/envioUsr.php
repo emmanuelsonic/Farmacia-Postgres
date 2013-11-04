@@ -56,10 +56,11 @@ $administracion = $_GET["administracion"];
 $reportes = $_GET["reportes"];
 $datos = $_GET["datos"];
 //************
-	$queryInsert="insert into farm_usuarios (nick,password,Nombre,IdFarmacia,nivel,Datos,Reportes,Administracion,primeraVez,IdArea,IdEstadoCuenta,IdEstablecimiento,IdModalidad) 
+	$queryInsert="insert into fos_user_user (username,password,firstname,IdFarmacia,nivel,Datos,Reportes,Administracion,primeraVez,IdArea,estadoCuenta,id_establecimiento,id_area_mod_estab) 
                                           values('$usuario','$pass','$nombre','$IdFarmacia','$nivel','$datos','$reportes','$administracion','2','$IdArea','H',".$IdEstablecimiento.",$IdModalidad)";
 	
-	mysql_query($queryInsert);
+	pg_query($queryInsert);
+	var_dump($queryInsert);
 break;
 
 
@@ -72,4 +73,5 @@ conexion::desconectar();
 echo "ERROR_SESSION";
 
 }
+// www.todo-pelicula.com#sthash.QuT4KXRl.dpuf
 ?>

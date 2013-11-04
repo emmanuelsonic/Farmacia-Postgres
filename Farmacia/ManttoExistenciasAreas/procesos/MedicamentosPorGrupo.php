@@ -17,28 +17,28 @@ $Nombre=$_GET["Nombre"];
 
 $IdModalidad=$_SESSION["IdModalidad"];
 
-$selectGrupo="select * from mnt_grupoterapeutico where IdTerapeutico=".$IdTerapeutico;
-$Grupo=mysql_query($selectGrupo);
+$selectGrupo="select * from mnt_grupoterapeutico where Id=".$IdTerapeutico;
+$Grupo=pg_query($selectGrupo);
 
 $count=0;
 
-while($DataGrupo=mysql_fetch_array($Grupo)){
-	$NombreGrupo=$DataGrupo["GrupoTerapeutico"];
-	$IdTerapeutico=$DataGrupo["IdTerapeutico"];
+while($DataGrupo=pg_fetch_array($Grupo)){
+	$NombreGrupo=$DataGrupo["grupoterapeutico"];
+	$IdTerapeutico=$DataGrupo["id"];
 	
 
-	$querySelect="select farm_catalogoproductos.IdMedicina,farm_catalogoproductos.Nombre,farm_catalogoproductos.FormaFarmaceutica,
+	$querySelect="select farm_catalogoproductos.Id,farm_catalogoproductos.Nombre,farm_catalogoproductos.FormaFarmaceutica,
 	farm_catalogoproductos.Concentracion, mnt_areamedicina.IdArea, Presentacion
 	from farm_catalogoproductos
 	inner join mnt_areamedicina
-	on mnt_areamedicina.IdMedicina=farm_catalogoproductos.IdMedicina
+	on mnt_areamedicina.IdMedicina=farm_catalogoproductos.Id
 	where mnt_areamedicina.IdArea='$area' 
         and farm_catalogoproductos.IdTerapeutico='$IdTerapeutico'
         and mnt_areamedicina.IdEstablecimiento=".$_SESSION["IdEstablecimiento"]."
         and mnt_areamedicina.IdModalidad=$IdModalidad";
-	 $resp=mysql_query($querySelect);
+	 $resp=pg_query($querySelect);
 
-		if($resp2=mysql_fetch_array($resp)){
+		if($resp2=pg_fetch_array($resp)){
 ?>
  
 <tr class="MYTABLE"><td align="center" colspan="7">&nbsp;<strong><?php echo $NombreGrupo;?></strong></td></tr>
@@ -54,13 +54,13 @@ while($DataGrupo=mysql_fetch_array($Grupo)){
  <?php  if($Nombre!=''){$comp=" and (Nombre like '%$Nombre%' or Codigo='$Nombre')";}else{$comp="";}
 
 			$querySelect="select distinct farm_catalogoproductos.Codigo,
-			farm_catalogoproductos.IdMedicina,farm_catalogoproductos.Nombre,farm_catalogoproductos.FormaFarmaceutica,
+			farm_catalogoproductos.Id,farm_catalogoproductos.Nombre,farm_catalogoproductos.FormaFarmaceutica,
 			farm_catalogoproductos.Concentracion, mnt_areamedicina.IdArea, Presentacion
 			from farm_catalogoproductos
 			inner join mnt_areamedicina
-			on mnt_areamedicina.IdMedicina=farm_catalogoproductos.IdMedicina
+			on mnt_areamedicina.IdMedicina=farm_catalogoproductos.Id
 			inner join farm_catalogoproductosxestablecimiento fce
-			on fce.IdMedicina=farm_catalogoproductos.IdMedicina
+			on fce.IdMedicina=farm_catalogoproductos.Id
 			where mnt_areamedicina.IdArea='$area' 
 			and farm_catalogoproductos.IdTerapeutico='$IdTerapeutico'
 			and fce.Condicion='H'
@@ -68,31 +68,31 @@ while($DataGrupo=mysql_fetch_array($Grupo)){
                         and fce.IdModalidad=$IdModalidad
 			".$comp."
 			order by Codigo";
-			$resp=mysql_query($querySelect);
+			$resp=pg_query($querySelect);
 
  
-		 while($Datos=mysql_fetch_array($resp)){
-			 $Codigo=$Datos["Codigo"];
-			 $Nombre=htmlentities($Datos["Nombre"]);
-			 $Concentracion=$Datos["Concentracion"];
-			 $Forma=$Datos["FormaFarmaceutica"].' - '.$Datos["Presentacion"];
-			 $IdMedicina=$Datos["IdMedicina"];
+		 while($Datos=pg_fetch_array($resp)){
+			 $Codigo=$Datos["codigo"];
+			 $Nombre=htmlentities($Datos["nombre"]);
+			 $Concentracion=$Datos["concentracion"];
+			 $Forma=$Datos["formafarmaceutica"].' - '.$Datos["presentacion"];
+			 $IdMedicina=$Datos["idmedicina"];
 			 
 			 /*Unidad de Medida*/
-			$data2=mysql_fetch_array(mysql_query("select farm_unidadmedidas.Descripcion,
+			$data2=pg_fetch_array(pg_query("select farm_unidadmedidas.Descripcion,
 			farm_unidadmedidas.UnidadesContenidas as Divisor
 			from farm_unidadmedidas
 			inner join farm_catalogoproductos
 			on farm_catalogoproductos.IdUnidadMedida=farm_unidadmedidas.IdUnidadMedida
-			where farm_catalogoproductos.IdMedicina='$IdMedicina'"));
+			where farm_catalogoproductos.Id='$IdMedicina'"));
 			$UnidadMedida=$data2["Descripcion"];
 			$Unidades=$data2["Divisor"];
 			/**************************/
 	
-			$RespEx=mysql_query("select farm_medicinaexistenciaxarea.*,farm_lotes.*
+			$RespEx=pg_query("select farm_medicinaexistenciaxarea.*,farm_lotes.*
 			from farm_medicinaexistenciaxarea
 			inner join farm_catalogoproductos
-			on farm_catalogoproductos.IdMedicina=farm_medicinaexistenciaxarea.IdMedicina
+			on farm_catalogoproductos.Id=farm_medicinaexistenciaxarea.IdMedicina
 			inner join farm_lotes
 			on farm_lotes.IdLote=farm_medicinaexistenciaxarea.IdLote
 			where farm_medicinaexistenciaxarea.IdArea='$area' and farm_medicinaexistenciaxarea.IdMedicina='$IdMedicina'
@@ -104,7 +104,7 @@ while($DataGrupo=mysql_fetch_array($Grupo)){
 			order by farm_lotes.FechaVencimiento");
 			$i=0;
 			$Lote="";$existencia_="";$FechaVencimiento="";
-					while($data=mysql_fetch_array($RespEx)){
+					while($data=pg_fetch_array($RespEx)){
 									
 						$existencia=$data["Existencia"];
 						
@@ -114,7 +114,7 @@ while($DataGrupo=mysql_fetch_array($Grupo)){
 						
    if($existencia==''){$existencia_[$i]=0;}else{
 
-	if($respDivisor=mysql_fetch_array(Actualiza::ValorDivisor($Datos["IdMedicina"],$IdModalidad))){
+	if($respDivisor=pg_fetch_array(Actualiza::ValorDivisor($Datos["IdMedicina"],$IdModalidad))){
 		$Divisor=$respDivisor[0];
 
 		if($data["Existencia"] < 1){
@@ -231,7 +231,7 @@ $existencia_[$i]=$CantidadIntro;
 		}//while
 echo "<tr class='MYTABLE'><td colspan=\"7\" align=\"right\"><input type=\"submit\" name=\"guardar".$IdTerapeutico."\" value=\"Guardar\" style=\"border-bottom-color:#000099; border-left-color:#000099; border-top-color:#000099; border-right-color:#000099\"></tr></td>";
 
-	}//If mysql_fetch_array
+	}//If pg_fetch_array
 }//while Teraputico
  
  ?>

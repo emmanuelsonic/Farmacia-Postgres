@@ -16,7 +16,7 @@ function ObtenerMedicinaInformacion($IdMedicina,$Lote){
 				where farm_catalogoproductos.IdMedicina='$IdMedicina'
 				and farm_lotes.Lote='$Lote'
                                 ";
-	$resp=mysql_fetch_array(mysql_query($querySelect));
+	$resp=pg_fetch_array(pg_query($querySelect));
 	return($resp);
 }//ObtenerMedicinaInformacion
 
@@ -26,9 +26,9 @@ function EliminarExistenciaxArea($IdMedicina,$IdExistenciaArea,$IdLote,$IdArea,$
 	from farm_medicinaexistenciaxarea
 	where IdExistencia=".$IdExistenciaArea."
         and IdEstablecimiento=".$IdEstablecimiento;
-   $resp=mysql_fetch_array(mysql_query($SQL));
-   $IdExistenciaArea=$resp["IdExistencia"];
-   $ExistenciaArea=$resp["Existencia"];
+   $resp=pg_fetch_array(pg_query($SQL));
+   $IdExistenciaArea=$resp["idexistencia"];
+   $ExistenciaArea=$resp["existencia"];
 
      $SQL2="select *
 	from farm_entregamedicamento
@@ -36,25 +36,25 @@ function EliminarExistenciaxArea($IdMedicina,$IdExistenciaArea,$IdLote,$IdArea,$
 	and IdLote=".$IdLote."
         and IdEstablecimiento=".$IdEstablecimiento;
 
-    $resp2=mysql_fetch_array(mysql_query($SQL2));
+    $resp2=pg_fetch_array(pg_query($SQL2));
 	$ExistenciaBodega=$resp2["Existencia"];
 	$IdEntrega=$resp2["IdEntrega"];
 
 	$ExistenciaBodegaNueva=$ExistenciaBodega+$ExistenciaArea;
 	
     $SQL3="update farm_entregamedicamento set Existencia='$ExistenciaBodegaNueva' where IdEntrega='$IdEntrega'";
-	mysql_query($SQL3);
+	pg_query($SQL3);
 
     $SQL4="delete from farm_medicinaexistenciaxarea where IdExistencia=".$IdExistenciaArea;
-	mysql_query($SQL4);
+	pg_query($SQL4);
     $SQL5="update farm_bitacoramedicinaexistenciaxarea set IdExistenciaOrigen=NULL where IdExistenciaOrigen=".$IdExistenciaArea;
-	mysql_query($SQL5);
+	pg_query($SQL5);
 }
 
 
 	function ValorDivisor($IdMedicina,$IdModalidad){
 	   $SQL="select DivisorMedicina from farm_divisores where IdMedicina=".$IdMedicina." and IdModalidad=$IdModalidad";
-	   $resp=mysql_query($SQL);
+	   $resp=pg_query($SQL);
 	   return($resp);
     	}
 
