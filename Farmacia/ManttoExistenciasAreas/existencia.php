@@ -31,7 +31,7 @@ function ComboTerapeutico(){
     $resp=pg_query($SQL);
 	$combo="<select Id='Terapeutico' name='Terapeutico' onchange='MedicamentoPorGrupo();'>
 		<option value='0'>[SELECCIONE UN GRUPO TERAPEUTICO]</option>";
-	while($row=pg_fetch_array($resp)){
+	while($row=pg_fetch_array($resp,null,PSQL_ASSOC)){
 	   $combo.="<option value='".$row["id"]."'>".$row["id"].' - '.$row["grupoterapeutico"]."</option>";
 	}
 	$combo.="</select>";

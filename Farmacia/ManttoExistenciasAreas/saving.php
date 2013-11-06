@@ -7,7 +7,7 @@ $query=new queries;
                  where IdMedicina=".$IdMedicina." 
                  and IdEstablecimiento=".$IdEstablecimiento." 
                  and IdModalidad=$IdModalidad";
-	   $resp=mysql_query($SQL);
+	   $resp=pg_query($SQL);
 	   return($resp);
     	}
 
@@ -27,8 +27,8 @@ $IdModalidad=$_SESSION["IdModalidad"];
 
 if($bandera==2){//comprobacion de fechas
 	$TestFecha=$_GET["TestFecha"];
-	$querySelect="select left('$TestFecha',7)<left(curdate(),7)";
-	$resp=mysql_fetch_array(mysql_query($querySelect));
+	$querySelect="select substr(to_char($TestFecha,'YYYY-MM-DD'),1,7)< substr(to_char(current_date,'YYYY-MM-DD'),1,7)";
+	$resp=pg_fetch_row(pg_query($querySelect));
 	if($resp!=1){
 		echo "SI";
 	}else{
@@ -47,20 +47,20 @@ if($bandera!=0 and $bandera!=3){
 
 		$IdTerapeutico=$_REQUEST["Terapeutico"];
 
-		$querySelect="select distinct farm_catalogoproductos.IdMedicina,farm_catalogoproductos.Nombre,farm_catalogoproductos.FormaFarmaceutica,
+		$querySelect="select distinct farm_catalogoproductos.Id,farm_catalogoproductos.Nombre,farm_catalogoproductos.FormaFarmaceutica,
 					farm_catalogoproductos.Concentracion, mnt_areamedicina.IdArea
 					from farm_catalogoproductos
 					inner join mnt_areamedicina
-					on mnt_areamedicina.IdMedicina=farm_catalogoproductos.IdMedicina
+					on mnt_areamedicina.IdMedicina=farm_catalogoproductos.Id
 					where mnt_areamedicina.IdArea='$area'
 					and farm_catalogoproductos.IdEstado='H'
                                         and mnt_areamedicina.IdEstablecimiento=".$_SESSION["IdEstablecimiento"]."
                                         and mnt_areamedicina.IdModalidad=$IdModalidad
 					and IdTerapeutico=".$IdTerapeutico;
-		$resp=mysql_query($querySelect);
+		$resp=pg_query($querySelect);
 		
-		while($Datos=mysql_fetch_array($resp)){
-			$IdMedicina=$Datos["IdMedicina"];
+		while($Datos=pg_fetch_array($resp,null,PGSQL_ASSOC)){
+			$IdMedicina=$Datos["Id"];
 			$Lote_="Lote".$IdMedicina;
 			/**/
 			$mes="mes".$IdMedicina;

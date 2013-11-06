@@ -650,7 +650,7 @@ function ComboGrupoTerapeutico(){
 	
 	$combo="<select id='IdTerapeutico' name='IdTerapeutico' onchange='javascript:Combo();'>
 	<option value='0'>[Seleccione ...]</option>";
-	while($row=mysql_fetch_array($resp)){
+	while($row=pg_fetch_array($resp)){
 		$combo.="<option value='".$row["IdTerapeutico"]."~".$row["GrupoTerapeutico"]."'>".$row["GrupoTerapeutico"]."</option>";
 	}//while
 	$combo.="</select>";

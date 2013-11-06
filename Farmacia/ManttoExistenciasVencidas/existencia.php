@@ -29,11 +29,11 @@ function generaSelect(){ //creacioon de combo para las Regiones
 	$conexion=new conexion;
 	$conexion->conectar();
 	if($_SESSION["TipoFarmacia"]==1){$comp=" and mafe.IdArea<>12";}else{$comp="";}
-	$consulta=mysql_query("select maf.IdArea,Area 
+	$consulta=pg_query("select maf.Id,Area 
                                from mnt_areafarmacia maf 
                                inner join mnt_areafarmaciaxestablecimiento mafe
-                               on mafe.IdArea=maf.IdArea
-                                where maf.IdArea <> 7 ".$comp." 
+                               on mafe.IdArea=maf.Id
+                                where maf.Id <> 7 ".$comp." 
                                 and mafe.Habilitado='S'
                                 and mafe.IdEstablecimiento=".$_SESSION["IdEstablecimiento"]." 
                                 and mafe.IdModalidad=".$_SESSION["IdModalidad"]);
@@ -41,7 +41,7 @@ function generaSelect(){ //creacioon de combo para las Regiones
 	// Voy imprimiendo el primer select compuesto por los paises
 	echo "<select name='IdAreaOrigen' id='IdAreaOrigen' onchange='LimpiaDatos();'>";
 	echo "<option value='0'>[Seleccione Area Origen...]</option>";
-	while($registro=mysql_fetch_row($consulta)){
+	while($registro=pg_fetch_row($consulta)){
 		if($registro[1]!="--"){
 		echo "<option value='".$registro[0]."'>".$registro[1]."</option>";
 		}

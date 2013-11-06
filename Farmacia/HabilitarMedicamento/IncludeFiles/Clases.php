@@ -276,10 +276,10 @@ class Laboratorio{
 //ADMINISTRACION DE FARMACIA	
 class Farmacia{
     function ObtenerGrupoTerapeutico(){
-	$SQL="select * 
+	$SQL="select id as idterapeutico,* 
 		from mnt_grupoterapeutico
 		where GrupoTerapeutico <> '--'";
-	$resp=mysql_query($SQL);
+	$resp=pg_query($SQL);
 	return($resp);
     }
 
@@ -287,8 +287,8 @@ class Farmacia{
 	
 	if($IdGrupoTerapeutico!=0){
 		if($Nombre!=''){$comp=" and (Nombre like '%$Nombre%' or Codigo='$Nombre')";}else{$comp="";}
-	$SQL="select * from farm_catalogoproductos where IdTerapeutico=".$IdGrupoTerapeutico." ".$comp."order by Codigo";
-	$resp=mysql_query($SQL);
+	$SQL="select id as idmedicina,* from farm_catalogoproductos where IdTerapeutico=".$IdGrupoTerapeutico." ".$comp."order by Codigo";
+	$resp=pg_query($SQL);
 	return($resp);
 	}else{
 	 return(false);
@@ -302,7 +302,7 @@ class Farmacia{
 		and IdEstablecimiento=".$IdEstablecimiento."
                 and IdModalidad = $IdModalidad
 		and (Condicion='H' ".$comp.")";
-	$resp=mysql_fetch_array(mysql_query($SQL));
+	$resp=pg_fetch_row(pg_query($SQL));
 	return($resp[0]);	
     }
 
@@ -313,19 +313,19 @@ class Farmacia{
 		and IdEstablecimiento=".$IdEstablecimiento."
                 and IdModalidad=$IdModalidad
 		and Estupefaciente='S'";
-	$resp=mysql_fetch_array(mysql_query($SQL));
+	$resp=pg_fetch_row(pg_query($SQL));
 	return($resp[0]);	
     }
 
     function LevantamientoMedicina($IdMedicina,$IdEstablecimiento,$IdUsuarioReg,$IdModalidad){
 	$SQL="insert into farm_catalogoproductosxestablecimiento(IdMedicina,IdEstablecimiento,IdModalidad,IdUsuarioReg,FechaHoraReg) values('$IdMedicina','$IdEstablecimiento','$IdModalidad','$IdUsuarioReg',now())";
-	mysql_query($SQL);
+	pg_query($SQL);
     }
 
     function HabilitarMedicina($IdMedicina,$IdEstablecimiento,$IdUsuarioMod,$IdModalidad){
 	$SQL="update farm_catalogoproductosxestablecimiento set Condicion='H', IdUsuarioMod='$IdUsuarioMod', FechaHoraMod=now() 
               where IdMedicina=".$IdMedicina." and IdEstablecimiento=".$IdEstablecimiento." and IdModalidad=$IdModalidad";
-	mysql_query($SQL);
+	pg_query($SQL);
     }
     function DeshabilitarMedicina($IdMedicina,$IdEstablecimiento,$IdUsuarioMod,$IdModalidad){
 	$SQL="update farm_catalogoproductosxestablecimiento set Condicion='I', IdUsuarioMod='$IdUsuarioMod', FechaHoraMod=now() 
@@ -362,14 +362,14 @@ class Farmacia{
 
 
     function Divisor($IdMedicina){
-	$SQL="select *
+	$SQL="select id as idmedicina,*
 	from farm_catalogoproductos
 	where (Presentacion like '%frasco%' or Presentacion like'%fco%') and Presentacion not like '%ml%'
 	and IdTerapeutico <> 0
 	and IdUnidadMedida = 1
 	and Presentacion not like '%Frasco vial%'
-	and IdMedicina = ".$IdMedicina;
-	$resp=mysql_query($SQL);
+	and Id = ".$IdMedicina;
+	$resp=pg_query($SQL);
 	return($resp);
     }
 
