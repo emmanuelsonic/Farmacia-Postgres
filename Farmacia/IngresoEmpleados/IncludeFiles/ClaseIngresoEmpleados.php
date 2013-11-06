@@ -4,13 +4,13 @@ include('../../Clases/class.php');
 class IngresoEmpleados{
 	function ObtenerIdEmpleado($IdTipoEmpleado,$IdEstablecimiento){
 		$query="select Correlativo 
-				from mnt_empleados
-				where IdTipoEmpleado='$IdTipoEmpleado'
-                                and IdEstablecimiento=".$IdEstablecimiento."
+				from mnt_empleado
+				where Id_Tipo_Empleado='$IdTipoEmpleado'
+                                and Id_Establecimiento=".$IdEstablecimiento."
 				order by Correlativo desc
 				limit 1";
-		$resp=mysql_query($query);
-		if($row=mysql_fetch_array($resp)){
+		$resp=pg_query($query);
+		if($row=pg_fetch_row($resp)){
 			$Correlativo=$row[0];
 			$SiguienteCorrelativo=$Correlativo+1;
 		}else{
@@ -33,9 +33,9 @@ class IngresoEmpleados{
 	
 	
     function VerificaCodigoFarmacia($CodigoFarmacia){
-        $query="select * from mnt_empleados where CodigoFarmacia='$CodigoFarmacia'";
-        $resp=mysql_query($query);
-        if(mysql_fetch_array($resp)){
+        $query="select * from mnt_empleado where Codigo_Farmacia='$CodigoFarmacia'";
+        $resp=pg_query($query);
+        if(pg_fetch_array($resp)){
             $respuesta=true;   
         }else{
             $respuesta=false;            
@@ -45,27 +45,27 @@ class IngresoEmpleados{
     }                            
     
 	function GuardarEmpleado($IdEmpleado,$IdEstablecimiento,$IdTipoEmpleado,$NombreEmpleado,$Correlativo,$CodigoFarmacia,$IdPersonal){
-		$query="insert into mnt_empleados(IdEmpleado,IdEstablecimiento,IdTipoEmpleado,NombreEmpleado,Correlativo,CodigoFarmacia,IdUsuarioReg,FechaHoraReg) values('$IdEmpleado','$IdEstablecimiento','$IdTipoEmpleado','$NombreEmpleado','$Correlativo','$CodigoFarmacia','$IdPersonal',now())";
-		mysql_query($query);
+		$query="insert into mnt_empleado(IdEmpleado,Id_Establecimiento,Id_Tipo_Empleado,NombreEmpleado,Correlativo,Codigo_Farmacia,IdUsuarioReg,FechaHoraReg) values('$IdEmpleado','$IdEstablecimiento','$IdTipoEmpleado','$NombreEmpleado','$Correlativo','$CodigoFarmacia','$IdPersonal',now())";
+		pg_query($query);
 
 	}	
 	
 	function ObtenerDatos($IdEmpleado,$IdEstablecimiento){
-	   $SQL="select IdEmpleado,NombreEmpleado,CodigoFarmacia
-			from mnt_empleados
+	   $SQL="select IdEmpleado,NombreEmpleado,Codigo_Farmacia
+			from mnt_empleado
 			where IdEmpleado='$IdEmpleado'
-                        and IdEstablecimiento=".$IdEstablecimiento;
-	   $resp=mysql_query($SQL);
+                        and Id_Establecimiento=".$IdEstablecimiento;
+	   $resp=pg_query($SQL);
 	   return($resp);
 	}
 
 	function Empleados($NombreEmpleado,$IdEstablecimiento){
-	   $SQL="select * from mnt_empleados 
-		where (IdTipoEmpleado='MED' or IdTipoEmpleado='ENF')
+	   $SQL="select * from mnt_empleado 
+		where (Id_Tipo_Empleado=4 or Id_Tipo_Empleado=5)
 		and NombreEmpleado like '%$NombreEmpleado%'
-                and IdEstablecimiento=".$IdEstablecimiento."
-		order by CodigoFarmacia desc";
-	   $resp=mysql_query($SQL);
+                and Id_Establecimiento=".$IdEstablecimiento."
+		order by Codigo_Farmacia desc";
+	   $resp=pg_query($SQL);
 	  return($resp);
 	}
 

@@ -87,8 +87,8 @@ require('../Clases/class.php');
       <td><strong>Tipo de Empleado: </strong></td>
       <td colspan="3">&nbsp;<select id="IdTipoEmpleado" name="IdTipoEmpleado" onChange="GenerarCorrelativo(this.value);">
           <option value="0">[Seleccione ...]</option>
-          <option value="MED">Medico</option>
-          <option value="ENF">Enfermeria</option>
+          <option value="4">Medico</option>
+          <option value="5">Enfermeria</option>
         </select></td>
 </tr>
 <tr class="FONDO2">
