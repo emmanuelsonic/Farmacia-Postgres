@@ -53,7 +53,7 @@ if (!isset($_SESSION["nivel"])) {
             </style>
     <?php head(); ?>
             <link rel="stylesheet" type="text/css" href="../default.css" media="screen" />
-            <title>...:::Introduccion de Recetas:::... </title>
+            <title>...:::Introducci&oacute;n de Recetas:::... </title>
 
             <!-- chat -->
             <script language="javascript" src="../MonitoreoDigitacion/MonitoreoDigitacion.js"></script>
@@ -87,7 +87,7 @@ if (!isset($_SESSION["nivel"])) {
 </script>
 
         </head>
-        <body onload="MonitoreoChat();document.getElementById('NombrePaciente').focus();">
+        <body onload="document.getElementById('NombrePaciente').focus();">
             <span id="dummy"></span>
     <?php Menu(); ?>
     <br>
@@ -105,7 +105,7 @@ if (!isset($_SESSION["nivel"])) {
       
             <!-- ****************************************************************************** -->        
     <tr>
-      <td class="FONDO"><strong>Numero de Expediente :  </strong>
+      <td class="FONDO"><strong>N&uacute;mero de Expediente :  </strong>
       <td colspan="3" class="FONDO"><input type="text" name="Expediente" id="Expediente" readonly="true" onKeyPress="return Saltos(event,this.id);" /></td>
       <td colspan="2" class="FONDO"> <!-- <input type="button" id="CorreccionArea" name="CorrecionArea" value="Correci&oacute;n de Expediente" onClick="CorregirExpediente();"><span id='ActualizacionExp'></span> --> </td>
     </tr>
@@ -142,8 +142,8 @@ if (!isset($_SESSION["nivel"])) {
                         $resp = pg_query("select mnt_farmacia.* 
                           from mnt_farmacia 
                           inner join mnt_farmaciaxestablecimiento mfe
-                          on mfe.IdFarmacia=mnt_farmacia.IdFarmacia                                   
-                          where mnt_farmacia.IdFarmacia <> 4
+                          on mfe.IdFarmacia=mnt_farmacia.Id                                
+                          where mnt_farmacia.Id <> 4
                           and mfe.IdEstablecimiento=" . $_SESSION["IdEstablecimiento"]."
                           and mfe.IdModalidad=".$_SESSION["IdModalidad"]);
                         conexion::desconectar();

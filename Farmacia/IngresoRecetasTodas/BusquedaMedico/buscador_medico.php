@@ -7,7 +7,7 @@ require('include/funciones.php');
 require('include/pagination.class.php');
 require('include/MedicosClass.php');
 $Classquery=new Classquery;
-$link=  conexion::conectar2();
+conexion::conectar();
 //****obtencion de fechas validas de recetas (3 dias habiles)
 //***
 $items = 15;
@@ -16,7 +16,7 @@ $page = 1;
 if(isset($_GET['page']) and is_numeric($_GET['page']) and $page = $_GET['page'])
 		$limit = " LIMIT ".(($page-1)*$items).",$items";
 	else
-		$limit = " LIMIT $items";
+		$limit = " LIMIT ".$items;
 
 if(isset($_GET['q']) and !eregi('^ *$',$_GET['q'])){
 		$q = $_GET['q']; //para ejecutar consulta
@@ -33,8 +33,8 @@ $sqlStr=$Classquery->ObtenerQuery($Bandera,$IdArea,"",$_SESSION["IdEstablecimien
 $sqlStrAux=$Classquery->ObtenerQueryTotal($Bandera,$IdArea,"",$_SESSION["IdEstablecimiento"]);
 }
     //fecha de vida de una receta son 3 dias habiles
-$query = mysql_query($sqlStr.$limit, $link);
-$aux = Mysql_Fetch_Assoc(mysql_query($sqlStrAux,$link));
+$query = pg_query($sqlStr.$limit);
+$aux = Pg_Fetch_Assoc(pg_query($sqlStrAux));
 ?>
 <html>
 <head>
@@ -158,11 +158,11 @@ echo "Resultados que coinciden con tu b&uacute;squeda \"<strong>$busqueda</stron
 			echo "\t<table class=\"registros\">\n";
 			echo "<tr class=\"titulos\"><td>CODIGO</td><td>NOMBRE DE MEDICO</td></tr>";
 			$r=0;
-			while($row = mysql_fetch_assoc($query)){
+			while($row = pg_fetch_assoc($query)){
 			
 		if(isset($page)){
-echo "\t\t<tr class=\"row$r\"><td align='center'>".$row["CodigoFarmacia"]."</td>
-<td align=\"left\"><a href=\"#\" onclick=\"javascript:UbicarMedico(0,'0','".$row["IdEmpleado"]."','".htmlentities($row["NombreEmpleado"])."')\">".htmlentities($row["NombreEmpleado"])."</a></td>
+echo "\t\t<tr class=\"row$r\"><td align='center'>".$row["codigo_farmacia"]."</td>
+<td align=\"left\"><a href=\"#\" onclick=\"javascript:UbicarMedico(0,'0','".$row["id"]."','".htmlentities($row["nombreempleado"])."')\">".htmlentities($row["nombreempleado"])."</a></td>
 </tr>";
 	}//if
 

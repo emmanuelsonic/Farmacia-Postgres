@@ -33,13 +33,13 @@ $selectDestino=$_REQUEST["select"]; $opcionSeleccionada=$_REQUEST["opcion"];
 		if ($tabla == "mnt_farmacia"){
 	$conexion=new conexion;
 	$conexion->conectar();
-	$consulta=mysql_query("SELECT * FROM $tabla'") or die(mysql_error());
+	$consulta=pg_query("SELECT * FROM $tabla'") or die(pg_error());
 	$conexion->desconectar();
 	
 	// Comienzo a imprimir el selec
 	echo "<select name='".$selectDestino."' id='".$selectDestino."' onChange='cargaContenido8(this.id)'>";
 	echo "<option value='0'>TODAS LAS FARMACIAS</option>";
-	while($registro=mysql_fetch_row($consulta))
+	while($registro=pg_fetch_row($consulta))
 	{
 		// Convierto los caracteres conflictivos a sus entidades HTML correspondientes para su correcta visualizacion
 		$registro[1]=htmlentities($registro[1]);
@@ -54,24 +54,23 @@ $selectDestino=$_REQUEST["select"]; $opcionSeleccionada=$_REQUEST["opcion"];
 	$conexion->conectar();
 		$plus='';
 	//if($opcionSeleccionada==3){$plus='or mnt_farmacia.IdFarmacia=2';}
-	$consulta=mysql_query("SELECT mnt_areafarmacia.IdArea,mnt_areafarmacia.Area
+	$consulta=pg_query("SELECT mnt_areafarmacia.Id,mnt_areafarmacia.Area
 						   FROM mnt_areafarmacia
 						   inner join mnt_farmacia
-						   on mnt_farmacia.IdFarmacia=mnt_areafarmacia.IdFarmacia
+						   on mnt_farmacia.Id=mnt_areafarmacia.IdFarmacia
                                                    inner join mnt_areafarmaciaxestablecimiento mafe
-                                                   on mafe.IdArea=mnt_areafarmacia.IdArea
-						   WHERE mnt_farmacia.IdFarmacia='$opcionSeleccionada'
-						   and mnt_areafarmacia.IdArea<>7 and mafe.Habilitado = 'S'
+                                                   on mafe.IdArea=mnt_areafarmacia.Id
+						   WHERE mnt_areafarmacia.Id<>7 and mafe.Habilitado = 'S'
                                                    and mafe.IdEstablecimiento=".$_SESSION["IdEstablecimiento"]."
                                                    and mafe.IdModalidad=".$_SESSION["IdModalidad"]."
-							".$plus) or die(mysql_error());
+							".$plus) or die(pg_error());
 	
 	$conexion->desconectar();
 	
 	// Comienzo a imprimir el select
 	echo "<select name='".$selectDestino."' id='".$selectDestino."' onChange='javascript:document.getElementById(\"CodigoFarmacia\").focus();CargarAreaOrigen(this.value);'>";
 	echo "<option value='0'>[Seleccione ...]</option>";
-	while($registro=mysql_fetch_row($consulta))
+	while($registro=pg_fetch_row($consulta))
 	{
 		// Convierto los caracteres conflictivos a sus entidades HTML correspondientes para su correcta visualizacion
 		$registro[1]=htmlentities($registro[1]);

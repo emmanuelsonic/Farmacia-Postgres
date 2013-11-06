@@ -1,7 +1,7 @@
 <?php session_start();
 $IdArea="";
 require('../../Clases/class.php');
-$link=  conexion::conectar2();
+$link=  conexion::conectar();
 require('include/funciones.php');
 require('include/pagination.class.php');
 require('include/RecetasClass.php');
@@ -32,8 +32,8 @@ $sqlStr=$Classquery->ObtenerQuery($Bandera,$IdArea,"",$_SESSION["IdEstablecimien
 $sqlStrAux=$Classquery->ObtenerQueryTotal($Bandera,$IdArea,"",$_SESSION["IdEstablecimiento"],$IdModalidad);
 }
     //fecha de vida de una receta son 3 dias habiles
-$query = mysql_query($sqlStr.$limit, $link);
-$aux = Mysql_Fetch_Assoc(mysql_query($sqlStrAux,$link));
+$query = pg_query($sqlStr.$limit, $link);
+$aux = Pg_Fetch_Array(pg_query($sqlStrAux,$link), null, PGSQL_ASSOC);
 ?>
 <html>
 <head>
@@ -158,7 +158,7 @@ echo "Resultados que coinciden con tu b&uacute;squeda \"<strong>$busqueda</stron
 			echo "\t<table class=\"registros\">\n";
 			echo "<tr class=\"titulos\"><td>CODIGO</td><td>ESPECIALIDAD/SERVICIO</td></tr>";
 			$r=0;
-			while($row = mysql_fetch_assoc($query)){
+			while($row = pg_fetch_array($query), null, PGSQL_ASSOC){
 			
 		if(isset($page)){
 		

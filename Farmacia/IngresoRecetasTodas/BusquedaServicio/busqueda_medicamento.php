@@ -3,7 +3,7 @@ $IdArea=$_SESSION["IdArea"];
 
 
 require('../../Clases/class.php');
-$link=  conexion::conectar2();
+$link=  conexion::conectar();
 
 require('include/funciones.php');
 require('include/pagination.class.php');
@@ -35,8 +35,8 @@ $Bandera=0;
 $sqlStr=$Classquery->ObtenerQuery($Bandera,$IdArea,"",$_SESSION["IdEstablecimiento"],$IdModalidad);
 $sqlStrAux=$Classquery->ObtenerQueryTotal($Bandera,$IdArea,"",$_SESSION["IdEstablecimiento"],$IdModalidad);
 }
-$query = mysql_query($sqlStr.$limit, $link);
-$aux = Mysql_Fetch_Assoc(mysql_query($sqlStrAux,$link));
+$query = pg_query($sqlStr.$limit, $link);
+$aux = pg_Fetch_row(pg_query($sqlStrAux,$link));
 ?><br>
 
 <?php

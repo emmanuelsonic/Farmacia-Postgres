@@ -6,7 +6,7 @@ require('include/funciones.php');
 require('include/pagination.class.php');
 require('include/MedicosClass.php');
 $Classquery=new Classquery;
-$link=  conexion::conectar2();
+conexion::conectar();
 //****obtencion de fechas validas de recetas (3 dias habiles)
 
 //***
@@ -32,8 +32,8 @@ $Bandera=0;
 $sqlStr=$Classquery->ObtenerQuery($Bandera,$IdArea,"",$_SESSION["IdEstablecimiento"]);
 $sqlStrAux=$Classquery->ObtenerQueryTotal($Bandera,$IdArea,"",$_SESSION["IdEstablecimiento"]);
 }
-$query = mysql_query($sqlStr.$limit, $link);
-$aux = Mysql_Fetch_Assoc(mysql_query($sqlStrAux,$link));
+$query = pg_query($sqlStr);
+$aux = Pg_Fetch_array(pg_query($sqlStrAux));
 ?><br>
 
 <?php
@@ -43,6 +43,8 @@ echo "Resultados que coinciden con tu b&uacute;squeda \"<strong>$busqueda</stron
 			}elseif($aux['total'] and !isset($q)){
 				//echo "Total de registros: {$aux['total']}";
 			}elseif(!$aux['total'] and isset($q)){
+			//	echo $aux['total'];
+			//	echo $sqlStr;
 				echo"No hay registros que coincidan con tu b&uacute;squeda \"<strong>$busqueda</strong>\"";
 			}
 	?><br />
@@ -61,10 +63,10 @@ echo "Resultados que coinciden con tu b&uacute;squeda \"<strong>$busqueda</stron
 			echo "\t<table class=\"registros\">\n";
 			echo "<tr class=\"titulos\"><td>CODIGO</td><td>NOMBRE DE MEDICO</td></tr>";
 $r=0;
-while($row = mysql_fetch_assoc($query)){
+while($row = pg_fetch_array($query)){
 	if(isset($page)){
 echo "\t\t<tr class=\"row$r\"><td align='center'>".$row["CodigoFarmacia"]."</td>
-<td align=\"left\"><a href=\"#\" onclick=\"javascript:UbicarMedico(0,'0','".$row["IdEmpleado"]."','".htmlentities($row["NombreEmpleado"])."')\">".htmlentities($row["NombreEmpleado"])."</a></td>
+<td align=\"left\"><a href=\"#\" onclick=\"javascript:UbicarMedico(0,'0','".$row["idempleado"]."','".htmlentities($row["nombreempleado"])."')\">".htmlentities($row["nombreempleado"])."</a></td>
 </tr>";
 	}//IF
 		 

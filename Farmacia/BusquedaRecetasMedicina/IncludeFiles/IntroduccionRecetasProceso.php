@@ -180,7 +180,7 @@ case 3:
 	$resp=$proceso->ObtenerComboAreas($IdFarmacia,$IdEstablecimiento,$IdModalidad);
 	$combo='<select id="IdArea" name="IdArea" style="font-style:italic;">
                 <option value="0">...::: Area :::...</option>';
-	while($row=mysql_fetch_array($resp)){
+	while($row=pg_fetch_row($resp)){
 		$combo.='<option value="'.$row[0].'">'.$row[1].'</option>';
 	}
 	

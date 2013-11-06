@@ -631,17 +631,17 @@ class RecetasProceso{
 
 
    function AreaOrigen($IdArea,$IdEstablecimiento){
-	$SQL="select mafe.IdArea,Area 
+	$SQL="select mafe.IdArea, Area 
               from mnt_areafarmacia 
               inner join mnt_areafarmaciaxestablecimiento mafe
-              on mafe.IdArea=mnt_areafarmacia.IdArea
+              on mafe.IdArea=mnt_areafarmacia.Id
               where mafe.Habilitado='S' and mafe.IdArea not in(12,7,".$IdArea.")
               and mafe.IdEstablecimiento=".$IdEstablecimiento;
-	$resp=mysql_query($SQL);
+	$resp=pg_query($SQL);
 	$combo="<select id='IdAreaOrigen' name='IdAreaOrigen'>
 		<option value='0'>[Opcional ...]</option>";
-	while($row=mysql_fetch_array($resp)){
-	   $combo.="<option value='".$row["IdArea"]."'>".$row["Area"]."</option>";
+	while($row=pg_fetch_array($resp, null, PGSQL_ASSOC)){
+	   $combo.="<option value='".$row["idarea"]."'>".$row["area"]."</option>";
 	}
 	$combo.="</select>";
 	return($combo);
@@ -649,8 +649,8 @@ class RecetasProceso{
 
    function ActualizarAreaOrigen($IdArea,$IdReceta){
 
-		$query="update farm_recetas set IdAreaOrigen='$IdArea' where IdReceta='$IdReceta'";
-		mysql_query($query);
+		$query="update farm_recetas set IdAreaOrigen='$IdArea' where Id='$IdReceta'";
+		pg_query($query);
 
    }
 

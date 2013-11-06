@@ -4,7 +4,7 @@ require('../../Clases/class.php');
 require('include/funciones.php');
 require('include/pagination.class.php');
 require('include/RecetasClass.php');
-$link=  conexion::conectar2();
+conexion::conectar();
 $Classquery=new Classquery;
 //****obtencion de fechas validas de recetas (3 dias habiles)
 $IdModalidad=$_SESSION["IdModalidad"];
@@ -32,8 +32,8 @@ $sqlStr=$Classquery->ObtenerQuery($Bandera,$IdArea,"",$_SESSION["IdEstablecimien
 $sqlStrAux=$Classquery->ObtenerQueryTotal($Bandera,$IdArea,"",$_SESSION["IdEstablecimiento"],$IdModalidad);
 }
     //fecha de vida de una receta son 3 dias habiles
-$query = mysql_query($sqlStr.$limit, $link);
-$aux = Mysql_Fetch_Assoc(mysql_query($sqlStrAux,$link));
+$query = pg_query($sqlStr);
+$aux = Pg_Fetch_Assoc(pg_query($sqlStrAux));
 ?>
 <html>
 <head>
