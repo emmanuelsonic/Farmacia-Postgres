@@ -20,20 +20,20 @@ include('../Clases/class.php');
 function ComboFarmacias(){
    conexion::conectar();
 		//if($_SESSION["TipoFarmacia"]==1){$comp=" and IdFarmacia <> 4";}else{$comp="";}
-	$SQL="select distinct mf.IdFarmacia,Farmacia 
+	$SQL="select distinct mf.Id as idFarmacia,Farmacia 
               from mnt_farmacia mf
               inner join mnt_farmaciaxestablecimiento mfe
-              on mfe.IdFarmacia=mf.IdFarmacia
+              on mfe.IdFarmacia=mf.Id
               where mfe.HabilitadoFarmacia ='S'
               and mfe.IdEstablecimiento=".$_SESSION["IdEstablecimiento"]."
               and mfe.IdModalidad=".$_SESSION["IdModalidad"];
-	$resp=mysql_query($SQL);
+	$resp=pg_query($SQL);
    conexion::desconectar();
 
 	$combo="<select id='IdFarmacia' name='IdFarmacia' onchange='CargarAreas(this.value);'>
 		<option value='0'>[SELECCIONE]</option>";
-	    while($row=mysql_fetch_array($resp)){
-		$combo.="<option value='".$row["IdFarmacia"]."'>".$row["Farmacia"]."</otion>";
+	    while($row=pg_fetch_array($resp)){
+		$combo.="<option value='".$row["idfarmacia"]."'>".$row["farmacia"]."</otion>";
 	    }
 	$combo.="</select>";
 	return($combo);
@@ -43,26 +43,26 @@ function ComboFarmacias(){
 function Farmacias(){
 	conexion::conectar();
 	
-   $SQL="select IdFarmacia,Farmacia, 
+   $SQL="select id as IdFarmacia,Farmacia, 
          ( select HabilitadoFarmacia 
            from mnt_farmaciaxestablecimiento 
-           where IdFarmacia=mnt_farmacia.IdFarmacia 
+           where IdFarmacia=mnt_farmacia.Id 
            and IdEstablecimiento=".$_SESSION["IdEstablecimiento"]."
            and IdModalidad=".$_SESSION["IdModalidad"].") as HabilitadoFarmacia
          from mnt_farmacia";
-   $resp=mysql_query($SQL);
+   $resp=pg_query($SQL);
 	conexion::desconectar();
 	$out="<table width='50%'>
 		<tr><td>Numero</td><td>Farmacia</td><td align=center>Habilitado</td></tr>
 		<tr><td colspan=3><hr></td></tr>";
-	while($row=mysql_fetch_array($resp)){
+	while($row=pg_fetch_array($resp)){
             
             
 	
-	   if($row["HabilitadoFarmacia"]=='S'){$check="<input type='checkbox' id='".$row["IdFarmacia"]."' name='".$row["IdFarmacia"]."' onclick='Habilitar(".$row["IdFarmacia"].",2)' checked=true>";}else{$check="<input type='checkbox' id='".$row["IdFarmacia"]."' name='".$row["IdFarmacia"]."' onclick='Habilitar(".$row["IdFarmacia"].",1)'>";}
+	   if($row["habilitadofarmacia"]=='S'){$check="<input type='checkbox' id='".$row["idfarmacia"]."' name='".$row["idfarmacia"]."' onclick='Habilitar(".$row["idfarmacia"].",2)' checked=true>";}else{$check="<input type='checkbox' id='".$row["idfarmacia"]."' name='".$row["idfarmacia"]."' onclick='Habilitar(".$row["idfarmacia"].",1)'>";}
 	   //if($row["IdFarmacia"]==4){$check="<input id='".$row["IdFarmacia"]."' type='checkbox' checked=true disabled=true>";}
 
-	   $out.="<tr><td>".$row["IdFarmacia"]."</td><td><span id='spanExt".$row["IdFarmacia"]."'><span id='span".$row["IdFarmacia"]."' onclick='CambioNombre(".$row["IdFarmacia"].")'>".$row["Farmacia"]."</span></span></td><td align=center>".$check."</td></r>";
+	   $out.="<tr><td>".$row["idfarmacia"]."</td><td><span id='spanExt".$row["idfarmacia"]."'><span id='span".$row["idfarmacia"]."' onclick='CambioNombre(".$row["idfarmacia"].")'>".$row["farmacia"]."</span></span></td><td align=center>".$check."</td></r>";
 	}
 	$out.="</table>";
    return($out);
