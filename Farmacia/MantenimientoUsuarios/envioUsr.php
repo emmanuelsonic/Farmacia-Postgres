@@ -56,11 +56,12 @@ $administracion = $_GET["administracion"];
 $reportes = $_GET["reportes"];
 $datos = $_GET["datos"];
 //************
-	$queryInsert="insert into fos_user_user (username,password,firstname,IdFarmacia,nivel,Datos,Reportes,Administracion,primeraVez,IdArea,estadoCuenta,id_establecimiento,id_area_mod_estab) 
-                                          values('$usuario','$pass','$nombre','$IdFarmacia','$nivel','$datos','$reportes','$administracion','2','$IdArea','H',".$IdEstablecimiento.",$IdModalidad)";
+	$sec_id=pg_fetch_array(pg_query("select nextval('fos_user_user_id_seq')"));
+	
+	$queryInsert="insert into fos_user_user (id,username,password,firstname,IdFarmacia,nivel,Datos,Reportes,Administracion,primeraVez,IdArea,estadoCuenta,id_establecimiento,id_area_mod_estab) 
+                                          values($sec_id[0],'$usuario','$pass','$nombre','$IdFarmacia','$nivel','$datos','$reportes','$administracion','2','$IdArea','H',".$IdEstablecimiento.",$IdModalidad)";
 	
 	pg_query($queryInsert);
-	var_dump($queryInsert);
 break;
 
 
