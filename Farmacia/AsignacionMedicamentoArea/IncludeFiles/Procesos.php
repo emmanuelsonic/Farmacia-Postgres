@@ -22,12 +22,12 @@ switch($_GET["Bandera"]){
   case 1:
 	//Inicio de Combos
 	$resp=$farmacia->Farmacias($_SESSION["IdEstablecimiento"],$_SESSION["IdModalidad"]);
-	     if($row=mysql_fetch_array($resp)){
+	     if($row=pg_fetch_array($resp)){
 		$out="<select id='IdFarmacia' name='IdFarmacia' onchange='CargarAreas(this.value);'>
 			<option value='0'> [SELECCIONE] </option>";
 			do{
-			$out.="<option value='".$row["IdFarmacia"]."'>".$row["Farmacia"]."</option>";
-			}while($row=mysql_fetch_array($resp));
+			$out.="<option value='".$row["idfarmacia"]."'>".$row["farmacia"]."</option>";
+			}while($row=pg_fetch_array($resp));
 		$out.="</select>-";
 	     }else{
 		$out="<select id='IdFarmacia' name='IdFarmacia'>
@@ -36,12 +36,12 @@ switch($_GET["Bandera"]){
 	     }
 
 	$resp=$farmacia->ObtenerGrupoTerapeutico();
-	     if($row=mysql_fetch_array($resp)){
+	     if($row=pg_fetch_array($resp)){
 		$out.="<select id='IdGrupoTerapeutico' name='IdGrupoTerapeutico' onchange='CargarCatFarmacia(this.value);' disabled='true'>
 			<option value='0'> << Grupo Terapeutico >> </option>";
 			do{
-			$out.="<option value='".$row["IdTerapeutico"]."'>".$row["IdTerapeutico"].' = '.$row["GrupoTerapeutico"]."</option>";
-			}while($row=mysql_fetch_array($resp));
+			$out.="<option value='".$row["idterapeutico"]."'>".$row["idterapeutico"].' = '.$row["grupoterapeutico"]."</option>";
+			}while($row=pg_fetch_array($resp));
 		$out.="</select>";
 	     }
 	     echo $out;
@@ -53,10 +53,10 @@ switch($_GET["Bandera"]){
 	$resp=$farmacia->Areas($IdFarmacia,$_SESSION["IdEstablecimiento"],$_SESSION["IdModalidad"]);
 	$out="<select id='IdArea' name='IdArea' onchange='HabilitarCombo();'>
 		<option value='0'>[SELECCIONE]</option>";
-	if($row=mysql_fetch_array($resp)){
+	if($row=pg_fetch_array($resp)){
 	   do{
-	   $out.="<option value='".$row["IdArea"]."'>".$row["Area"]."</option>";
-	  }while($row=mysql_fetch_array($resp));
+	   $out.="<option value='".$row["idarea"]."'>".$row["area"]."</option>";
+	  }while($row=pg_fetch_array($resp));
 	}
 	$out.="</select>";
 	echo $out;
@@ -71,20 +71,20 @@ switch($_GET["Bandera"]){
 		$out="";
 		$resp=$farmacia->CatalogoxGrupo($IdGrupoTerapeutico,$_SESSION["IdEstablecimiento"],$_SESSION["IdModalidad"]);
 		if($resp!=false){
-		if($row=mysql_fetch_array($resp)){
+		if($row=pg_fetch_array($resp)){
 	//la consulta genera informacion
 			
 	   	    $out.="		
 		    <table width='100%'>
 		    <tr class='FONDO2'><th style='border-left:solid; border-right:solid; border-bottom:solid;'>CODIGO</th><th style=' border-right:solid;border-bottom:solid;'>MEDICAMENTO</th><th style=' border-right:solid;border-bottom:solid;'>CONCENTRACION</th><th style=' border-right:solid;border-bottom:solid;'>PRESENTACION</th><th style=' border-right:solid;border-bottom:solid;'>HABILITAR<br>[<input type='checkbox' id='all' name='all' onclick='SeleccionaTodo();'> TODO]</th><th style=' border-right:solid;border-bottom:solid;'>AREA DISPENSADA</th></tr>";
 	   	do{
-                    $IdMedicina=$row["IdMedicina"];
-		    $confirmacion=$farmacia->MedicamentoHabilitado($row["IdMedicina"],$_GET["IdArea"],$_SESSION["IdEstablecimiento"],$_SESSION["IdModalidad"]);
+                    $IdMedicina=$row["idmedicina"];
+		    $confirmacion=$farmacia->MedicamentoHabilitado($row["idmedicina"],$_GET["IdArea"],$_SESSION["IdEstablecimiento"],$_SESSION["IdModalidad"]);
 		    
 		    if($confirmacion!=NULL and $confirmacion!=''){
-		       $checkbox="<input type='checkbox' name='checkeo' id='".$row["IdMedicina"]."' value='".$row["IdMedicina"]."' checked='true' alt='Deshabilitar' onclick='DeshabilitarMedicamento(this.value);'>";
+		       $checkbox="<input type='checkbox' name='checkeo' id='".$row["id"]."' value='".$row["id"]."' checked='true' alt='Deshabilitar' onclick='DeshabilitarMedicamento(this.value);'>";
 		    }else{
-		       $checkbox="<input type='checkbox' name='checkeo' id='".$row["IdMedicina"]."' value='".$row["IdMedicina"]."' alt='Habilitar' onclick='HabilitarMedicamento(this.value);'>";
+		       $checkbox="<input type='checkbox' name='checkeo' id='".$row["id"]."' value='".$row["id"]."' alt='Habilitar' onclick='HabilitarMedicamento(this.value);'>";
 		    }
 
 			//verificacion si es Dispensada en otra area
@@ -104,10 +104,10 @@ switch($_GET["Bandera"]){
 
 
 		    		
-		    $out.="<tr class='FONDO'><td valign='top' style='border-left:solid; border-right:solid; border-bottom:solid;'>".$row["Codigo"]."</td><td valign='top' style=' border-right:solid; border-bottom:solid;'>".htmlentities($row["Nombre"])."</td><td valign='top' style=' border-right:solid; border-bottom:solid;'>".$row["Concentracion"]."</td> <td valign='top' style=' border-right:solid; border-bottom:solid;'>".htmlentities($row["FormaFarmaceutica"].' - '.$row["Presentacion"])."</td><td valign='top' align='center' style=' border-right:solid; border-bottom:solid;'>".$checkbox."</td><td style=' border-right:solid;border-bottom:solid;'>".$select."</td></tr>";
+		    $out.="<tr class='FONDO'><td valign='top' style='border-left:solid; border-right:solid; border-bottom:solid;'>".$row["codigo"]."</td><td valign='top' style=' border-right:solid; border-bottom:solid;'>".htmlentities($row["nombre"])."</td><td valign='top' style=' border-right:solid; border-bottom:solid;'>".$row["concentracion"]."</td> <td valign='top' style=' border-right:solid; border-bottom:solid;'>".htmlentities($row["formafarmaceutica"].' - '.$row["presentacion"])."</td><td valign='top' align='center' style=' border-right:solid; border-bottom:solid;'>".$checkbox."</td><td style=' border-right:solid;border-bottom:solid;'>".$select."</td></tr>";
 		
 		
-	   	}while($row=mysql_fetch_array($resp));
+	   	}while($row=pg_fetch_array($resp));
 	   	    $out.="</table>";
 		}
 		

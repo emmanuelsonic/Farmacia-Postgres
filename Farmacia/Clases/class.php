@@ -55,12 +55,7 @@ class conexion {
 /* * ***************** */
 
 class queries{
-	//private static $instancia;
-    private $db;
-	private function __construct()
-	{
-		$this->db = NEW conexion();
-	}
+
 
 //private $db= NEW conexion();
 //FECHAS ATRAS (3 DIAS HABILES)

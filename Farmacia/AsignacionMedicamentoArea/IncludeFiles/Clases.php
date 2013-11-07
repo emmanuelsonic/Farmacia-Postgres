@@ -3,37 +3,37 @@
 //ADMINISTRACION DE FARMACIA	
 class Farmacia{
    function Farmacias($IdEstablecimiento,$IdModalidad){
-	$SQL="select distinct mf.IdFarmacia,Farmacia
+	$SQL="select distinct mf.Id as IdFarmacia,Farmacia
               from mnt_farmacia mf
               inner join mnt_farmaciaxestablecimiento mfe
-              on mfe.IdFarmacia=mf.IdFarmacia
+              on mfe.IdFarmacia=mf.Id
               where mfe.HabilitadoFarmacia='S'
-              and mf.IdFarmacia<>4
+              and mf.Id<>4
               and mfe.IdEstablecimiento=".$IdEstablecimiento."
               and mfe.IdModalidad=$IdModalidad";
-	$resp=mysql_query($SQL);
+	$resp=pg_query($SQL);
 	return($resp);
    }
 
    function Areas($IdFarmacia,$IdEstablecimiento,$IdModalidad){
-	$SQL="select maf.IdArea,Area
+	$SQL="select maf.id as IdArea,Area
               from mnt_areafarmacia maf
               inner join mnt_areafarmaciaxestablecimiento mafe
-              on mafe.IdArea=maf.IdArea              
+              on mafe.IdArea=maf.Id              
               where maf.IdFarmacia=".$IdFarmacia." 
               and mafe.Habilitado='S' 
-              and maf.IdArea <> 7
+              and maf.Id <> 7
               and mafe.IdEstablecimiento=".$IdEstablecimiento."
               and mafe.IdModalidad=$IdModalidad";
-	$resp=mysql_query($SQL);
+	$resp=pg_query($SQL);
 	return($resp);
    }
 
     function ObtenerGrupoTerapeutico(){
-	$SQL="select * 
+	$SQL="select id as idterapeutico,* 
 		from mnt_grupoterapeutico
 		where GrupoTerapeutico <> '--'";
-	$resp=mysql_query($SQL);
+	$resp=pg_query($SQL);
 	return($resp);
     }
 
@@ -42,11 +42,11 @@ class Farmacia{
 	if($IdGrupoTerapeutico!=0){
 	$SQL="select * from farm_catalogoproductos cp
 		inner join farm_catalogoproductosxestablecimiento cpe
-		on cpe.IdMedicina = cp.IdMedicina
+		on cpe.IdMedicina = cp.Id
 		where cp.IdTerapeutico=".$IdGrupoTerapeutico." 
                 and cpe.IdEstablecimiento=".$IdEstablecimiento."
                 and cpe.IdModalidad=$IdModalidad";
-	$resp=mysql_query($SQL);
+	$resp=pg_query($SQL);
 	return($resp);
 	}else{
 	 return(false);
@@ -60,7 +60,7 @@ class Farmacia{
 		and IdArea= ".$IdArea."
                 and IdEstablecimiento=".$IdEstablecimiento."
                 and IdModalidad=$IdModalidad";
-	$resp=mysql_fetch_array(mysql_query($SQL));
+	$resp=pg_fetch_array(pg_query($SQL));
 	return($resp[0]);	
     }
 
@@ -68,11 +68,11 @@ class Farmacia{
 	$SQL="select Dispensada, Area
 	from mnt_areamedicina am
 	inner join mnt_areafarmacia af
-	on af.IdArea=am.Dispensada
+	on af.Id=am.Dispensada
 	where IdMedicina=".$IdMedicina."
 	and am.IdArea=".$IdArea."
         and am.IdModalidad=$IdModalidad";
-	$resp=mysql_fetch_array(mysql_query($SQL));
+	$resp=pg_fetch_array(pg_query($SQL));
 	return($resp);
     }
 
@@ -82,16 +82,16 @@ class Farmacia{
 	$SQL="select afe.IdArea, Area, Farmacia
 		from mnt_areafarmacia
 		inner join mnt_farmacia
-		on mnt_farmacia.IdFarmacia=mnt_areafarmacia.IdFarmacia
+		on mnt_farmacia.Id=mnt_areafarmacia.IdFarmacia
                 inner join mnt_areafarmaciaxestablecimiento afe
-                on afe.IdArea=mnt_areafarmacia.IdArea
-		where mnt_areafarmacia.IdArea not in (7,12".$comp.")
+                on afe.IdArea=mnt_areafarmacia.Id
+		where mnt_areafarmacia.Id not in (7,12".$comp.")
 		and afe.Habilitado ='S'
                 and afe.IdModalidad=$IdModalidad";
-	$resp=mysql_query($SQL);
+	$resp=pg_query($SQL);
 	$combo="";
-	while($row=mysql_fetch_array($resp)){
-	    $combo.="<option value='".$row["IdArea"]."'>".$row["Area"]." [".$row["Farmacia"]."]</option>";
+	while($row=pg_fetch_array($resp)){
+	    $combo.="<option value='".$row["idarea"]."'>".$row["area"]." [".$row["farmacia"]."]</option>";
 	}
 	return($combo);
     }
@@ -99,15 +99,15 @@ class Farmacia{
     function AgregarMedicamento($IdMedicina,$IdArea,$IdEstablecimiento,$IdModalidad){
 	$SQL="insert into mnt_areamedicina(IdMedicina,IdArea,IdEstablecimiento,IdModalidad) 
                                     values('$IdMedicina','$IdArea','$IdEstablecimiento','$IdModalidad')";
-	$resp=mysql_query($SQL);
+	$resp=pg_query($SQL);
 	return($resp);
     }
 
     function EliminarMedicina($IdMedicina,$IdArea,$IdEstablecimiento,$IdModalidad){
 	$SQL="delete from mnt_areamedicina 
-              where IdMedicina=".$IdMedicina." and IdArea=".$IdArea." 
+              where IdMedicina=".$IdMedicina." and Id=".$IdArea." 
               and IdEstablecimiento=".$IdEstablecimiento." and IdModalidad=$IdModalidad";
-	mysql_query($SQL);
+	pg_query($SQL);
     }
 
 
@@ -119,7 +119,7 @@ class Farmacia{
 		$SQL="update mnt_areamedicina set Dispensada=".$IdArea." 
                       where IdMedicina=".$IdMedicina." and IdArea=".$IdArea." 
                       and IdEstablecimiento=".$IdEstablecimiento." and IdModalidad=$IdModalidad";
-		$resp=mysql_query($SQL);
+		$resp=pg_query($SQL);
 	   }else{
 		//si el medicamento no esta previamente habilitado, se habilita antes de convertirlo en 
 		//estupefaciente
@@ -128,21 +128,22 @@ class Farmacia{
 		$SQL="update mnt_areamedicina set Dispensada=".$IdAreaDispensada." 
                       where IdMedicina=".$IdMedicina." and IdArea=".$IdArea." 
                       and IdEstablecimiento=".$IdEstablecimiento." and IdModalidad=$IdModalidad";
-		$resp=mysql_query($SQL);
+		$resp=pg_query($SQL);
 	   }
 	break;
 	case 'C':
 	   $SQL="update mnt_areamedicina set Dispensada=".$IdAreaDispensada." 
                  where IdMedicina=".$IdMedicina." and IdArea='".$IdArea."' and Dispensada=".$IdAreaOld." 
                  and IdEstablecimiento=".$IdEstablecimiento." and IdModalidad=$IdModalidad";
-		$resp=mysql_query($SQL);
+		$resp=pg_query($SQL);
 	break;
 	case 'E':
 	   //Si el estado es a N (no estupefaciente)
-	   $SQL="update mnt_areamedicina set Dispensada='' 
+	   $SQL="update mnt_areamedicina set Dispensada=0 
                  where IdMedicina=".$IdMedicina." and IdArea=".$IdArea." and Dispensada=".$IdAreaOld." 
                  and IdEstablecimiento=".$IdEstablecimiento." and IdModalidad=$IdModalidad";
-	   $resp=mysql_query($SQL);
+		var_dump($SQL);
+	   $resp=pg_query($SQL);
            
 	break;
 	}
