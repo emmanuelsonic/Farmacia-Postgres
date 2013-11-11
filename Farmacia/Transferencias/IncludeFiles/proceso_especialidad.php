@@ -10,18 +10,18 @@ switch($_GET["Bandera"]){
 	$SQL="select distinct mnt_areafarmacia.* 
               from mnt_areafarmacia 
               inner join mnt_areafarmaciaxestablecimiento mafe
-              on mafe.IdArea=mnt_areafarmacia.IdArea
+              on mafe.IdArea=mnt_areafarmacia.Id
               where mafe.IdArea <> 7 
               and mafe.IdArea <> 12 
               and mafe.Habilitado ='S' 
               and mafe.IdArea <> ".$valor."
               and mafe.IdEstablecimiento=".$_SESSION["IdEstablecimiento"]." 
               and mafe.IdModalidad=".$_SESSION["IdModalidad"];
-	$resp=mysql_query($SQL);
+	$resp=pg_query($SQL);
 	$comboDestino="<select id='IdAreaDestino'>
 		<option value='0'>[Seleccion Area Destino]</option>";
-	while($row=mysql_fetch_array($resp)){
-	   $comboDestino.="<option value='".$row["IdArea"]."'>".$row["Area"]."</option>";
+	while($row=pg_fetch_array($resp)){
+	   $comboDestino.="<option value='".$row["id"]."'>".$row["area"]."</option>";
 	}
 	$comboDestino.="</select>";
 	

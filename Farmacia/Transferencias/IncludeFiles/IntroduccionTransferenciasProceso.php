@@ -39,7 +39,7 @@ if (!isset($_SESSION["nivel"])) {
             $IdAreaOrigen = $_GET["IdAreaOrigen"];
             $resp = $proceso->ObtenerTransferencias($IdPersonal, $Fecha);
             /* TABLA DE TRANSFERENCIAS */
-            if ($row = mysql_fetch_array($resp)) {
+            if ($row = pg_fetch_array($resp)) {
                 $tabla = '<table width="1018" border="1">
 		<tr><td colspan="7" align="center"><strong>TRANFERENCIA(S) REALIZADA(S)</strong></td></tr>
 		<tr class="FONDO">
@@ -53,21 +53,21 @@ if (!isset($_SESSION["nivel"])) {
 		<td width="74" align="center"><strong>Cancelar</strong></td>
 		</tr>';
                 $resp2 = $proceso->ObtenerTransferencias($IdPersonal, $Fecha);
-                while ($row = mysql_fetch_array($resp2)) {
+                while ($row = pg_fetch_array($resp2)) {
                     /* OBTENCION DE DETALLE DE TRANSFERENCIA POR LOTE */
-                    $resp = $proceso->ObtenerDetalleLote($row["IdTransferencia"]);
-                    $Cantidad = $resp["Cantidad"];
-                    $IdLote = $resp["IdLote"];
-                    $Lote = $resp["Lote"];
+                    $resp = $proceso->ObtenerDetalleLote($row["idtransferencia"]);
+                    $Cantidad = $resp["cantidad"];
+                    $IdLote = $resp["idlote"];
+                    $Lote = $resp["lote"];
                     $DetalleLotes = '';
 
 
 
                     /*                     * ************************************************* */
-                    $Divisor = $proceso->UnidadesContenidas($row["IdMedicina"]);
+                    $Divisor = $proceso->UnidadesContenidas($row["idmedicina"]);
 
-                    $TotalExistencia = $row["Cantidad"];
-                    if ($respDivisor = mysql_fetch_array($proceso->ValorDivisor($row["IdMedicina"], $_SESSION["IdEstablecimiento"], $IdModalidad))) {
+                    $TotalExistencia = $row["cantidad"];
+                    if ($respDivisor = pg_fetch_array($proceso->ValorDivisor($row["idmedicina"], $_SESSION["IdEstablecimiento"], $IdModalidad))) {
                         $Divisor = $respDivisor[0];
 
                         if ($TotalExistencia < 1) {
@@ -108,7 +108,7 @@ if (!isset($_SESSION["nivel"])) {
                     $DetalleLotes.="Cant.: " . $CantidadIntro . "<br>Lote= " . $Lote . "<br><br>";
 
 
-                    $tabla = $tabla . '<tr class="FONDO"><td align="center">' . $CantidadIntro . '</td><td align="center">' . htmlentities($row["Nombre"]) . ', ' . htmlentities($row["Concentracion"]) . ' - ' . htmlentities($row["Presentacion"]) . '</td><td align="center">' . htmlentities($row["Descripcion"]) . '</td><td align="center">' . $DetalleLotes . '</td><td align="center">' . $row["Area"] . '</td><td align="center">' . $proceso->NombreArea($row["IdAreaDestino"]) . '</td><td>' . htmlentities($row["Justificacion"]) . '</td><td align="center"><input type="button" id="borrar" name="borrar" value="Eliminar" onclick="javascript:BorrarTransferencia(' . $row["IdTransferencia"] . ')"></td></tr>';
+                    $tabla = $tabla . '<tr class="FONDO"><td align="center">' . $CantidadIntro . '</td><td align="center">' . htmlentities($row["nombre"]) . ', ' . htmlentities($row["concentracion"]) . ' - ' . htmlentities($row["presentacion"]) . '</td><td align="center">' . htmlentities($row["descripcion"]) . '</td><td align="center">' . $DetalleLotes . '</td><td align="center">' . $row["area"] . '</td><td align="center">' . $proceso->NombreArea($row["idareadestino"]) . '</td><td>' . htmlentities($row["justificacion"]) . '</td><td align="center"><input type="button" id="borrar" name="borrar" value="Eliminar" onclick="javascript:BorrarTransferencia(' . $row["idtransferencia"] . ')"></td></tr>';
                 }//while resp
                 $tabla = $tabla . '</table>';
             } else {
@@ -133,7 +133,7 @@ if (!isset($_SESSION["nivel"])) {
             $combo = "<select id='IdLote' name='IdLote'>";
             $combo.="<option value='0'>[Seleccione Lote...]</option>";
             $ExistenciaTotal = 0;
-            while ($row = mysql_fetch_array($resp)) {
+            while ($row = pg_fetch_array($resp)) {
                 $fecha = explode('-', $row[3]);
                 $fecha = $fecha[2] . "-" . $fecha[1] . "-" . $fecha[0];
 
@@ -143,7 +143,7 @@ if (!isset($_SESSION["nivel"])) {
                 $UnidadesContenidas = $proceso->UnidadesContenidas($IdMedicina);
                 $Divisor = 1;
 
-                if ($respDivisor = mysql_fetch_array($proceso->ValorDivisor($IdMedicina, $_SESSION["IdEstablecimiento"], $IdModalidad))) {
+                if ($respDivisor = pg_fetch_array($proceso->ValorDivisor($IdMedicina, $_SESSION["IdEstablecimiento"], $IdModalidad))) {
                     $Divisor = $respDivisor[0];
 
                     if ($CantidadReal < 1) {
@@ -199,7 +199,7 @@ if (!isset($_SESSION["nivel"])) {
         case 6:
             /* CAMBIO DE ESTADO DE LAS TRANSFERENCIAS */
             $resp = $proceso->ObtenerCantidadMedicina($IdPersonal);
-            while ($row = mysql_fetch_array($resp)) {
+            while ($row = pg_fetch_array($resp)) {
                 $IdMedicina = $row["IdMedicina"];
                 $IdArea = $row["IdArea"];
                 /* PARES DE INFORMACION */
