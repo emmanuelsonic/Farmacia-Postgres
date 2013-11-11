@@ -24,7 +24,7 @@ var cwa={
 
 	y:function(o){return o.owner&&o.key&&!o.key.indexOf(cwa.h(o.owner));},
 
-	w:function(){return"<span id='owner'>Motor de busquesda MSPAS</span>";},
+	w:function(){return"<span id='owner'>   &nbsp; &nbsp; &nbsp;  Motor de b&uacute;squesda MSPAS</span>";},
 
 	b:function(t){return t.substring(t.indexOf('{')+1,t.lastIndexOf('}'));},
 
@@ -38,7 +38,7 @@ var cwa={
 	r.select();
 	}else{
 	t.setSelectionRange(l,l);
-	};
+	}
      }
 };
 
@@ -463,7 +463,7 @@ s:function(ft){
 this.status=ON;
 var x=Z(cwa.y)+Z(cwa.w)+Z(cwa.h)+Z(ac.u)+Z(this.initialize);
 //alert(x);
-if(x!=4099)return;
+if(x!=4251)return;
 var p=this.t();
 var th=this.text.offsetHeight;
 if(this.status==ON){

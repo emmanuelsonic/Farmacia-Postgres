@@ -1,67 +1,72 @@
 <?php include("../../Clases/class.php");
 class admon{
    function InformacionGral($IdPersonal){
-	$SQL='select *, case Nivel when 2 then "Co-Administrador" when 3 then "Tecnico de Farmacia" when 4 then "Digitador de Farmacia" end as TipoNivel,Farmacia,Area 
-	from farm_usuarios 
-		left join mnt_farmacia
-		on mnt_farmacia.IdFarmacia=farm_usuarios.IdFarmacia
+	$SQL="select fos_user_user.nivel, fos_user_user.estadocuenta, fos_user_user. firstname ,fos_user_user. username,
+				fos_user_user. datos,	fos_user_user. reportes,fos_user_user. administracion, mnt_areafarmacia.area, mnt_farmacia.farmacia,
+	case  
+	when fos_user_user.nivel=2 then 'Co-Administrador'
+	when fos_user_user.nivel=3 then 'Tecnico de Farmacia' 
+	when fos_user_user.nivel=4 then 'Digitador de Farmacia' 
+	end AS nivel
+from fos_user_user
+
+left join mnt_farmacia
+		on mnt_farmacia.id=fos_user_user.idfarmacia
 		left join mnt_areafarmacia
-		on mnt_areafarmacia.IdArea=farm_usuarios.IdArea
-	where IdPersonal='.$IdPersonal;
-	$resp=mysql_query($SQL);
+		on mnt_areafarmacia.id=fos_user_user.idarea
+	where fos_user_user.id=".$IdPersonal;
+	$resp=pg_query($SQL);
 	return($resp);
    }
 
    function NivelUsuario($IdPersonal){
-	$SQL="select nivel from farm_usuarios where IdPersonal=".$IdPersonal;
-	$resp=mysql_fetch_array(mysql_query($SQL));
+	$SQL="select nivel from fos_user_user where id=".$IdPersonal;
+	$resp=pg_fetch_array(pg_query($SQL));
 	return($resp[0]);
    }
    function CambiarNivel($IdPersonal,$Nivel){
 	$SQL="update farm_usuarios set Nivel=".$Nivel." where IdPersonal=".$IdPersonal;
-	$resp=mysql_query($SQL);
+	$resp=pg_query($SQL);
    }
 
    function CambioPermisos($IdPersonal,$acceso,$campo){
-	$SQL="update farm_usuarios set ".$campo."=".$acceso." where IdPersonal=".$IdPersonal;
-	mysql_query($SQL);
+	$SQL="update fos_user_user set ".$campo."=".$acceso." where id_empleado=".$IdPersonal;
+	pg_query($SQL);
    }
 
    function Farmacias($IdModalidad){
 	$SQL="select *
-		from mnt_farmacia mf
-                inner join mnt_farmaciaxestablecimiento mfe
-                on mf.IdFarmacia = mfe.IdFarmacia
-                
-                where IdModalidad=$IdModalidad
-		";
-	$resp=mysql_query($SQL);
+		from mnt_farmacia
+                inner join mnt_farmaciaxestablecimiento
+                on mnt_farmacia.id = mnt_farmaciaxestablecimiento.idfarmacia
+                where mnt_farmaciaxestablecimiento.idmodalidad=$IdModalidad";
+	$resp=pg_query($SQL);
 	return($resp);
    }
 
 
    function AreasFarmacia($IdFarmacia,$IdPersonal,$IdModalidad,$IdEstablecimiento){
 	$SQL="select * 
-		from mnt_areafarmacia maf
-                inner join mnt_areafarmaciaxestablecimiento mafe
-                on mafe.IdArea=maf.IdArea
-		where mafe.IdArea not in (select IdArea from farm_usuarios where IdPersonal=".$IdPersonal." )
-		and mafe.Habilitado='S' and IdFarmacia=".$IdFarmacia ." 
-                and mafe.IdModalidad=$IdModalidad
-                and mafe.IdEstablecimiento=$IdEstablecimiento";
-	$resp=mysql_query($SQL);
+		from mnt_areafarmacia 
+                inner join mnt_areafarmaciaxestablecimiento
+                on mnt_areafarmaciaxestablecimiento.idarea=mnt_areafarmacia .id
+		where mnt_areafarmaciaxestablecimiento.idarea not in (select idarea from fos_user_user where id_empleado=".$IdPersonal." )
+		and mnt_areafarmaciaxestablecimiento.habilitado='S' and mnt_areafarmacia.idfarmacia=".$IdFarmacia ." 
+                and mnt_areafarmaciaxestablecimiento.idmodalidad=$IdModalidad
+                and mnt_areafarmaciaxestablecimiento.idestablecimiento=$IdEstablecimiento";
+	$resp=pg_query($SQL);
 	return ($resp);
    }
 
    function CambiarArea($IdFarmacia,$IdArea,$IdPersonal){
-	$SQL="update farm_usuarios set IdFarmacia=".$IdFarmacia." , IdArea=".$IdArea." 
-                where IdPersonal=".$IdPersonal;
-	$resp=mysql_query($SQL);
+	$SQL="update fos_user_user set idfarmacia=".$IdFarmacia." , idarea=".$IdArea." 
+                where id_empleado=".$IdPersonal;
+	$resp=pg_query($SQL);
    }
 
    function DeshabilitarCuenta($IdPersonal,$NuevoEstado){
-	$SQL="update farm_usuarios set IdEstadoCuenta='".$NuevoEstado."' where IdPersonal=".$IdPersonal;
-	mysql_query($SQL);
+	$SQL="update fos_user_user set estadocuenta='".$NuevoEstado."' where id_empleado=".$IdPersonal;
+	pg_query($SQL);
    }
 }
 ?>

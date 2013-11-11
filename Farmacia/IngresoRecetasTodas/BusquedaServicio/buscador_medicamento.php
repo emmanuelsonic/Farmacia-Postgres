@@ -32,7 +32,7 @@ $sqlStr=$Classquery->ObtenerQuery($Bandera,$IdArea,"",$_SESSION["IdEstablecimien
 $sqlStrAux=$Classquery->ObtenerQueryTotal($Bandera,$IdArea,"",$_SESSION["IdEstablecimiento"],$IdModalidad);
 }
     //fecha de vida de una receta son 3 dias habiles
-$query = pg_query($sqlStr);
+$query = pg_query($sqlStr.$limit);
 $aux = Pg_Fetch_Assoc(pg_query($sqlStrAux));
 ?>
 <html>
@@ -158,11 +158,17 @@ echo "Resultados que coinciden con tu b&uacute;squeda \"<strong>$busqueda</stron
 			echo "\t<table class=\"registros\">\n";
 			echo "<tr class=\"titulos\"><td>CODIGO</td><td>ESPECIALIDAD/SERVICIO</td></tr>";
 			$r=0;
-			while($row = mysql_fetch_assoc($query)){
+			while($row = pg_fetch_assoc($query)){
 			
+			/*Ubicaciones segun version MySQL
+				CONEXT: Consulta Externa
+				CONBMG: Bienestar Magisterial
+				
+				*/
 		if(isset($page)){
-		
-				if($row["Ubicacion"]=='INSUMO' or $row["Ubicacion"]=="CONEXT"){$Ubicacion=$row["Ubicacion"]." -> ";}else{$Ubicacion="HOSPIT. -> ";}
+				if($row["Ubicacion"]=='INSUMO' or $row["Ubicacion"]=="CONEXT")
+					{$Ubicacion=$row["Ubicacion"]." -> ";}
+						else{$Ubicacion="HOSPIT. -> ";}
 				if($row["Ubicacion"]=='CONBMG'){$Ubicacion="";}
 echo "\t\t<tr class=\"row$r\">
 <td align=\"left\"><a href=\"#\" onclick=\"javascript:UbicarSubServicio(".$row['IdSubServicioxEstablecimiento'].",'".htmlentities($row['CodigoFarmacia'])."')\">".strtoupper (htmlentities($row['CodigoFarmacia']))."</a></td>

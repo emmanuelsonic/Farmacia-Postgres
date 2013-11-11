@@ -13,31 +13,33 @@ if (isset($_SESSION["nivel"])) {
         case 1:
             //Obtencion de informacion general
             $resp = $proceso->InformacionGral($_GET["IdPersonal"]);
-            if ($row = mysql_fetch_array($resp)) {
-                if ($row["IdEstadoCuenta"] == 'H') {
+            if ($row = pg_fetch_array($resp)) {
+                if ($row["estadocuenta"] == 'H') {
                     $checkHabi = "checked='true'";
                 } else {
                     $checkHabi = "";
                 }
 
                 $out = "<table width='70%'>
-		<tr class='MYTABLE'><td colspan='2' align='center'><h2><strong>" . htmlentities($row["Nombre"]) . " <small><i>[" . $row["nick"] . "]</i></small></strong></h2></td></tr>
-		<tr class='FONDO2'><td colspan='2' align='center'><strong>Nivel:</strong> <span id='TipoNivel'><u><a onclick='CambioNivel(" . $row["Nivel"] . ");'>" . $row["TipoNivel"] . "</a></u></span></td></tr>
+		<tr class='MYTABLE'><td colspan='2' align='center'><h2><strong>" . htmlentities($row["firstname"]) . " <small><i>[" . $row["username"] . "]</i></small></strong></h2></td></tr>
+		<tr class='FONDO2'><td colspan='2' align='center'><strong>Nivel:</strong> <span id='TipoNivel'><u><a onclick='CambioNivel(" . $row["nivel"] . ");'></a></u></span></td></tr>
 		<tr class='FONDO2'><td colspan='2' align='center'><input type='checkbox' id='EstadoCuenta' " . $checkHabi . " onclick='CambiarEstado();'> <strong>Cuenta Habilitada</td></tr>
 		<tr class='FONDO2'><th>Permisos</th><th>Ubicacion</th></tr>";
 
-                //*******
-                if ($row["Datos"] == 1) {
+                /* <tr class='FONDO2'><td colspan='2' align='center'><strong>Nivel:</strong> <span id='TipoNivel'><u><a onclick='CambioNivel(" . $row["nivel"] . ");'>" . $row["TipoNivel"] . "</a></u></span></td></tr>
+		           <tr class='FONDO2'><td colspan='2' align='center'><input type='checkbox' id='EstadoCuenta' " . $checkHabi . " onclick='CambiarEstado();'> <strong>Cuenta Habilitada</td></tr>*/
+				
+                if ($row["datos"] == 1) {
                     $datos = 'checked="true"';
                 } else {
                     $datos = '';
                 }
-                if ($row["Reportes"] == 1) {
+                if ($row["reportes"] == 1) {
                     $reportes = 'checked="true"';
                 } else {
                     $reportes = '';
                 }
-                if ($row["Administracion"] == 1) {
+                if ($row["administracion"] == 1) {
                     $administracion = 'checked="true"';
                 } else {
                     $administracion = '';
@@ -53,8 +55,8 @@ if (isset($_SESSION["nivel"])) {
 		<td align='center' >
 		<div id='ReUbicacion'>
 		<table><tr>
-			<td>Farmacia: </td><td><div id='ComboFarmacia'>" . $row["Farmacia"] . "</div></td></tr>
-			<tr><td>Area: </td><td><div id='ComboArea'>" . $row["Area"] . "</div></td> 
+			<td>Farmacia: </td><td><div id='ComboFarmacia'>" . $row["farmacia"] . "</div></td></tr>
+			<tr><td>Area: </td><td><div id='ComboArea'>" . $row["area"] . "</div></td> 
 			<tr><td colspan='2'><div id='botones'><input type='button' id='CambiarUbicacion' value='Cambiar  Ubicacion...' onclick='CambiaUbicacion(1);'></div></td></tr>
 		</table>
 		</div>
@@ -126,8 +128,8 @@ if (isset($_SESSION["nivel"])) {
                     $out = "<table width='100%'>
 			<tr><td width='30%'>Farmacia: </td><td><select id='farmacia' onchange='CargarAreas(this.value)'>
 			<option value='0'>[SELECCIONE]</option>";
-                    while ($row = mysql_fetch_array($resp)) {
-                        $out.="<option value='" . $row["IdFarmacia"] . "'>" . $row["Farmacia"] . "</<option>";
+                    while ($row = pg_fetch_array($resp)) {
+                        $out.="<option value='" . $row["idfarmacia"] . "'>" . $row["farmacia"] . "</<option>";
                     }
                     $out.="</select></td></tr>
 		<tr><td>Area: </td><td><div id='ComboAreas'><select id='area' disabled='true'><option>[SELECCIONE]</option></select></div></td></tr>
@@ -144,11 +146,11 @@ if (isset($_SESSION["nivel"])) {
                     $IdPersonal = $_GET["IdPersonal"];
                     $proceso->CambiarArea($IdFarmacia, $IdArea, $IdPersonal);
                     $resp = $proceso->InformacionGral($IdPersonal);
-                    $row = mysql_fetch_array($resp);
+                    $row = pg_fetch_array($resp);
 
                     $out = "<table><tr>
-			<td>Farmacia: </td><td><div id='ComboFarmacia'>" . $row["Farmacia"] . "</div></td></tr>
-			<tr><td>Area: </td><td><div id='ComboArea'>" . $row["Area"] . "</div></td> 
+			<td>Farmacia: </td><td><div id='ComboFarmacia'>" . $row["farmacia"] . "</div></td></tr>
+			<tr><td>Area: </td><td><div id='ComboArea'>" . $row["area"] . "</div></td> 
 			<tr><td colspan='2'><div id='botones'><input type='button' id='CambiarUbicacion' value='Cambiar  Ubicacion...' onclick='CambiaUbicacion(1);'></div></td></tr>
 		</table>";
                     echo $out;
@@ -160,8 +162,8 @@ if (isset($_SESSION["nivel"])) {
                     $resp = $proceso->AreasFarmacia($IdFarmacia, $IdPersonal, $IdModalidad,$IdEstablecimiento);
                     $out = "<select id='area'>
 			<option value='0'>[SELECCIONE]</option>";
-                    while ($row = mysql_fetch_array($resp)) {
-                        $out.="<option value='" . $row["IdArea"] . "'>" . $row["Area"] . "</option>";
+                    while ($row = pg_fetch_array($resp)) {
+                        $out.="<option value='" . $row["idarea"] . "'>" . $row["area"] . "</option>";
                     }
                     $out.="</select>";
                     echo $out;
@@ -170,11 +172,11 @@ if (isset($_SESSION["nivel"])) {
                     //Cancelacion
                     $IdPersonal = $_GET["IdPersonal"];
                     $resp = $proceso->InformacionGral($IdPersonal);
-                    $row = mysql_fetch_array($resp);
+                    $row = pg_fetch_array($resp);
 
                     $out = "<table><tr>
-			<td>Farmacia: </td><td><div id='ComboFarmacia'>" . $row["Farmacia"] . "</div></td></tr>
-			<tr><td>Area: </td><td><div id='ComboArea'>" . $row["Area"] . "</div></td> 
+			<td>Farmacia: </td><td><div id='ComboFarmacia'>" . $row["farmacia"] . "</div></td></tr>
+			<tr><td>Area: </td><td><div id='ComboArea'>" . $row["area"] . "</div></td> 
 			<tr><td colspan='2'><div id='botones'><input type='button' id='CambiarUbicacion' value='Cambiar  Ubicacion...' onclick='CambiaUbicacion(1);'></div></td></tr>
 		</table>";
                     echo $out;

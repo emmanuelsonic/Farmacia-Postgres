@@ -63,6 +63,7 @@ var ajax = xmlhttp();
 			B.innerHTML = "";
 		}
 	}
+	/*Bandera=2&SubOpcion=21*/
 ajax.open("GET","include/Procesos.php?Bandera=2&SubOpcion=21&nivelActual="+nivelActual+"&IdPersonal="+IdPersonal,true);
 ajax.send(null);
 return false;
@@ -90,6 +91,7 @@ var ajax = xmlhttp();
 			B.innerHTML = "";
 		}
 	}
+	/*Bandera=2&SubOpcion=22*/
 ajax.open("GET","include/Procesos.php?Bandera=2&SubOpcion=22&IdPersonal="+IdPersonal+"&NivelNuevo="+NivelNuevo,true);
 ajax.send(null);
 return false;
@@ -119,6 +121,7 @@ var ajax = xmlhttp();
 			//B.innerHTML = "";
 		}
 	}
+	/*Bandera=3&SubOpcion=31*/
 ajax.open("GET","include/Procesos.php?Bandera=3&SubOpcion=31&IdPersonal="+IdPersonal+"&Id="+obj+"&acceso="+acceso,true);
 ajax.send(null);
 return false;
@@ -154,7 +157,7 @@ if(Opcion==3){
    SubOpcion="&SubOpcion=44";
 }
 
-
+/*Bandera=3*/
 var URL="include/Procesos.php?Bandera=4"+SubOpcion+"&IdPersonal="+IdPersonal;
 
 if(Opcion==2){
@@ -192,6 +195,7 @@ var ajax = xmlhttp();
 			B.innerHTML = ajax.responseText;
 		}
 	}
+	/*Bandera=4&SubOpcion=43*/
 ajax.open("GET","include/Procesos.php?Bandera=4&SubOpcion=43&IdFarmacia="+IdFarmacia+"&IdPersonal="+IdPersonal,true);
 ajax.send(null);
 return false;

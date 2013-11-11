@@ -3,7 +3,7 @@ $IdArea=$_SESSION["IdArea"];
 
 
 require('../../Clases/class.php');
-$link=  conexion::conectar();
+conexion::conectar();
 
 require('include/funciones.php');
 require('include/pagination.class.php');
@@ -64,7 +64,7 @@ echo "Resultados que coinciden con tu b&uacute;squeda \"<strong>$busqueda</stron
 			echo "\t<table class=\"registros\">\n";
 			echo "<tr class=\"titulos\"><td>CODIGO</td><td>ESPECIALIDAD/SERVICIO</td></tr>";
 $r=0;
-while($row = mysql_fetch_assoc($query)){
+while($row = pg_fetch_assoc($query)){
 		if(isset($page)){
 		if($row["Ubicacion"]=='INSUMO' or $row["Ubicacion"]=="CONEXT"){$Ubicacion=$row["Ubicacion"]." -> ";}else{$Ubicacion="HOSPIT. -> ";}
 		if($row["Ubicacion"]=='CONBMG'){$Ubicacion="";}

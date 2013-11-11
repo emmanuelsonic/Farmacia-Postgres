@@ -2,12 +2,14 @@
 include('../Clases/class.php');
 conexion::conectar();
 $Busqueda=$_GET['q'];
-$querySelect="select * from farm_usuarios where Nombre like '%$Busqueda%' and IdModalidad=".$_SESSION["IdModalidad"]." and IdEstablecimiento=".$_SESSION["IdEstablecimiento"];
-	$resp=mysql_query($querySelect);
-while($row=mysql_fetch_array($resp)){
-	$Nombre=htmlentities($row["Nombre"]);
-	$Usuario=$row["nick"];
-	$IdPersonal=$row["IdPersonal"];
+$querySelect="
+select * from fos_user_user
+where username like '%$Busqueda%'  and id_area_mod_estab=".$_SESSION["IdModalidad"]." and id_establecimiento=".$_SESSION["IdEstablecimiento"];
+	$resp=pg_query($querySelect);
+while($row=pg_fetch_array($resp)){
+	$Nombre=$row["firstname"]. ' ' .$row["lastname"];
+	$Usuario=$row["username"];
+	$IdPersonal=$row["id"];
 
 ?>
 <li onselect="this.text.value = '<?php echo $Nombre;?>'; $('IdPersonal').value = '<?php echo $IdPersonal;?>'; MostrarDetalle(<?php echo $IdPersonal; ?>);"> 

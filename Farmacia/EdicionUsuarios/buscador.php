@@ -31,21 +31,24 @@ if($_SESSION["Administracion"]==1 and $_SESSION["nivel"]==1){
 <?php Menu(); ?>
        <br>
       
-        <table width="50%" style="border:solid;">
-          <tr>
-            <td align="center" colspan="2"><strong>Modificaci&oacute;n de Usuarios </strong></td>
-          </tr>
-          <tr>
+    <table width="50%" style="border:solid;">
+        <tr>
+           <td align="center" colspan="2"><strong>Modificaci&oacute;n de Usuarios </strong></td>
+        </tr>
+		  
+        <tr>
             <td width="25%"><strong>Nombre Usuario:</strong></td>
-                <td><input type="text" id="q" name="q" value="" size="50"><input type="hidden" id="IdPersonal"></td>
+            <td><input type="text" id="q" name="q" value="" size="50"><input type="hidden" id="IdPersonal"></td>
+		</tr>
+
+		<tr>
+			<td colspan="2"><div id="loading">&nbsp;</div></td>
+		</tr>
 		
-          </tr>
-
-	<tr><td colspan="2"><div id="loading">&nbsp;</div></td></tr>
-	<tr><td colspan="2"><div id="resultados" align="center">&nbsp;</div></td></tr>
-    
-
-</table>
+		<tr>
+			<td colspan="2"><div id="resultados" align="center">&nbsp;</div></td>
+		</tr>
+    </table>
 
 	<script>
 		new Autocomplete('q', function() { 
@@ -53,6 +56,7 @@ if($_SESSION["Administracion"]==1 and $_SESSION["nivel"]==1){
 			return 'respuesta.php?q=' + this.value; 
 		});
 	</script>
+	
 </body>
 </html>
 <?php

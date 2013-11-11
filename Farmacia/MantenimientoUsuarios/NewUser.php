@@ -86,9 +86,9 @@ require('../Clases/class.php');
 
 <tr><td class="FONDO">Permisos: </td><td class="FONDO" colspan="4">
 <table>
-<tr><td>Administracion:</td><td><input type="checkbox" id="administracion" name="administracion" value="1"></td></tr>
-<tr><td>Generacion Reportes:</td><td><input type="checkbox" id="reportes" name="reportes" value="1"></td></tr>
-<tr><td>Introduccion de Datos:</td><td><input type="checkbox" id="datos" name="datos" value="1" ></td></tr>
+<tr><td>Administraci&oacute;n:</td><td><input type="checkbox" id="administracion" name="administracion" value="1"></td></tr>
+<tr><td>Generaci&oacute;n Reportes:</td><td><input type="checkbox" id="reportes" name="reportes" value="1"></td></tr>
+<tr><td>Introducci&oacute;n de Datos:</td><td><input type="checkbox" id="datos" name="datos" value="1" ></td></tr>
 </table>
 </td>
 
