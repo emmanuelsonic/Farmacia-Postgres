@@ -153,6 +153,6 @@ switch($_GET["Bandera"]){
 }
 conexion::desconectar();
 
-
+//Osyan 
 }
 ?>

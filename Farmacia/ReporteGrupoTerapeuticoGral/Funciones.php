@@ -33,7 +33,7 @@ $querySelect="select distinct farm_catalogoproductos.IdMedicina,Codigo,Nombre,Co
 			order by farm_catalogoproductos.Codigo";
 
 
-$resp=mysql_query($querySelect);
+$resp=pg_query($querySelect);
 return($resp);
 }//queryExterna
 
@@ -63,7 +63,7 @@ $selectQuery="select distinct farm_recetas.IdReceta,
                         and farm_recetas.IdEstablecimiento=$IdEstablecimiento
                         and farm_recetas.IdModalidad=$IdModalidad
 			order by farm_catalogoproductos.IdMedicina";
-$resp=mysql_query($selectQuery);
+$resp=pg_query($selectQuery);
 return($resp);
 }//fin de ObtenerReporteGrupoTerapeutico
 
@@ -142,7 +142,7 @@ $querySelect="select distinct count(farm_recetas.IdReceta) as TotalSatisfechas
 		  ";	
 	}
 }
-$resp=mysql_fetch_array(mysql_query($querySelect));
+$resp=pg_fetch_array(pg_query($querySelect));
 
 return($resp[0]);
 }//satisfechas
@@ -216,7 +216,7 @@ else{
 		}//else IF medico
 }
 
-$resp=mysql_fetch_array(mysql_query($querySelect));
+$resp=pg_fetch_array(pg_query($querySelect));
 
 return($resp[0]);
 }//Insatisfechas
@@ -228,7 +228,7 @@ function verificaSatisfecha($IdMedicina,$IdReceta){
 	}else{
 		$querySelect="select * from farm_medicinarecetada where IdReceta='$IdReceta' and IdMedicina='$IdMedicina' and (IdEstado='S' or IdEstado='')";
 	}
-	$resp=mysql_query($querySelect);
+	$resp=pg_query($querySelect);
 	return($resp);
 }//verificaSatisfechos
 
@@ -242,7 +242,7 @@ function NumeroRecetasTotal($IdMedicina,$IdArea,$FechaInicio,$FechaFin){
 				and farm_medicinarecetada.IdMedicina='$IdMedicina'
 				and (farm_recetas.IdEstado='E' or farm_recetas.IdEstado='ER')
 				and Fecha between '$FechaInicio' and '$FechaFin'";
-	$resp=mysql_fetch_array(mysql_query($querySelect));
+	$resp=pg_fetch_array(pg_query($querySelect));
 	return($resp[0]);
 }
 
@@ -277,7 +277,7 @@ function SumatoriaMedicamento($IdFarmacia,$IdMedicina,$IdArea,$FechaInicio,$Fech
                         and l.IdEstablecimiento=$IdEstablecimiento
                         and l.IdModalidad=$IdModalidad
 			group by md.IdLote";
-	$resp=mysql_query($querySelect);
+	$resp=pg_query($querySelect);
 	return($resp);
 }
 
@@ -286,17 +286,17 @@ function ObtenerPrecioMedicina($IdMedicina,$Ano){
 				from farm_preciosxano
 				where IdMedicina='$IdMedicina'
 				and Ano	='$Ano'";
-		$resp=mysql_fetch_array(mysql_query($query));
+		$resp=pg_fetch_array(pg_query($query));
 		if($resp[0]!=NULL){$Respuesta=$resp[0];}else{$Respuesta=0;}
 		return($Respuesta);
 }
 
 function ObtenerAreasFarmacia($IdFarmacia,$IdArea,$FechaInicio,$FechaFin,$IdEstablecimiento,$IdModalidad){
 	if($IdArea==0){$comp="";}else{$comp=" and IdAreaOrigen=".$IdArea;}
-		$query="select distinct mnt_areafarmacia.IdArea,Area,farm_recetas.IdFarmacia
+		$query="select distinct mnt_areafarmacia.id as IdArea,Area,farm_recetas.IdFarmacia
 				from mnt_areafarmacia 
 				inner join farm_recetas
-				on farm_recetas.IdAreaOrigen=mnt_areafarmacia.IdArea
+				on farm_recetas.IdAreaOrigen=mnt_areafarmacia.Id
 				where farm_recetas.IdFarmacia='$IdFarmacia'
                                 and farm_recetas.IdEstablecimiento=$IdEstablecimiento
                                 and farm_recetas.IdModalidad=$IdModalidad
@@ -304,7 +304,7 @@ function ObtenerAreasFarmacia($IdFarmacia,$IdArea,$FechaInicio,$FechaFin,$IdEsta
 				and Fecha  between '$FechaInicio' and '$FechaFin'";
 	
 	
-	$resp=mysql_query($query);
+	$resp=pg_query($query);
 	return($resp);
 }
 
@@ -313,7 +313,7 @@ function ObtenerAreasFarmacia($IdFarmacia,$IdArea,$FechaInicio,$FechaFin,$IdEsta
 		from farm_periododesabastecido
 		where (FechaInicio between '$FechaInicial' and '$FechaFinal' or FechaFin between '$FechaInicial' and '$FechaFinal')
 		and IdMedicina=".$IdMedicina;
-	   $resp=mysql_query($SQL);
+	   $resp=pg_query($SQL);
 	   return ($resp);
 	}
 
@@ -323,7 +323,7 @@ function ObtenerAreasFarmacia($IdFarmacia,$IdArea,$FechaInicio,$FechaFin,$IdEsta
                     where IdMedicina=$IdMedicina
                    and IdEstablecimiento=$IdEstablecimiento
                    and IdModalidad=$IdModalidad";
-	   $resp=mysql_query($SQL);
+	   $resp=pg_query($SQL);
 	   return($resp);
     	}
 

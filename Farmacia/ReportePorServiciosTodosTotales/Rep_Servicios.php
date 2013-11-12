@@ -22,7 +22,7 @@ require('../Clases/class.php');
 
 function generaSelect2(){//creacioon de combo para las Regiones
 	conexion::conectar();
-	$consulta=mysql_query("select msse.IdSubServicioxEstablecimiento,NombreServicio,NombreSubServicio 
+	$consulta=pg_query("select msse.IdSubServicioxEstablecimiento,NombreServicio,NombreSubServicio 
 				from mnt_subservicio mss
 				inner join mnt_subservicioxestablecimiento msse
 				on msse.IdSubServicio=mss.IdSubServicio
@@ -39,7 +39,7 @@ function generaSelect2(){//creacioon de combo para las Regiones
 	// Voy imprimiendo el primer select compuesto por los paises
 	echo "<select name='IdSubServicio' id='IdSubServicio'>";
 	echo "<option value='0'>[General ...]</option>";
-	while($registro=mysql_fetch_row($consulta)){
+	while($registro=pg_fetch_row($consulta)){
 		
 		echo "<option value='".$registro[0]."'>[".$registro[1].'] '.$registro[2]."</option>";
 
@@ -104,9 +104,9 @@ if(Ok==true){
           <option value="0">[General ...]</option>
 	  <?php 
 	  	conexion::conectar();
-			$consulta=mysql_query("SELECT * FROM mnt_grupoterapeutico") or die(mysql_error());
+			$consulta=pg_query("SELECT * FROM mnt_grupoterapeutico") or die(pg_error());
 		conexion::desconectar();
-		  	while($registro=mysql_fetch_row($consulta))
+		  	while($registro=pg_fetch_row($consulta))
 	{
 		// Convierto los caracteres conflictivos a sus entidades HTML correspondientes para su correcta visualizacion
 		$registro[1]=htmlentities($registro[1]);

@@ -10,26 +10,26 @@ $IdModalidad=$_SESSION["IdModalidad"];
 	$conexion=new conexion;	
 	$conexion->conectar();
 		
-	$consulta=mysql_query("SELECT distinct mnt_areafarmacia.IdArea,mnt_areafarmacia.Area
+	$consulta=pg_query("SELECT distinct mnt_areafarmacia.id as IdArea,mnt_areafarmacia.Area
 				FROM mnt_areafarmacia
 				inner join farm_recetas
-				on farm_recetas.IdAreaOrigen=mnt_areafarmacia.IdArea
+				on farm_recetas.IdAreaOrigen=mnt_areafarmacia.Id
                                 inner join mnt_areafarmaciaxestablecimiento mafe
-                                on mafe.IdArea = mnt_areafarmacia.IdArea
+                                on mafe.IdArea = mnt_areafarmacia.Id
 				WHERE farm_recetas.IdFarmacia='$opcionSeleccionada'
-				and mnt_areafarmacia.IdArea <> '7'
+				and mnt_areafarmacia.Id <> '7'
 				and farm_recetas.IdEstablecimiento=$IdEstablecimiento
                                 and farm_recetas.IdModalidad=$IdModalidad
                                 and mafe.IdEstablecimiento=$IdEstablecimiento
                                 and mafe.IdModalidad=$IdModalidad
-				and mafe.Habilitado='S'") or die(mysql_error());
+				and mafe.Habilitado='S'") or die(pg_error());
 	
 	$conexion->desconectar();
 	
 	// Comienzo a imprimir el select
 	echo "<select name='area' id='area'>";
 	echo "<option value='0'>TODAS LAS AREAS</option>";
-	while($registro=mysql_fetch_row($consulta))
+	while($registro=pg_fetch_row($consulta))
 	{
 		// Convierto los caracteres conflictivos a sus entidades HTML correspondientes para su correcta visualizacion
 		$registro[1]=htmlentities($registro[1]);
@@ -45,23 +45,23 @@ $IdModalidad=$_SESSION["IdModalidad"];
 	case "farm_catalogoproductos":
 	$conexion=new conexion;	
 	$conexion->conectar();
-	$consulta=mysql_query("SELECT farm_catalogoproductos.IdMedicina,farm_catalogoproductos.Nombre,Concentracion,farm_catalogoproductos.FormaFarmaceutica,Presentacion,Codigo
+	$consulta=pg_query("SELECT farm_catalogoproductos.id as IdMedicina,farm_catalogoproductos.Nombre,Concentracion,farm_catalogoproductos.FormaFarmaceutica,Presentacion,Codigo
 			FROM farm_catalogoproductos
 			inner join mnt_grupoterapeutico 
-			on mnt_grupoterapeutico.IdTerapeutico=farm_catalogoproductos.IdTerapeutico
+			on mnt_grupoterapeutico.Id=farm_catalogoproductos.IdTerapeutico
 			inner join farm_catalogoproductosxestablecimiento fcpe
-			on fcpe.IdMedicina=farm_catalogoproductos.IdMedicina
-			WHERE mnt_grupoterapeutico.IdTerapeutico='$opcionSeleccionada' 
-			and IdEstablecimiento=".$_SESSION["IdEstablecimiento"]."
+			on fcpe.IdMedicina=farm_catalogoproductos.Id
+			WHERE mnt_grupoterapeutico.Id='$opcionSeleccionada' 
+			and fcpe.IdEstablecimiento=".$_SESSION["IdEstablecimiento"]."
                         and IdModalidad=".$_SESSION["IdModalidad"]."
-			order by farm_catalogoproductos.Codigo") or die(mysql_error());
+			order by farm_catalogoproductos.Codigo") or die(pg_error());
 	
 	$conexion->desconectar();
 	
 	// Comienzo a imprimir el select
 	echo "<select name='IdMedicina' id='IdMedicina'>";
 	echo "<option value='0'>TODAS LAS MEDICINAS</option>";
-	while($registro=mysql_fetch_row($consulta))
+	while($registro=pg_fetch_row($consulta))
 	{
 		// Convierto los caracteres conflictivos a sus entidades HTML correspondientes para su correcta visualizacion
 		//$registro[1]=htmlentities($registro[1]);

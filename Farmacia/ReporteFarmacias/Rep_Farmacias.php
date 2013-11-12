@@ -27,10 +27,10 @@ $IdModalidad=$_SESSION["IdModalidad"];
 function generaSelect2($IdEstablecimiento,$IdModalidad){ //creacioon de combo para las Regiones
 	conexion::conectar();
 	if($_SESSION["TipoFarmacia"]==1){$comp=" and HabilitadoFarmacia='S'";}else{$comp="";}
-	$consulta=mysql_query("select mfxe.IdFarmacia,Farmacia
+	$consulta=pg_query("select mfxe.IdFarmacia,Farmacia
                                 from mnt_farmacia mf
                                 inner join mnt_farmaciaxestablecimiento mfxe
-                                on mfxe.IdFarmacia = mf.IdFarmacia
+                                on mfxe.IdFarmacia = mf.Id
                                 where mfxe.IdEstablecimiento=$IdEstablecimiento
                                 and mfxe.IdModalidad=$IdModalidad
 				".$comp);
@@ -38,7 +38,7 @@ function generaSelect2($IdEstablecimiento,$IdModalidad){ //creacioon de combo pa
 	// Voy imprimiendo el primer select compuesto por los paises
 	echo "<select name='IdFarmacia' id='IdFarmacia'>";
 	echo "<option value='0'>[Consumo General ...]</option>";
-	while($registro=mysql_fetch_row($consulta)){
+	while($registro=pg_fetch_row($consulta)){
 		echo "<option value='".$registro[0]."'>".$registro[1]."</option>";
 	}
 	echo "</select>";
@@ -116,7 +116,7 @@ function generaSelect2($IdEstablecimiento,$IdModalidad){ //creacioon de combo pa
         <option value="0">[Seleccione ...]</option>
 		<?php conexion::conectar();
 		$resp=queries::ComboGrupoTerapeutico();
-		while($row=mysql_fetch_array($resp)){
+		while($row=pg_fetch_array($resp)){
 		?>
 		<option value="<?php echo $row[0];?>"><?php echo $row[0].' - '.$row[1];?></option>
 		<?php }?>

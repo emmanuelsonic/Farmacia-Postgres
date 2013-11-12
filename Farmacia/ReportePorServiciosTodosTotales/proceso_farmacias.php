@@ -14,23 +14,23 @@ $IdModalidad=$_SESSION["IdModalidad"];
 		$tabla="farm_catalogoproductos";
 	$conexion=new conexion;	
 	$conexion->conectar();
-	$consulta=mysql_query("SELECT $tabla.IdMedicina,$tabla.Nombre,Concentracion,$tabla.FormaFarmaceutica, Presentacion, Codigo
+	$consulta=pg_query("SELECT $tabla.id as IdMedicina,$tabla.Nombre,Concentracion,$tabla.FormaFarmaceutica, Presentacion, Codigo
 				FROM $tabla
 				inner join mnt_grupoterapeutico 
-				on mnt_grupoterapeutico.IdTerapeutico=$tabla.IdTerapeutico
+				on mnt_grupoterapeutico.Id=$tabla.IdTerapeutico
 				inner join farm_catalogoproductosxestablecimiento fcpe
-				on fcpe.IdMedicina=$tabla.IdMedicina
-				WHERE mnt_grupoterapeutico.IdTerapeutico='$opcionSeleccionada' 
+				on fcpe.IdMedicina=$tabla.Id
+				WHERE mnt_grupoterapeutico.Id='$opcionSeleccionada' 
                                 and fcpe.IdEstablecimiento=$IdEstablecimiento
                                 and fcpe.IdModalidad=$IdModalidad
-				order by $tabla.Codigo") or die(mysql_error());
+				order by $tabla.Codigo") or die(pg_error());
 	
 	$conexion->desconectar();
 	
 	// Comienzo a imprimir el select
 	echo "<select name='IdMedicina' id='IdMedicina'>";
 	echo "<option value='0'>TODAS LAS MEDICINAS</option>";
-	while($registro=mysql_fetch_row($consulta))
+	while($registro=pg_fetch_row($consulta))
 	{
 		// Convierto los caracteres conflictivos a sus entidades HTML correspondientes para su correcta visualizacion
 		//$registro[1]=htmlentities($registro[1]);

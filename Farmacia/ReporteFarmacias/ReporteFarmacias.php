@@ -33,7 +33,7 @@ if (isset($_SESSION["nivel"])) {
         $NombreFarmacia = "Consumo General";
     } else {
         $SQL = "select Farmacia from mnt_farmacia where IdFarmacia=" . $IdFarmacia;
-        $resp = mysql_fetch_array(mysql_query($SQL));
+        $resp = pg_fetch_row(pg_query($SQL));
         $NombreFarmacia = $resp[0];
     }
 
@@ -82,7 +82,7 @@ if (isset($_SESSION["nivel"])) {
     <td colspan="11" align="center" style="vertical-align:middle;"><strong>Periodo: ' . $F1[2] . "-" . $F1[1] . "-" . $F1[0] . ' al ' . $F2[2] . "-" . $F2[1] . "-" . $F2[0] . '</strong></td></tr>';
             //<!--  INICIO DE REPORTE  -->
 
-            while ($rowGrupos = mysql_fetch_array($RespGrupos)) {
+            while ($rowGrupos = pg_fetch_array($RespGrupos)) {
                 $IdTerapeutico = $rowGrupos[0];
                 $GrupoTerapeutico = $rowGrupos[1];
 
@@ -93,7 +93,7 @@ if (isset($_SESSION["nivel"])) {
 
                 //**************VERIFICACION DE MEDICAMENTO DEL GRUPO CONTRA INGRESO
                 $resp = ReporteFarmacias::IngresoPorGrupo($IdTerapeutico, $IdFarmacia, $FechaInicial, $FechaFinal, $IdEstablecimiento, $IdModalidad);
-                if ($rowTmp = mysql_fetch_array($resp)) {
+                if ($rowTmp = pg_fetch_array($resp)) {
 
                     $reporte.='<tr class="MYTABLE">
 	<td colspan="11" align="center" style="background:#999999;"><strong>' . $GrupoTerapeutico . '</strong></td>
@@ -122,7 +122,7 @@ if (isset($_SESSION["nivel"])) {
                     $RespMedicina = ReporteFarmacias::DatosMedicamentosPorGrupo($IdTerapeutico, $IdFarmacia, $IdMedicina, $IdEstablecimiento, $IdModalidad);
                     $MontoSubTotal = 0;
                     $TotalConsumo2 = 0;
-                    while ($rowMedicina = mysql_fetch_array($RespMedicina)) {
+                    while ($rowMedicina = pg_fetch_array($RespMedicina)) {
 
                         $IdMedicina = $rowMedicina["IdMedicina"];
 
@@ -139,7 +139,7 @@ if (isset($_SESSION["nivel"])) {
                         $ConsumoMedicamento = ReporteFarmacias::ConsumoMedicamento($IdMedicina, $IdFarmacia, $FechaInicial, $FechaFinal, 0, $IdEstablecimiento, $IdModalidad);
 
                         /*                         * *********************************************** */
-                        if ($tmp = mysql_fetch_array($ConsumoMedicamento)) {
+                        if ($tmp = pg_fetch_array($ConsumoMedicamento)) {
 
                             //Consumo realizacon por medicamento con estado Satisfecha valor en Bandera = 1
                             $ConsumoMedicamento = ReporteFarmacias::ConsumoMedicamento($IdMedicina, $IdFarmacia, $FechaInicial, $FechaFinal, 1, $IdEstablecimiento, $IdModalidad);
@@ -157,7 +157,7 @@ if (isset($_SESSION["nivel"])) {
                                 $respInsatEstimada = ReporteFarmacias::InsatisfechasEstimadas($IdMedicina, $FechaInicial, $FechaFinal, $IdEstablecimiento, $IdModalidad);
                                 $Estimadas = 0;
 
-                                while ($rowEstimadas = mysql_fetch_array($respInsatEstimada)) {
+                                while ($rowEstimadas = pg_fetch_array($respInsatEstimada)) {
                                     $Estimadas+=$rowEstimadas["PromedioRecetas"];
                                     $aviso = '*';
                                     $nota = "* Al total de recetas insatisfechas se han sumado las recetas insatisfechas generadas por tiempo desbastecido.-";
@@ -184,12 +184,12 @@ if (isset($_SESSION["nivel"])) {
                             $TotalConsumo = 0;
                             $Monto = 0;
                             $PrecioLote = "";
-                            if ($row = mysql_fetch_array($ConsumoMedicamento)) {
+                            if ($row = pg_fetch_array($ConsumoMedicamento)) {
                                 do {
                                     $TotalConsumo+=$row["Total"];
                                     $Monto+=$row["Costo"];
 
-                                    if ($respDivisor = mysql_fetch_array(ReporteFarmacias::ValorDivisor($IdMedicina,$IdEstablecimiento,$IdModalidad))) {
+                                    if ($respDivisor = pg_fetch_array(ReporteFarmacias::ValorDivisor($IdMedicina,$IdEstablecimiento,$IdModalidad))) {
                                         $Divisor = $respDivisor[0];
 
                                         if ($TotalConsumo < 1) {
@@ -229,10 +229,10 @@ if (isset($_SESSION["nivel"])) {
 
 
                                     $PrecioLote.="Lote: " . strtoupper($row["Lote"]) . "<br> $" . $row["PrecioLote"] . "<br>";
-                                } while ($row = mysql_fetch_array($ConsumoMedicamento));
+                                } while ($row = pg_fetch_array($ConsumoMedicamento));
                             }
 
-                            if ($respDivisor = mysql_fetch_array(ReporteFarmacias::ValorDivisor($IdMedicina,$IdEstablecimiento,$IdModalidad))) {
+                            if ($respDivisor = pg_fetch_array(ReporteFarmacias::ValorDivisor($IdMedicina,$IdEstablecimiento,$IdModalidad))) {
                                 $Divisor = $respDivisor[0];
 
                                 $TotalConsumo = number_format($TotalConsumo, 3, '.', '');

@@ -71,7 +71,7 @@ function Servicios($IdSubEspecialidad,$IdTerapeutico,$IdMedicina,$FechaInicio,$F
 				and sec_historial_clinico.IdSubServicioxEstablecimiento=".$IdSubEspecialidad;
 		break;
 	}
-	$resp=mysql_query($querySelect);
+	$resp=pg_query($querySelect);
 	return($resp);
 }//Servicios
 
@@ -114,7 +114,7 @@ $querySelect="select distinct mnt_grupoterapeutico.IdTerapeutico,GrupoTerapeutic
                         and sec_historial_clinico.IdModalidad=$IdModalidad";
 }//else
 //
-$resp=mysql_query($querySelect);
+$resp=pg_query($querySelect);
 //
 return($resp);
 }//nombreTera
@@ -166,7 +166,7 @@ $querySelect="select distinct farm_catalogoproductos.IdMedicina,Codigo,Nombre,Co
 			order by farm_catalogoproductos.IdMedicina";
 }
 
-$resp=mysql_query($querySelect);
+$resp=pg_query($querySelect);
 return($resp);
 }//queryExterna
 
@@ -184,7 +184,7 @@ $selectQuery="select distinct farm_unidadmedidas.Descripcion,farm_unidadmedidas.
 			where farm_catalogoproductos.IdMedicina='$IdMedicina'
                         and fcpe.IdEstablecimiento=$IdEstablecimiento
                         and fcpe.IdModalidad=$IdModalidad";
-$resp=mysql_query($selectQuery);
+$resp=pg_query($selectQuery);
 return($resp);
 }//fin de ObtenerReporteGrupoTerapeutico
 
@@ -208,7 +208,7 @@ $querySelect="select distinct count(farm_recetas.IdReceta) as TotalSatisfechas
                           and sec_historial_clinico.IdEstablecimiento=$IdEstablecimiento
                           and sec_historial_clinico.IdModalidad=$IdModalidad
 			  ";
-$resp=mysql_fetch_array(mysql_query($querySelect));
+$resp=pg_fetch_array(pg_query($querySelect));
 
 return($resp[0]);
 }//satisfechas
@@ -232,7 +232,7 @@ $querySelect="select distinct count(farm_recetas.IdReceta) as TotalInsatisfechas
                           and sec_historial_clinico.IdEstablecimiento=$IdEstablecimiento
                           and sec_historial_clinico.IdModalidad=$IdModalidad
 			  ";
-$resp=mysql_fetch_array(mysql_query($querySelect));
+$resp=pg_fetch_array(pg_query($querySelect));
 
 return($resp[0]);
 }//Insatisfechas
@@ -244,7 +244,7 @@ function verificaSatisfecha($IdMedicina,$IdReceta){
 	}else{
 		$querySelect="select * from farm_medicinarecetada where IdReceta='$IdReceta' and IdMedicina='$IdMedicina' and (IdEstado='S' or IdEstado='')";
 	}
-	$resp=mysql_query($querySelect);
+	$resp=pg_query($querySelect);
 	return($resp);
 }//verificaSatisfechos
 
@@ -277,7 +277,7 @@ function SumatoriaMedicamento($IdMedicina,$IdSubEspecialidad,$FechaInicio,$Fecha
                 and l.IdEstablecimiento=$IdEstablecimiento
                 and l.IdModalidad=$IdModalidad
 		group by md.IdLote";
-	$resp=mysql_query($querySelect);
+	$resp=pg_query($querySelect);
 	return($resp);
 }
 
@@ -292,7 +292,7 @@ function ObtenerConsumoTotalMedicamento($IdMedicina,$FechaInicio,$FechaFin,$IdSu
 			where IdSubServicio='$IdSubEspecialidad'
 			and IdMedicina='$IdMedicina'
 			and farm_recetas.Fecha between '$FechaInicio' and '$FechaFin'";
-	$resp=mysql_fetch_array(mysql_query($querySelect));
+	$resp=pg_fetch_array(pg_query($querySelect));
 	return($resp[0]);	
 }//ObtenerConsumoTotalMedicamento
 
@@ -302,7 +302,7 @@ function ObtenerPrecioMedicina($IdMedicina,$Ano){
 				from farm_preciosxano
 				where IdMedicina='$IdMedicina'
 				and Ano	='$Ano'";
-		$resp=mysql_fetch_array(mysql_query($query));
+		$resp=pg_fetch_array(pg_query($query));
 		if($resp[0]!=NULL){$Respuesta=$resp[0];}else{$Respuesta=0;}
 		return($Respuesta);
 }
@@ -313,7 +313,7 @@ function ObtenerPrecioMedicina($IdMedicina,$Ano){
                     where IdMedicina=$IdMedicina
                     and IdEstablecimiento=$IdEstablecimiento
                     and IdModalidad=$IdModalidad";
-	   $resp=mysql_query($SQL);
+	   $resp=pg_query($SQL);
 	   return($resp);
     	}
 

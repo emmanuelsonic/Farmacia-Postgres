@@ -28,7 +28,7 @@ $IdModalidad=$_SESSION["IdModalidad"];
 
 function generaSelect2($IdEstablecimiento,$IdModalidad){ //creacioon de combo para las Regiones
 	conexion::conectar();
-	$consulta=mysql_query("select mssxe.IdSubServicioxEstablecimiento,NombreServicio,NombreSubServicio
+	$consulta=pg_query("select mssxe.IdSubServicioxEstablecimiento,NombreServicio,NombreSubServicio
 			from mnt_subservicio mss
                         inner join mnt_subservicioxestablecimiento mssxe
                         on mssxe.IdSubServicio=mss.IdSubServicio
@@ -47,7 +47,7 @@ function generaSelect2($IdEstablecimiento,$IdModalidad){ //creacioon de combo pa
 	// Voy imprimiendo el primer select compuesto por los paises
 	echo "<select name='IdSubEspecialidad' id='IdSubEspecialidad'>";
 	echo "<option value='0'>[General ...]</option>";
-	while($registro=mysql_fetch_row($consulta)){
+	while($registro=pg_fetch_row($consulta)){
 		echo "<option value='".$registro[0]."'>[".$registro[1]."]  ".$registro[2]."</option>";
 	}
 	echo "</select>";
