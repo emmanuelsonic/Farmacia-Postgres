@@ -8,13 +8,13 @@ class ReporteVencimiento {
 					farm_unidadmedidas.UnidadesContenidas as Divisor
 					from farm_lotes
 					inner join farm_medicinaexistenciaxarea
-					on farm_medicinaexistenciaxarea.IdLote=farm_lotes.IdLote
+					on farm_medicinaexistenciaxarea.IdLote=farm_lotes.Id
 					inner join farm_catalogoproductos
-					on farm_catalogoproductos.IdMedicina=farm_medicinaexistenciaxarea.IdMedicina
+					on farm_catalogoproductos.Id=farm_medicinaexistenciaxarea.IdMedicina
 					inner join farm_unidadmedidas
-					on farm_unidadmedidas.IdUnidadMedida=farm_catalogoproductos.IdUnidadMedida
+					on farm_unidadmedidas.Id=farm_catalogoproductos.IdUnidadMedida
 					where farm_lotes.FechaVencimiento between '$FechaInicio' and '$FechaFin'
-                                        and farm_catalogoproductos.IdMedicina=$IdMedicina
+                                        and farm_catalogoproductos.Id=$IdMedicina
                                         and farm_lotes.IdEstablecimiento=$IdEstablecimiento
                                         and farm_lotes.IdModalidad=$IdModalidad
                                         and farm_medicinaexistenciaxarea.IdEstablecimiento=$IdEstablecimiento
@@ -28,11 +28,11 @@ class ReporteVencimiento {
 					farm_unidadmedidas.UnidadesContenidas as Divisor
 					from farm_lotes
 					inner join farm_entregamedicamento
-					on farm_entregamedicamento.IdLote=farm_lotes.IdLote
+					on farm_entregamedicamento.IdLote=farm_lotes.Id
 					inner join farm_catalogoproductos
 					on farm_catalogoproductos.IdMedicina=farm_entregamedicamento.IdMedicina
 					inner join farm_unidadmedidas
-					on farm_unidadmedidas.IdUnidadMedida=farm_catalogoproductos.IdUnidadMedida
+					on farm_unidadmedidas.Id=farm_catalogoproductos.IdUnidadMedida
 
 					where farm_lotes.FechaVencimiento between '$FechaInicio' and '$FechaFin'
                                         and farm_catalogoproductos.IdMedicina=$IdMedicina
@@ -43,7 +43,7 @@ class ReporteVencimiento {
                                         
                                         group by farm_catalogoproductos.IdMedicina";
 
-        $resp = mysql_query($SQL);
+        $resp = pg_query($SQL);
         return($resp);
     }
 
@@ -62,7 +62,7 @@ class ReporteVencimiento {
 					farm_unidadmedidas.UnidadesContenidas as Divisor
 					from farm_lotes
 					inner join farm_medicinaexistenciaxarea
-					on farm_medicinaexistenciaxarea.IdLote=farm_lotes.IdLote
+					on farm_medicinaexistenciaxarea.IdLote=farm_lotes.Id
 					inner join farm_catalogoproductos
 					on farm_catalogoproductos.IdMedicina=farm_medicinaexistenciaxarea.IdMedicina
 					inner join farm_unidadmedidas
@@ -81,7 +81,7 @@ class ReporteVencimiento {
 					farm_unidadmedidas.UnidadesContenidas as Divisor
 					from farm_lotes
 					inner join farm_entregamedicamento
-					on farm_entregamedicamento.IdLote=farm_lotes.IdLote
+					on farm_entregamedicamento.IdLote=farm_lotes.Id
 					inner join farm_catalogoproductos
 					on farm_catalogoproductos.IdMedicina=farm_entregamedicamento.IdMedicina
 					inner join farm_unidadmedidas
@@ -95,7 +95,7 @@ class ReporteVencimiento {
                                         and farm_entregamedicamento.IdModalidad=$IdModalidad
 
                                         group by farm_catalogoproductos.IdMedicina";
-        $resp = mysql_query($querySelect);
+        $resp = pg_query($querySelect);
         return($resp);
     }
 
@@ -111,7 +111,7 @@ class ReporteVencimiento {
                 from mnt_grupoterapeutico 
                 where GrupoTerapeutico <> '--' 
                 " . $comp;
-        $resp = mysql_query($SQL);
+        $resp = pg_query($SQL);
         return($resp);
     }
 
@@ -124,14 +124,14 @@ class ReporteVencimiento {
         $SQL = "select fcp.*
 	from farm_catalogoproductos fcp
 	inner join farm_catalogoproductosxestablecimiento fcpe
-	on fcpe.IdMedicina=fcp.IdMedicina
+	on fcpe.IdMedicina=fcp.Id
 	where IdTerapeutico=" . $IdTerapeutico . "
         $comp
 	and fcpe.Condicion='H'
 	and fcpe.IdEstablecimiento=" . $IdEstablecimiento . "
         and fcpe.IdModalidad=$IdModalidad
 	order by fcp.Codigo";
-        $resp = mysql_query($SQL);
+        $resp = pg_query($SQL);
         return($resp);
     }
 
@@ -139,7 +139,7 @@ class ReporteVencimiento {
         $SQL = "select Lote,FechaVencimiento
 		from farm_lotes l
 		inner join farm_entregamedicamento fem
-		on fem.IdLote=l.IdLote
+		on fem.IdLote=l.Id
 		where FechaVencimiento between '$FechaInicio' and  '$FechaFin'
 		and IdMedicina=" . $IdMedicina . "
                 and l.IdEstablecimiento=$IdEstablecimiento
@@ -148,7 +148,7 @@ class ReporteVencimiento {
                 and fem.IdModalidad=$IdModalidad
                 
 		order by FechaVencimiento";
-        $resp = mysql_query($SQL);
+        $resp = pg_query($SQL);
         return($resp);
     }
 
@@ -158,7 +158,7 @@ class ReporteVencimiento {
                 where IdMedicina=$IdMedicina
                 and IdEstablecimiento=$IdEstablecimiento
                 and IdModalidad=$IdModalidad";
-        $resp = mysql_query($SQL);
+        $resp = pg_query($SQL);
         return($resp);
     }
 

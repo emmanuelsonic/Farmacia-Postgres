@@ -6,19 +6,19 @@ function NombreTera($grupoTerapeutico, $IdEstablecimiento, $IdModalidad) {
     if ($grupoTerapeutico == 0) {
         $querySelect = "select distinct mnt_grupoterapeutico.* from mnt_grupoterapeutico
 			inner join farm_catalogoproductos fcp
-			on fcp.IdTerapeutico=mnt_grupoterapeutico.IdTerapeutico
+			on fcp.IdTerapeutico=mnt_grupoterapeutico.Id
 			inner join farm_catalogoproductosxestablecimiento fcpe
-			on fcpe.IdMedicina=fcp.IdMedicina
+			on fcpe.IdMedicina=fcp.Id
 
 			where GrupoTerapeutico <> '--'
 			and fcpe.IdEstablecimiento=$IdEstablecimiento
                         and fcpe.IdModalidad=$IdModalidad
-			order by mnt_grupoterapeutico.IdTerapeutico";
+			order by mnt_grupoterapeutico.Id";
     } else {
-        $querySelect = "select * from mnt_grupoterapeutico where IdTerapeutico='$grupoTerapeutico'";
+        $querySelect = "select * from mnt_grupoterapeutico where Id='$grupoTerapeutico'";
     }//else
 //
-    $resp = mysql_query($querySelect);
+    $resp = pg_query($querySelect);
 //
     return($resp);
 }
@@ -29,69 +29,69 @@ function QueryExterna($IdFarmacia, $IdArea, $grupoTerapeutico, $medicina, $IdEst
 
     if ($IdFarmacia == 0) {
         if ($grupoTerapeutico != 0) {
-            $comp = "where  mnt_grupoterapeutico.IdTerapeutico='$grupoTerapeutico'";
+            $comp = "where  mnt_grupoterapeutico.Id='$grupoTerapeutico'";
         } else {
             $comp = "";
         }
         if ($medicina != 0) {
-            $comp2 = "and farm_catalogoproductos.IdMedicina='$medicina'";
+            $comp2 = "and farm_catalogoproductos.Id='$medicina'";
         } else {
             $comp2 = "";
         }
 
-        $querySelect = "select distinct farm_catalogoproductos.IdMedicina,Codigo,Nombre,Concentracion,FormaFarmaceutica, Presentacion
+        $querySelect = "select distinct farm_catalogoproductos.id as IdMedicina,Codigo,Nombre,Concentracion,FormaFarmaceutica, Presentacion
 				from farm_catalogoproductos
 				inner join mnt_grupoterapeutico
-				on mnt_grupoterapeutico.IdTerapeutico=farm_catalogoproductos.IdTerapeutico
+				on mnt_grupoterapeutico.Id=farm_catalogoproductos.IdTerapeutico
 					
 				inner join farm_catalogoproductosxestablecimiento fcpe
-				on fcpe.IdMedicina=farm_catalogoproductos.IdMedicina
+				on fcpe.IdMedicina=farm_catalogoproductos.Id
 				" . $comp . "
 				" . $comp2 . "
                                 and fcpe.IdEstablecimiento=$IdEstablecimiento
-                                and fcpe.IdModalidad=$IdModalidad
-				order by farm_catalogoproductos.Codigo";
+                                and fcpe.IdModalidad=$IdModalidad";
+				//order by farm_catalogoproductos.Codigo";
     }
 
     if ($IdFarmacia != 4 and $IdFarmacia != 0) {
 
         if ($IdFarmacia != 0) {
-            $comp3 = "where mf.IdFarmacia='$IdFarmacia'";
+            $comp3 = "where mf.Id='$IdFarmacia'";
         } else {
             $comp3 = "";
         }
         if ($IdArea != 0) {
-            $comp4 = "and maf.IdArea='$IdArea'";
+            $comp4 = "and maf.Id='$IdArea'";
         } else {
             $comp4 = "";
         }
 
         if ($grupoTerapeutico != 0) {
-            $comp = "and  mnt_grupoterapeutico.IdTerapeutico='$grupoTerapeutico'";
+            $comp = "and  mnt_grupoterapeutico.Id='$grupoTerapeutico'";
         } else {
             $comp = "";
         }
         if ($medicina != 0) {
-            $comp2 = "and farm_catalogoproductos.IdMedicina='$medicina'";
+            $comp2 = "and farm_catalogoproductos.Id='$medicina'";
         } else {
             $comp2 = "";
         }
 
 
-        $querySelect = "select distinct farm_catalogoproductos.IdMedicina,Codigo,Nombre,Concentracion,FormaFarmaceutica,Presentacion
+        $querySelect = "select distinct farm_catalogoproductos.Id,Codigo,Nombre,Concentracion,FormaFarmaceutica,Presentacion
 				from farm_catalogoproductos
 				inner join mnt_grupoterapeutico
-				on mnt_grupoterapeutico.IdTerapeutico=farm_catalogoproductos.IdTerapeutico
+				on mnt_grupoterapeutico.Id=farm_catalogoproductos.IdTerapeutico
 					
 				inner join farm_catalogoproductosxestablecimiento fcpe
-				on fcpe.IdMedicina=farm_catalogoproductos.IdMedicina
+				on fcpe.IdMedicina=farm_catalogoproductos.Id
 					
 				inner join farm_medicinaexistenciaxarea fmexa
 				on fmexa.IdMedicina=fcpe.IdMedicina
 				inner join mnt_areafarmacia maf
-				on maf.IdArea=fmexa.IdArea
+				on maf.Id=fmexa.IdArea
 				inner join mnt_farmacia mf
-				on mf.IdFarmacia=maf.IdFarmacia
+				on mf.Id=maf.IdFarmacia
 				" . $comp4 . "
 				" . $comp3 . "
 				" . $comp . "
@@ -99,41 +99,41 @@ function QueryExterna($IdFarmacia, $IdArea, $grupoTerapeutico, $medicina, $IdEst
                                 and fcpe.IdEstablecimiento=$IdEstablecimiento
                                 and fcpe.IdModalidad=$IdModalidad
                                 and fmexa.IdEstablecimiento=$IdEstablecimiento
-                                and fmexa.IdModalidad=$IdModalidad
+                                and fmexa.IdModalidad=$IdModalidad";
                                 
-				order by farm_catalogoproductos.Codigo";
+				//order by farm_catalogoproductos.Codigo";
     }
     if ($IdFarmacia == 4) {
 // MEDICAMENTO EN BODEGA
         if ($grupoTerapeutico != 0) {
-            $comp = "where  mnt_grupoterapeutico.IdTerapeutico='$grupoTerapeutico'";
+            $comp = "where  mnt_grupoterapeutico.Id='$grupoTerapeutico'";
         } else {
             $comp = "";
         }
         if ($medicina != 0) {
-            $comp2 = "and farm_catalogoproductos.IdMedicina='$medicina'";
+            $comp2 = "and farm_catalogoproductos.Id='$medicina'";
         } else {
             $comp2 = "";
         }
 
 
-        $querySelect = "select distinct farm_catalogoproductos.IdMedicina,Codigo,Nombre,Concentracion,FormaFarmaceutica,Presentacion
+        $querySelect = "select distinct farm_catalogoproductos.Id,Codigo,Nombre,Concentracion,FormaFarmaceutica,Presentacion
 				from farm_catalogoproductos
 				inner join mnt_grupoterapeutico
-				on mnt_grupoterapeutico.IdTerapeutico=farm_catalogoproductos.IdTerapeutico
+				on mnt_grupoterapeutico.Id=farm_catalogoproductos.IdTerapeutico
 					
 				inner join farm_catalogoproductosxestablecimiento fcpe
-				on fcpe.IdMedicina=farm_catalogoproductos.IdMedicina
+				on fcpe.IdMedicina=farm_catalogoproductos.Id
 					
 				" . $comp . "
 				" . $comp2 . "
                                 and fcpe.IdEstablecimiento=$IdEstablecimiento
-                                and fcpe.IdModalidad=$IdModalidad
-				order by farm_catalogoproductos.Codigo";
+                                and fcpe.IdModalidad=$IdModalidad";
+				//order by farm_catalogoproductos.Codigo";
     }
 
 
-    $resp = mysql_query($querySelect);
+    $resp = pg_query($querySelect);
     return($resp);
 }
 
@@ -147,24 +147,25 @@ function ObtenerReporteGrupoTerapeutico($IdFarmacia, $IdArea, $GrupoTerapeutico,
 	
 			from farm_medicinaexistenciaxarea fme
 			inner join farm_catalogoproductos
-			on fme.IdMedicina=farm_catalogoproductos.IdMedicina
+			on fme.IdMedicina=farm_catalogoproductos.Id
 		
 			inner join mnt_grupoterapeutico
-			on mnt_grupoterapeutico.IdTerapeutico=farm_catalogoproductos.IdTerapeutico
+			on mnt_grupoterapeutico.Id=farm_catalogoproductos.IdTerapeutico
 			inner join farm_unidadmedidas
-			on farm_catalogoproductos.IdUnidadMedida=farm_unidadmedidas.IdUnidadMedida
+			on farm_catalogoproductos.IdUnidadMedida=farm_unidadmedidas.Id
 			inner join farm_lotes l
-			on l.IdLote=fme.IdLote	
+			on l.id=fme.IdLote	
 								
 				
 				inner join mnt_areafarmacia maf
-				on maf.IdArea=fme.IdArea
+				on maf.Id=fme.IdArea
 				inner join mnt_farmacia mf
-				on mf.IdFarmacia=maf.IdFarmacia
+				on mf.Id=maf.IdFarmacia
 
-			where mnt_grupoterapeutico.IdTerapeutico='$GrupoTerapeutico' 
-			and farm_catalogoproductos.IdMedicina='$IdMedicina' 
-			and left(FechaVencimiento,7) >= left(curdate(),7)
+			where mnt_grupoterapeutico.Id='$GrupoTerapeutico' 
+			and farm_catalogoproductos.Id='$IdMedicina' 
+			and substr(to_char(fechavencimiento,'YYYY-MM-DD'),1,7)>=
+				substr(to_char(current_date,'YYYY-MM-DD'),1,7)
                         and fme.IdEstablecimiento=$IdEstablecimiento
                         and fme.IdModalidad=$IdModalidad
                         and l.IdEstablecimiento=$IdEstablecimiento
@@ -176,20 +177,21 @@ function ObtenerReporteGrupoTerapeutico($IdFarmacia, $IdArea, $GrupoTerapeutico,
                         select fem.IdMedicina,sum(Existencia)/UnidadesContenidas as Total, Descripcion
 			from farm_entregamedicamento fem
 			inner join farm_catalogoproductos
-			on fem.IdMedicina=farm_catalogoproductos.IdMedicina
+			on fem.IdMedicina=farm_catalogoproductos.Id
 		
 			inner join mnt_grupoterapeutico
-			on mnt_grupoterapeutico.IdTerapeutico=farm_catalogoproductos.IdTerapeutico
+			on mnt_grupoterapeutico.Id=farm_catalogoproductos.IdTerapeutico
 			inner join farm_unidadmedidas
-			on farm_catalogoproductos.IdUnidadMedida=farm_unidadmedidas.IdUnidadMedida
+			on farm_catalogoproductos.IdUnidadMedida=farm_unidadmedidas.Id
 
 			inner join farm_lotes l
-			on l.IdLote=fem.IdLote
+			on l.id=fem.IdLote
 
-			where mnt_grupoterapeutico.IdTerapeutico='$GrupoTerapeutico' 
-			and farm_catalogoproductos.IdMedicina='$IdMedicina' 
+			where mnt_grupoterapeutico.Id='$GrupoTerapeutico' 
+			and farm_catalogoproductos.Id='$IdMedicina' 
 
-			and left(FechaVencimiento,7) >= left(curdate(),7)
+			and	substr(to_char(fechavencimiento,'YYYY-MM-DD'),1,7)>=
+				substr(to_char(current_date,'YYYY-MM-DD'),1,7)
                         and fem.IdEstablecimiento=$IdEstablecimiento
                         and fem.IdModalidad=$IdModalidad
                         and l.IdEstablecimiento=$IdEstablecimiento
@@ -201,12 +203,12 @@ function ObtenerReporteGrupoTerapeutico($IdFarmacia, $IdArea, $GrupoTerapeutico,
     if ($IdFarmacia != 4 and $IdFarmacia != 0) {
 
         if ($IdFarmacia != 0) {
-            $comp = "and mf.IdFarmacia=" . $IdFarmacia;
+            $comp = "and mf.Id=" . $IdFarmacia;
         } else {
             $comp = "";
         }
         if ($IdArea != 0) {
-            $comp2 = "and maf.IdArea=" . $IdArea;
+            $comp2 = "and maf.Id=" . $IdArea;
         } else {
             $comp2 = "";
         }
@@ -215,27 +217,27 @@ function ObtenerReporteGrupoTerapeutico($IdFarmacia, $IdArea, $GrupoTerapeutico,
 	
 			from farm_medicinaexistenciaxarea fme
 			inner join farm_catalogoproductos
-			on fme.IdMedicina=farm_catalogoproductos.IdMedicina
+			on fme.IdMedicina=farm_catalogoproductos.Id
 		
 			inner join mnt_grupoterapeutico
-			on mnt_grupoterapeutico.IdTerapeutico=farm_catalogoproductos.IdTerapeutico
+			on mnt_grupoterapeutico.Id=farm_catalogoproductos.IdTerapeutico
 			inner join farm_unidadmedidas
-			on farm_catalogoproductos.IdUnidadMedida=farm_unidadmedidas.IdUnidadMedida
+			on farm_catalogoproductos.IdUnidadMedida=farm_unidadmedidas.Id
 			inner join farm_lotes l
-			on l.IdLote=fme.IdLote	
+			on l.id=fme.IdLote	
 								
 				
 				inner join mnt_areafarmacia maf
-				on maf.IdArea=fme.IdArea
+				on maf.Id=fme.IdArea
 				inner join mnt_farmacia mf
-				on mf.IdFarmacia=maf.IdFarmacia
+				on mf.Id=maf.IdFarmacia
 
-			where mnt_grupoterapeutico.IdTerapeutico='$GrupoTerapeutico' 
-			and farm_catalogoproductos.IdMedicina='$IdMedicina' 
+			where mnt_grupoterapeutico.Id='$GrupoTerapeutico' 
+			and farm_catalogoproductos.Id='$IdMedicina' 
 			" . $comp . "
 			" . $comp2 . "
-			and left(FechaVencimiento,7) >= left(curdate(),7)
-                        and fme.IdEstablecimiento=$IdEstablecimiento
+			and substr(to_char(fechavencimiento,'YYYY-MM-DD'),1,7)>=
+				substr(to_char(current_date,'YYYY-MM-DD'),1,7)                        and fme.IdEstablecimiento=$IdEstablecimiento
                         and fme.IdModalidad=$IdModalidad
                         and l.IdEstablecimiento=$IdEstablecimiento
                         and l.IdModalidad=$IdModalidad
@@ -247,20 +249,20 @@ function ObtenerReporteGrupoTerapeutico($IdFarmacia, $IdArea, $GrupoTerapeutico,
         $selectQuery = "select fem.IdMedicina,sum(Existencia)/UnidadesContenidas as Total, Descripcion
 			from farm_entregamedicamento fem
 			inner join farm_catalogoproductos
-			on fem.IdMedicina=farm_catalogoproductos.IdMedicina
+			on fem.IdMedicina=farm_catalogoproductos.Id
 		
 			inner join mnt_grupoterapeutico
-			on mnt_grupoterapeutico.IdTerapeutico=farm_catalogoproductos.IdTerapeutico
+			on mnt_grupoterapeutico.Id=farm_catalogoproductos.IdTerapeutico
 			inner join farm_unidadmedidas
-			on farm_catalogoproductos.IdUnidadMedida=farm_unidadmedidas.IdUnidadMedida
+			on farm_catalogoproductos.IdUnidadMedida=farm_unidadmedidas.Id
 
 			inner join farm_lotes l
-			on l.IdLote=fem.IdLote
+			on l.id=fem.IdLote
 
-			where mnt_grupoterapeutico.IdTerapeutico='$GrupoTerapeutico' 
-			and farm_catalogoproductos.IdMedicina='$IdMedicina' 
-
-			and left(FechaVencimiento,7) >= left(curdate(),7)
+			where mnt_grupoterapeutico.Id='$GrupoTerapeutico' 
+			and farm_catalogoproductos.Id='$IdMedicina' 
+			and substr(to_char(fechavencimiento,'YYYY-MM-DD'),1,7)>=
+				substr(to_char(current_date,'YYYY-MM-DD'),1,7)
                         and fem.IdEstablecimiento=$IdEstablecimiento
                         and fem.IdModalidad=$IdModalidad
                         and l.IdEstablecimiento=$IdEstablecimiento
@@ -268,15 +270,15 @@ function ObtenerReporteGrupoTerapeutico($IdFarmacia, $IdArea, $GrupoTerapeutico,
 			group by fem.IdMedicina";
     }
 
-    $resp = mysql_query($selectQuery);
+    $resp = pg_query($selectQuery);
     return($resp);
 }
 
 //fin de ObtenerReporteGrupoTerapeutico
 
 function FechaBase() {
-    $SQL = "select left(adddate(current_date,interval -1 month),7)";
-    $resp = mysql_fetch_array(mysql_query($SQL));
+    $SQL = "select substr(to_char(current_date - '1 month'::interval, 'YYYY-MM-DD'), 1,7)";
+    $resp = pg_fetch_array(pg_query($SQL));
     return($resp[0]);
 }
 
@@ -285,9 +287,10 @@ function LotesMedicamento($IdFarmacia, $IdArea, $Medicina, $IdEstablecimiento, $
         $SQL = "select distinct l.* 
                 from farm_medicinaexistenciaxarea  fmexa
                 inner join farm_lotes l
-                on fmexa.IdLote=l.IdLote
+                on fmexa.IdLote=l.id
                 where IdMedicina='$Medicina'
-                and left(FechaVencimiento,7) >= left(curdate(),7)
+				and substr(to_char(fechavencimiento,'YYYY-MM-DD'),1,7)>=
+				substr(to_char(current_date,'YYYY-MM-DD'),1,7)
                 and fmexa.IdEstablecimiento=$IdEstablecimiento
                 and fmexa.IdModalidad=$IdModalidad
                 and l.IdEstablecimiento=$IdEstablecimiento
@@ -298,9 +301,10 @@ function LotesMedicamento($IdFarmacia, $IdArea, $Medicina, $IdEstablecimiento, $
                 select distinct l.* 
                 from farm_entregamedicamento  fmexa
                 inner join farm_lotes l
-                on fmexa.IdLote=l.IdLote
+                on fmexa.IdLote=l.id
                 where IdMedicina='$Medicina'
-                and left(FechaVencimiento,7) >= left(curdate(),7)
+				and substr(to_char(fechavencimiento,'YYYY-MM-DD'),1,7)>=
+				substr(to_char(current_date,'YYYY-MM-DD'),1,7)
                 and fmexa.IdEstablecimiento=$IdEstablecimiento
                 and fmexa.IdModalidad=$IdModalidad
                 and l.IdEstablecimiento=$IdEstablecimiento
@@ -327,10 +331,12 @@ function LotesMedicamento($IdFarmacia, $IdArea, $Medicina, $IdEstablecimiento, $
 
         $SQL = "select distinct l.* from farm_medicinaexistenciaxarea  fmexa
                 inner join farm_lotes l
-                on fmexa.IdLote=l.IdLote
+                on fmexa.IdLote=l.id
                 " . $comp . "
                 where IdMedicina=" . $Medicina . "
-                and left(FechaVencimiento,7) >= left(curdate(),7)
+				and substr(to_char(fechavencimiento,'YYYY-MM-DD'),1,7)>=
+				substr(to_char(current_date,'YYYY-MM-DD'),1,7)
+
                 " . $comp2 . "
                 and fmexa.IdEstablecimiento=$IdEstablecimiento
                 and fmexa.IdModalidad=$IdModalidad
@@ -342,9 +348,10 @@ function LotesMedicamento($IdFarmacia, $IdArea, $Medicina, $IdEstablecimiento, $
     if ($IdFarmacia == 4) {
         $SQL = "select distinct l.* from farm_entregamedicamento  fmexa
                 inner join farm_lotes l
-                on fmexa.IdLote=l.IdLote
+                on fmexa.IdLote=l.id
                 where IdMedicina=" . $Medicina . "
-                and left(FechaVencimiento,7) >= left(curdate(),7)
+				and substr(to_char(fechavencimiento,'YYYY-MM-DD'),1,7)>=
+				substr(to_char(current_date,'YYYY-MM-DD'),1,7)
                 and Existencia <> 0
                 and fmexa.IdEstablecimiento=$IdEstablecimiento
                 and fmexa.IdModalidad=$IdModalidad
@@ -353,7 +360,7 @@ function LotesMedicamento($IdFarmacia, $IdArea, $Medicina, $IdEstablecimiento, $
 		order by FechaVencimiento asc";
     }
 
-    $resp = mysql_query($SQL);
+    $resp = pg_query($SQL);
     return($resp);
 }
 
@@ -378,9 +385,9 @@ function ObtenerRecetasSatisfechas($IdReceta, $IdMedicina, $FechaInicio, $FechaF
 			inner join farm_medicinarecetada
 			on farm_medicinarecetada.IdReceta=farm_recetas.IdReceta
 			inner join farm_catalogoproductos
-			on farm_catalogoproductos.IdMedicina=farm_medicinarecetada.IdMedicina
+			on farm_catalogoproductos.Id=farm_medicinarecetada.IdMedicina
 			inner join mnt_grupoterapeutico
-			on mnt_grupoterapeutico.IdTerapeutico=farm_catalogoproductos.IdTerapeutico
+			on mnt_grupoterapeutico.Id=farm_catalogoproductos.IdTerapeutico
 			inner join sec_historial_clinico
 			on sec_historial_clinico.IdHistorialClinico=farm_recetas.IdHistorialClinico
 			inner join mnt_empleados
@@ -400,9 +407,9 @@ function ObtenerRecetasSatisfechas($IdReceta, $IdMedicina, $FechaInicio, $FechaF
 			inner join farm_medicinarecetada
 			on farm_medicinarecetada.IdReceta=farm_recetas.IdReceta
 			inner join farm_catalogoproductos
-			on farm_catalogoproductos.IdMedicina=farm_medicinarecetada.IdMedicina
+			on farm_catalogoproductos.Id=farm_medicinarecetada.IdMedicina
 			inner join mnt_grupoterapeutico
-			on mnt_grupoterapeutico.IdTerapeutico=farm_catalogoproductos.IdTerapeutico
+			on mnt_grupoterapeutico.Id=farm_catalogoproductos.IdTerapeutico
 			inner join sec_historial_clinico
 			on sec_historial_clinico.IdHistorialClinico=farm_recetas.IdHistorialClinico
 			inner join mnt_empleados
@@ -419,7 +426,7 @@ function ObtenerRecetasSatisfechas($IdReceta, $IdMedicina, $FechaInicio, $FechaF
 		  ";
         }
     }
-    $resp = mysql_fetch_array(mysql_query($querySelect));
+    $resp = pg_fetch_array(pg_query($querySelect));
 
     return($resp[0]);
 }
@@ -446,9 +453,9 @@ function ObtenerRecetasInsatisfechas($IdReceta, $IdMedicina, $FechaInicio, $Fech
 					inner join farm_medicinarecetada
 					on farm_medicinarecetada.IdReceta=farm_recetas.IdReceta
 					inner join farm_catalogoproductos
-					on farm_catalogoproductos.IdMedicina=farm_medicinarecetada.IdMedicina
+					on farm_catalogoproductos.Id=farm_medicinarecetada.IdMedicina
 					inner join mnt_grupoterapeutico
-					on mnt_grupoterapeutico.IdTerapeutico=farm_catalogoproductos.IdTerapeutico
+					on mnt_grupoterapeutico.Id=farm_catalogoproductos.IdTerapeutico
 					inner join sec_historial_clinico
 					on sec_historial_clinico.IdHistorialClinico=farm_recetas.IdHistorialClinico
 					inner join mnt_empleados
@@ -468,9 +475,9 @@ function ObtenerRecetasInsatisfechas($IdReceta, $IdMedicina, $FechaInicio, $Fech
 					inner join farm_medicinarecetada
 					on farm_medicinarecetada.IdReceta=farm_recetas.IdReceta
 					inner join farm_catalogoproductos
-					on farm_catalogoproductos.IdMedicina=farm_medicinarecetada.IdMedicina
+					on farm_catalogoproductos.Id=farm_medicinarecetada.IdMedicina
 					inner join mnt_grupoterapeutico
-					on mnt_grupoterapeutico.IdTerapeutico=farm_catalogoproductos.IdTerapeutico
+					on mnt_grupoterapeutico.Id=farm_catalogoproductos.IdTerapeutico
 					inner join sec_historial_clinico
 					on sec_historial_clinico.IdHistorialClinico=farm_recetas.IdHistorialClinico
 					inner join mnt_empleados
@@ -488,7 +495,7 @@ function ObtenerRecetasInsatisfechas($IdReceta, $IdMedicina, $FechaInicio, $Fech
         }//else IF medico
     }
 
-    $resp = mysql_fetch_array(mysql_query($querySelect));
+    $resp = pg_fetch_array(pg_query($querySelect));
 
     return($resp[0]);
 }
@@ -501,7 +508,7 @@ function verificaSatisfecha($IdMedicina, $IdReceta) {
     } else {
         $querySelect = "select * from farm_medicinarecetada where IdReceta='$IdReceta' and IdMedicina='$IdMedicina' and (IdEstado='S' or IdEstado='')";
     }
-    $resp = mysql_query($querySelect);
+    $resp = pg_query($querySelect);
     return($resp);
 }
 
@@ -516,7 +523,7 @@ function NumeroRecetasTotal($IdMedicina, $IdArea, $FechaInicio, $FechaFin) {
 				and farm_medicinarecetada.IdMedicina='$IdMedicina'
 				and (farm_recetas.IdEstado='E' or farm_recetas.IdEstado='ER')
 				and Fecha between '$FechaInicio' and '$FechaFin'";
-    $resp = mysql_fetch_array(mysql_query($querySelect));
+    $resp = pg_fetch_array(pg_query($querySelect));
     return($resp[0]);
 }
 
@@ -525,15 +532,15 @@ function SumatoriaMedicamento($IdMedicina, $FechaInicio, $FechaFin, $IdEstableci
 		    ((sum(Cantidad)/UnidadesContenidas)*PrecioLote) as Costo,Lote,PrecioLote
 			from farm_recetas 
 			inner join farm_medicinarecetada
-			on farm_recetas.IdReceta=farm_medicinarecetada.IdReceta
+			on farm_recetas.Id=farm_medicinarecetada.IdReceta
 			inner join farm_medicinadespachada md
 			on md.IdMedicinaRecetada = farm_medicinarecetada.IdMedicinaRecetada
 			inner join farm_lotes l
-			on l.IdLote = md.IdLote
+			on l.id = md.IdLote
 			inner join farm_catalogoproductos cp
 			on cp.IdMedicina = farm_medicinarecetada.IdMedicina
 			inner join farm_unidadmedidas um
-			on um.IdUnidadMedida = cp.IdUnidadMedida
+			on um.Id = cp.IdUnidadMedida
 			where (farm_medicinarecetada.IdEstado='S' or farm_medicinarecetada.IdEstado='')
 			and farm_medicinarecetada.IdMedicina='$IdMedicina'
 			and (farm_recetas.IdEstado='E' or farm_recetas.IdEstado='ER')
@@ -548,7 +555,7 @@ function SumatoriaMedicamento($IdMedicina, $FechaInicio, $FechaFin, $IdEstableci
                         and l.IdModalidad=$IdModalidad
                         
 			group by md.IdLote";
-    $resp = mysql_query($querySelect);
+    $resp = pg_query($querySelect);
     return($resp);
 }
 
@@ -557,7 +564,7 @@ function ObtenerPrecioMedicina($IdMedicina, $Ano) {
 				from farm_preciosxano
 				where IdMedicina='$IdMedicina'
 				and Ano	='$Ano'";
-    $resp = mysql_fetch_array(mysql_query($query));
+    $resp = pg_fetch_array(pg_query($query));
     if ($resp[0] != NULL) {
         $Respuesta = $resp[0];
     } else {
@@ -590,7 +597,7 @@ function ObtenerAreasFarmacia($IdFarmacia, $IdArea, $FechaInicio, $FechaFin) {
         $query = "select IdArea,Area from mnt_areafarmacia where IdArea=" . $IdArea;
     }
 
-    $resp = mysql_query($query);
+    $resp = pg_query($query);
     return($resp);
 }
 
@@ -598,9 +605,9 @@ function ValorDivisor($IdMedicina, $IdEstablecimiento, $IdModalidad) {
     $SQL = "select DivisorMedicina 
             from farm_divisores 
             where IdMedicina= $IdMedicina
-            and IdEstablecimiento=$IdEstablecimiento
+            and Id_Establecimiento=$IdEstablecimiento
             and IdModalidad=$IdModalidad";
-    $resp = mysql_query($SQL);
+    $resp = pg_query($SQL);
     return($resp);
 }
 

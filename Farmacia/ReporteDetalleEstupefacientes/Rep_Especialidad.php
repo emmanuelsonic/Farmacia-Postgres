@@ -32,10 +32,10 @@ if (!isset($_SESSION["nivel"])) {
         function generaSelect2($IdEstablecimiento,$IdModalidad) { //creacioon de combo para las Regiones
             $conexion = new conexion;
             $conexion->conectar();
-            $consulta = mysql_query("select * 
+            $consulta = pg_query("select * 
                                     from mnt_farmacia  mf
                                     inner join mnt_farmaciaxestablecimiento mfe
-                                    on mf.IdFarmacia=mfe.IdFarmacia
+                                    on mf.Id=mfe.IdFarmacia
                                     where mfe.HabilitadoFarmacia='S'
                                     and mfe.IdEstablecimiento=$IdEstablecimiento
                                     and mfe.IdModalidad=$IdModalidad
@@ -44,7 +44,7 @@ if (!isset($_SESSION["nivel"])) {
             // Voy imprimiendo el primer select compuesto por los paises
             echo "<select name='farmacia' id='farmacia' onChange='cargaContenido8(this.value,this.id)'>";
             echo "<option value='0'>SELECCIONE UNA FARMACIA</option>";
-            while ($registro = mysql_fetch_row($consulta)) {
+            while ($registro = pg_fetch_row($consulta)) {
                 if ($registro[1] != "--") {
                     echo "<option value='" . $registro[0] . "'>" . $registro[1] . "</option>";
                 }
@@ -76,12 +76,12 @@ if (!isset($_SESSION["nivel"])) {
 
             $conexion = new conexion;
             $conexion->conectar();
-            $consulta = mysql_query($query);
+            $consulta = pg_query($query);
             $conexion->desconectar();
 
             echo "<select name='IdSubServicio' id='IdSubServicio' onChange='cargaContenido8(this.value,this.id)'>";
             echo "<option value='0'>SELECCIONE UNA ESPECIALIDAD / SERVICIO</option>";
-            while ($registro = mysql_fetch_row($consulta)) {
+            while ($registro = pg_fetch_row($consulta)) {
                 if ($registro[1] != "--") {
                     echo "<option value='" . $registro[0] . "'>[" . $registro[1] . "] " . $registro[2] . "</option>";
                 }
@@ -90,10 +90,10 @@ if (!isset($_SESSION["nivel"])) {
         }
 
         function ComboMedicos($IdEstablecimiento,$IdModalidad) {
-            $query = "select distinct mnt_empleados.IdEmpleado,NombreEmpleado
-                    from mnt_empleados
+            $query = "select distinct mnt_empleado.IdEmpleado,NombreEmpleado
+                    from mnt_empleado
                     inner join sec_historial_clinico
-                    on sec_historial_clinico.IdEmpleado=mnt_empleados.IdEmpleado
+                    on sec_historial_clinico.IdEmpleado=mnt_empleado.IdEmpleado
 
                     where NombreEmpleado is not null
                     and sec_historial_clinico.IdEstablecimiento=$IdEstablecimiento
@@ -102,13 +102,13 @@ if (!isset($_SESSION["nivel"])) {
 
             $conexion = new conexion;
             $conexion->conectar();
-            $resp = mysql_query($query);
+            $resp = pg_query($query);
             $conexion->desconectar();
 
             $comboMedico = '<select name="IdEmpleado" id="IdEmpleado">
 		  <option value="0">TODOS LOS MEDICOS</option>';
 
-            while ($row = mysql_fetch_array($resp)) {
+            while ($row = pg_fetch_array($resp)) {
                 $comboMedico.='<option value="' . $row["IdEmpleado"] . '">' . $row["NombreEmpleado"] . '</option>';
             }
             $comboMedico.="</select>";
@@ -117,31 +117,31 @@ if (!isset($_SESSION["nivel"])) {
         }
 
         function comboMedicina($IdEstablecimiento,$IdModalidad) {
-            $query2 = "select distinct GrupoTerapeutico,farm_catalogoproductos.IdMedicina,Codigo,
-		 left(farm_catalogoproductos.Nombre,'80') as Nombre,
-		left(farm_catalogoproductos.Concentracion,30) as Concentracion
+            $query2 = "select distinct GrupoTerapeutico,farm_catalogoproductos.id as IdMedicina,Codigo,
+		 substr(farm_catalogoproductos.Nombre,1,80) as Nombre,
+		substr(farm_catalogoproductos.Concentracion,1,30) as Concentracion
 		from farm_catalogoproductos
 		inner join farm_catalogoproductosxestablecimiento fcpe
-		on fcpe.IdMedicina = farm_catalogoproductos.IdMedicina
+		on fcpe.IdMedicina = farm_catalogoproductos.Id
 
 		inner join mnt_grupoterapeutico
-		on mnt_grupoterapeutico.IdTerapeutico=farm_catalogoproductos.IdTerapeutico
+		on mnt_grupoterapeutico.Id=farm_catalogoproductos.IdTerapeutico
 		
 		where fcpe.IdEstablecimiento = $IdEstablecimiento
 		and fcpe.Estupefaciente='S'
-                and fcpe.IdModalidad=$IdModalidad
-		order by mnt_grupoterapeutico.IdTerapeutico,farm_catalogoproductos.Codigo";
+                and fcpe.IdModalidad=$IdModalidad";
+		//order by mnt_grupoterapeutico.Id,farm_catalogoproductos.Codigo";
 
 
             $conexion = new conexion;
             $conexion->conectar();
-            $consulta2 = mysql_query($query2);
+            $consulta2 = pg_query($query2);
             $conexion->desconectar();
 
             $combo = "<select id='IdMedicina' name='IdMedicina'>
 	<option value='0'>TODAS LAS MEDICINAS</option>";
-            while ($row = mysql_fetch_array($consulta2)) {
-                $combo.="<option value='" . $row["IdMedicina"] . "'>" . $row["Codigo"] . " - " . $row["Nombre"] . " - " . $row["Concentracion"] . "</option>";
+            while ($row = pg_fetch_array($consulta2)) {
+                $combo.="<option value='" . $row["idmedicina"] . "'>" . $row["codigo"] . " - " . $row["nombre"] . " - " . $row["concentracion"] . "</option>";
             }
 
             $combo.="</select>";

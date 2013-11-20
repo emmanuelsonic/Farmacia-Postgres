@@ -33,14 +33,14 @@ if (!isset($_SESSION["nivel"])) {
 
         $IdFarmacia = $_REQUEST["IdFarmacia"];
         $IdFarmaciaTemp = $_REQUEST["IdFarmacia"];
-        $resp = mysql_query("select Farmacia 
+        $resp = pg_query("select Farmacia 
                             from mnt_farmacia mf
                             inner join mnt_farmaciaxestablecimiento mfe
-                            on mfe.IdFarmacia=mf.IdFarmacia
-                            where mf.IdFarmacia='$IdFarmacia'
+                            on mfe.IdFarmacia=mf.Id
+                            where mf.Id='$IdFarmacia'
                             and mfe.IdEstablecimiento=$IdEstablecimiento
                             and mfe.IdModalidad=$IdModalidad");
-        $RowArea = mysql_fetch_array($resp);
+        $RowArea = pg_fetch_array($resp);
         $Farmacia = $RowArea[0];
         $NombreFarmacia = "<tr><td align='center' colspan='8' class='MYTABLE'><strong><h2>Farmacia: " . $Farmacia . "</h2></strong></td></tr>";
     } else {
@@ -54,14 +54,15 @@ if (!isset($_SESSION["nivel"])) {
 
         $IdArea = $_REQUEST["IdArea"];
         $IdAreaTemp = $_REQUEST["IdArea"];
-        $resp = mysql_query("select Area 
+        $resp = pg_query("select Area 
                             from mnt_areafarmacia maf
                             inner join mnt_areafarmaciaxestablecimiento mafe
-                            where maf.IdArea='$IdArea'
+							on maf.id=mafe.idarea
+                            where maf.Id='$IdArea'
                             and mafe.IdEstablecimiento=$IdEstablecimiento
                             and mafe.IdModalidad=$IdModalidad
                             ");
-        $RowArea = mysql_fetch_array($resp);
+        $RowArea = pg_fetch_array($resp);
         $area = $RowArea[0];
         $NombreArea = "<tr><td align='center' colspan='8' class='MYTABLE'><strong><h4> Area: " . $area . "</strong></h4></td></tr>";
     } else {
@@ -120,13 +121,13 @@ if (!isset($_SESSION["nivel"])) {
 //*************************************
 //******************************* QUERIES Y RECORRIDOS
     $nombreTera = NombreTera($grupoTerapeutico,$IdEstablecimiento,$IdModalidad);
-    while ($grupos = mysql_fetch_array($nombreTera)) {
-        $NombreTerapeutico = $grupos["GrupoTerapeutico"];
-        $IdTerapeutico = $grupos["IdTerapeutico"];
+    while ($grupos = pg_fetch_array($nombreTera)) {
+        $NombreTerapeutico = $grupos["grupoterapeutico"];
+        $IdTerapeutico = $grupos["id"];
         if ($NombreTerapeutico != "--") {
 
             $resp = QueryExterna($IdFarmacia, $IdArea, $IdTerapeutico, $Idmedicina, $IdEstablecimiento, $IdModalidad);
-            if ($row = mysql_fetch_array($resp)) {
+            if ($row = pg_fetch_array($resp)) {
                 //Todos los medicamentos
                 $SubTotal = 0;
                 $TotalRecetas = 0;
@@ -155,11 +156,11 @@ if (!isset($_SESSION["nivel"])) {
 
                 do {
                     $GrupoTerapeutico = $IdTerapeutico;
-                    $Medicina = $row["IdMedicina"];
-                    $codigoMedicina = $row["Codigo"];
-                    $NombreMedicina = htmlentities($row["Nombre"]);
-                    $concentracion = $row["Concentracion"];
-                    $presentacion = $row["FormaFarmaceutica"] . ' - ' . $row["Presentacion"];
+                    $Medicina = $row["id"];
+                    $codigoMedicina = $row["codigo"];
+                    $NombreMedicina = htmlentities($row["nombre"]);
+                    $concentracion = $row["concentracion"];
+                    $presentacion = $row["formafarmaceutica"] . ' - ' . $row["presentacion"];
 
                     $Nrecetas = 0; //conteo de recetas
                     $consumo = 0;
@@ -170,19 +171,19 @@ if (!isset($_SESSION["nivel"])) {
                     $TotalExistencia = 0;
 
 
-                    if ($row2 = mysql_fetch_array($respuesta)) {
+                    if ($row2 = pg_fetch_array($respuesta)) {
                         /* verificacion de datos */
-                        $UnidadMedida = $row2["Descripcion"]; //Tipo de unidad de Medida
-                        $IdMedicinaEstudio = $row2["IdMedicina"];
+                        $UnidadMedida = $row2["descripcion"]; //Tipo de unidad de Medida
+                        $IdMedicinaEstudio = $row2["idmedicina"];
                         do {
-                            $TotalExistencia+=$row2["Total"];
-                        } while ($row2 = mysql_fetch_array($respuesta));
+                            $TotalExistencia+=$row2["total"];
+                        } while ($row2 = pg_fetch_array($respuesta));
                     } else {
                         $UnidadMedida = "&nbsp;";
                     }//if row2
 
 
-                    if ($respDivisor = mysql_fetch_array(ValorDivisor($Medicina,$IdEstablecimiento,$IdModalidad))) {
+                    if ($respDivisor = pg_fetch_array(ValorDivisor($Medicina,$IdEstablecimiento,$IdModalidad))) {
 
                         $Divisor = $respDivisor[0];
 
@@ -226,7 +227,7 @@ if (!isset($_SESSION["nivel"])) {
                     /*                     * ************************************************* */
                     $resp2 = SumatoriaMedicamento($Medicina, $FechaInicio, $FechaFin, $IdEstablecimiento, $IdModalidad);
                     $CantidadReal = 0;
-                    if ($row2 = mysql_fetch_array($resp2)) {
+                    if ($row2 = pg_fetch_array($resp2)) {
 
                         $Costo = 0;
                         $Lotes = "";
@@ -234,7 +235,7 @@ if (!isset($_SESSION["nivel"])) {
                             $CantidadReal+=$row2["TotalMedicamento"];
                             $Costo+=$row2["Costo"];
                             //Informacion del o los lotes utilizados
-                        } while ($row = mysql_fetch_array($resp2));
+                        } while ($row = pg_fetch_array($resp2));
                     }
 
 
@@ -248,10 +249,10 @@ if (!isset($_SESSION["nivel"])) {
 
                     $respLotes = LotesMedicamento($IdFarmacia, $IdArea, $Medicina, $IdEstablecimiento, $IdModalidad);
                     $Lotes = '';
-                    if ($rowLote = mysql_fetch_array($respLotes)) {
+                    if ($rowLote = pg_fetch_array($respLotes)) {
                         do {
                             $Lotes.="Lote: " . $rowLote["Lote"] . "<br> Precio: $" . $rowLote["PrecioLote"] . "<br><br>";
-                        } while ($rowLote = mysql_fetch_array($respLotes));
+                        } while ($rowLote = pg_fetch_array($respLotes));
                     } else {
                         $Lotes = "&nbsp;";
                     }
@@ -333,7 +334,7 @@ if (!isset($_SESSION["nivel"])) {
                       </tr>'; */
 
                     //}//nuevo IF test del medicamento
-                } while ($row = mysql_fetch_array($resp)); //while de la informacion del medicamento
+                } while ($row = pg_fetch_array($resp)); //while de la informacion del medicamento
             }
         }//IF NombreTerapeutico!=--
     }//while de grupos terapeuticos  

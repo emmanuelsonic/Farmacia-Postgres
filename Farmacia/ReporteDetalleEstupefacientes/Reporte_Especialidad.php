@@ -31,12 +31,12 @@ if (!isset($_SESSION["IdFarmacia2"])) {
         $IdSubEspecialidad = $_REQUEST["select1"];
         $IdMedico = $_REQUEST["select2"]; //IdMedico si no es seleccinado siempre es Cero
         if ($IdMedico != '0') {
-            $MedRow = mysql_fetch_array(mysql_query("select NombreEmpleado 
-                                                    from mnt_empleados 
+            $MedRow = pg_fetch_array(pg_query("select NombreEmpleado 
+                                                    from mnt_empleado 
                                                     where IdEmpleado='$IdMedico'
                                                     and IdEstablecimiento=$IdEstablecimiento
                                                     "));
-            $NomMed = $MedRow["NombreEmpleado"];
+            $NomMed = $MedRow["nombreempleado"];
         } else {
             $NomMed = "";
         }
@@ -48,10 +48,10 @@ if (!isset($_SESSION["IdFarmacia2"])) {
         }
 
         if ($IdFarmacia != 0) {
-            $Farmacia = mysql_fetch_array(mysql_query("select Farmacia 
+            $Farmacia = pg_fetch_array(pg_query("select Farmacia 
                                                         from mnt_farmacia mf
                                                         inner join mnt_farmaciaxestablecimiento mfe
-                                                        on mfe.IdFarmacia = mf.IdFarmacia
+                                                        on mfe.IdFarmacia = mf.Id
                                                         where mfe.IdFarmacia=$IdFarmacia
                                                         and mfe.IdEstablecimiento=$IdEstablecimiento
                                                         and mfe.IdModalidad=$IdModalidad"));
@@ -72,7 +72,7 @@ if (!isset($_SESSION["IdFarmacia2"])) {
 
         /* OBTENCION DE NOMBRE SUBESPECIALIDAD */
         if ($IdSubEspecialidad != 0) {
-            $RowEsp = mysql_fetch_array(mysql_query("select concat_ws(' ','[',NombreServicio,']',NombreSubServicio) as NombreServicio
+            $RowEsp = pg_fetch_array(pg_query("select concat_ws(' ','[',NombreServicio,']',NombreSubServicio) as NombreServicio
                                                     from mnt_subservicio mss
                                                     inner join mnt_subservicioxestablecimiento msse
                                                     on msse.IdSubServicio=mss.IdSubServicio
@@ -94,7 +94,7 @@ if (!isset($_SESSION["IdFarmacia2"])) {
 
         /* OBTENCION DE NOMBRE DE AREA */
         if ($IdArea != 0) {
-            $RowArea = mysql_fetch_array(mysql_query("select Area from mnt_areafarmacia where IdArea='$IdArea'"));
+            $RowArea = pg_fetch_array(pg_query("select Area from mnt_areafarmacia where Id='$IdArea'"));
             $area = $RowArea[0];
         }
 
@@ -141,14 +141,14 @@ if (!isset($_SESSION["IdFarmacia2"])) {
 
 //******************************* QUERIES Y RECORRIDOS
         $nombreTera = GrupoTerapeutico($IdMedicina, $IdEstablecimiento, $IdModalidad);
-        while ($grupos = mysql_fetch_array($nombreTera)) {
-            $NombreTerapeutico = $grupos["GrupoTerapeutico"];
-            $IdTerapeutico = $grupos["IdTerapeutico"];
+        while ($grupos = pg_fetch_array($nombreTera)) {
+            $NombreTerapeutico = $grupos["grupoterapeutico"];
+            $IdTerapeutico = $grupos["id"];
 
 //*****Verificacion de numero de datos, asi se rompe el lazo para evitar impresiones de datos no existentes
             $respuesta = ObtenerReporteEspecialidades($IdTerapeutico, $IdMedicina, $FechaInicio, $FechaFin, $IdSubEspecialidad, $IdMedico, $IdArea, $IdFarmacia, $IdEstablecimiento, $IdModalidad);
 
-            if ($row = mysql_fetch_array($respuesta)) {
+            if ($row = pg_fetch_array($respuesta)) {
 
 //***************
                 $SubTotal = 0;
@@ -206,14 +206,14 @@ if (!isset($_SESSION["IdFarmacia2"])) {
                       $Monto=$CantidadReal*$Precio;
                      */
                     $respSum = SumatoriaMedicamento($Medicina, $IdArea, $IdMedico, $IdSubEspecialidad, $FechaInicio, $FechaFin, $IdFarmacia, $IdEstablecimiento, $IdModalidad);
-                    if ($row2 = mysql_fetch_array($respSum)) {
+                    if ($row2 = pg_fetch_array($respSum)) {
                         $Lote = "";
                         $CantidadReal = 0;
                         $Monto = 0;
                         do {
                             $CantidadReal+=$row2["TotalMedicamento"];
 
-                            if ($respDivisor = mysql_fetch_array(ValorDivisor($Medicina,$IdEstablecimiento,$IdModalidad))) {
+                            if ($respDivisor = pg_fetch_array(ValorDivisor($Medicina,$IdEstablecimiento,$IdModalidad))) {
                                 $Divisor = $respDivisor[0];
 
                                 if ($CantidadReal < 1) {
@@ -252,7 +252,7 @@ if (!isset($_SESSION["IdFarmacia2"])) {
 
                             $Monto+=$row2["Costo"];
                             $Lote.=" Lote: " . $row2["Lote"] . "<br> $" . $row2["PrecioLote"] . "<br><br>";
-                        } while ($row2 = mysql_fetch_array($respSum));
+                        } while ($row2 = pg_fetch_array($respSum));
                     }
 
 
@@ -260,7 +260,7 @@ if (!isset($_SESSION["IdFarmacia2"])) {
                     $MontoNuevo = number_format($Monto, 3, '.', ',');
                     $SubTotal+=$Monto;
 
-                    if ($respDivisor = mysql_fetch_array(ValorDivisor($Medicina,$IdEstablecimiento,$IdModalidad))) {
+                    if ($respDivisor = pg_fetch_array(ValorDivisor($Medicina,$IdEstablecimiento,$IdModalidad))) {
                         $Divisor = $respDivisor[0];
 
                         $CantidadReal = number_format($CantidadReal, 3, '.', '');
@@ -312,7 +312,7 @@ if (!isset($_SESSION["IdFarmacia2"])) {
 	  <td align="right" style="vertical-align:middle">' . $PrecioNuevo . '</td>
       <td align="right" style="vertical-align:middle">' . $MontoNuevo . '</td>
     </tr>';
-                } while ($row = mysql_fetch_array($respuesta));
+                } while ($row = pg_fetch_array($respuesta));
 
                 $Total+=$SubTotal;
 

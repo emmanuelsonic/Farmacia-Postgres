@@ -29,7 +29,7 @@ if (!isset($_SESSION["nivel"])) { ?>
 
         function generaSelect2($IdEstablecimiento,$IdModalidad) { //creacioon de combo para las Regiones
             conexion::conectar();
-            $consulta = mysql_query("select msse.IdSubServicioxEstablecimiento,NombreServicio,NombreSubServicio 
+            $consulta = pg_query("select msse.IdSubServicioxEstablecimiento,NombreServicio,NombreSubServicio 
 				from mnt_subservicio mss
 				inner join mnt_subservicioxestablecimiento msse
 				on msse.IdSubServicio=mss.IdSubServicio
@@ -47,7 +47,7 @@ if (!isset($_SESSION["nivel"])) { ?>
             // Voy imprimiendo el primer select compuesto por los paises
             echo "<select name='IdSubServicio' id='IdSubServicio'>";
             echo "<option value='0'>[General ...]</option>";
-            while ($registro = mysql_fetch_row($consulta)) {
+            while ($registro = pg_fetch_row($consulta)) {
 
                 echo "<option value='" . $registro[0] . "'> [" . $registro[1] . "] " . $registro[2] . "</option>";
             }
@@ -61,10 +61,10 @@ if (!isset($_SESSION["nivel"])) { ?>
             } else {
                 $complemento = "and mf.IdFarmacia in(1,2,3)";
             }
-            $consulta = mysql_query("select mf.IdFarmacia,Farmacia 
+            $consulta = pg_query("select mf.id as IdFarmacia,Farmacia 
                                      from mnt_farmacia mf
                                      inner join mnt_farmaciaxestablecimiento mfe
-                                     on mfe.IdFarmacia=mf.IdFarmacia
+                                     on mfe.IdFarmacia=mf.Id
                                      where mfe.IdEstablecimiento=$IdEstablecimiento
                                      and mfe.IdModalidad=$IdModalidad
                                      " . $complemento." ");
@@ -72,7 +72,7 @@ if (!isset($_SESSION["nivel"])) { ?>
             // Voy imprimiendo el primer select compuesto por los paises
             echo "<select name='IdFarmacia' id='IdFarmacia'>";
             echo "<option value='0'>[General ...]</option>";
-            while ($registro = mysql_fetch_row($consulta)) {
+            while ($registro = pg_fetch_row($consulta)) {
 
                 echo "<option value='" . $registro[0] . "'>" . $registro[1] . "</option>";
             }
@@ -137,10 +137,10 @@ if (!isset($_SESSION["nivel"])) { ?>
                                     <option value="0">[General ...]</option>
                                     <?php
                                     conexion::conectar();
-                                    $consulta = mysql_query("select * 
-                                                                from mnt_grupoterapeutico") or die(mysql_error());
+                                    $consulta = pg_query("select * 
+                                                                from mnt_grupoterapeutico") or die(pg_error());
                                     conexion::desconectar();
-                                    while ($registro = mysql_fetch_row($consulta)) {
+                                    while ($registro = pg_fetch_row($consulta)) {
                                         // Convierto los caracteres conflictivos a sus entidades HTML correspondientes para su correcta visualizacion
                                         $registro[1] = htmlentities($registro[1]);
                                         // Imprimo las opciones del select
