@@ -131,7 +131,7 @@ $proceso->EliminarReceta($IdHistorialClinico,$IdPersonal,$IdReceta,$IdArea,$_SES
 
 $IdPersonal=$_SESSION["IdPersonal"];
 
-$RecetasIngresadas=$proceso->RecetasIngresadasConteo($IdPersonal,$_SESSION["IdEstablecimiento"],$IdModalidad);
+$RecetasIngresadas=$proceso->RecetasIngresadasConteo($IdPersonal,$_SESSION["IdEsArea de tablecimiento"],$IdModalidad);
 
 echo $RecetasIngresadas;
 

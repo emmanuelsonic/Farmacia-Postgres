@@ -16,7 +16,7 @@ $page = 1;
 if(isset($_GET['page']) and is_numeric($_GET['page']) and $page = $_GET['page'])
 		$limit = " LIMIT ".(($page-1)*$items).",$items";
 	else
-		$limit = " LIMIT ".$items;
+		$limit = " LIMIT $items";
 
 if(isset($_GET['q']) and !eregi('^ *$',$_GET['q'])){
 		$q = $_GET['q']; //para ejecutar consulta
@@ -123,7 +123,7 @@ this.close();
 	   <td width="380" align="center">&nbsp;</td>
 	   </tr>
 	 <tr>
-	 <td><strong>Nombre del Medico:</strong> 
+             <td><strong>Nombre del M&eacute;dico:</strong> 
 	   <input type="text" id="q" name="q" value="<?php if(isset($q)) echo $busqueda;?>" onKeyUp="return buscar()" style="border-bottom-color:#000099; border-top-color:#000099; border-left-color:#000099; border-right-color:#000099" size="50">
 		
       &nbsp;&nbsp;<input type="button" value="Buscar" id="boton" style="border-bottom-color:#000099; border-left-color:#000099; border-top-color:#000099; border-right-color:#000099">
@@ -145,26 +145,26 @@ echo "Resultados que coinciden con tu b&uacute;squeda \"<strong>$busqueda</stron
 			}
 	?><br>
     <?php 
-		if($aux['total']>0){
-			$p = new pagination;
-			$p->Items($aux['total']);
-			$p->limit($items);
-			if(isset($q))
-					$p->target("buscador_medico.php?q=".$q);
-				else
-					$p->target("buscador_medico.php");
-			$p->currentPage($page);
-			$p->show();
-			echo "\t<table class=\"registros\">\n";
-			echo "<tr class=\"titulos\"><td>CODIGO</td><td>NOMBRE DE MEDICO</td></tr>";
-			$r=0;
-			while($row = pg_fetch_assoc($query)){
-			
-		if(isset($page)){
-echo "\t\t<tr class=\"row$r\"><td align='center'>".$row["codigo_farmacia"]."</td>
-<td align=\"left\"><a href=\"#\" onclick=\"javascript:UbicarMedico(0,'0','".$row["id"]."','".htmlentities($row["nombreempleado"])."')\">".htmlentities($row["nombreempleado"])."</a></td>
-</tr>";
-	}//if
+    if($aux['total']>0){
+            $p = new pagination;
+            $p->Items($aux['total']);
+            $p->limit($items);
+            if(isset($q))
+                            $p->target("buscador_medico.php?q=".$q);
+                    else
+                            $p->target("buscador_medico.php");
+            $p->currentPage($page);
+            $p->show();
+            echo "\t<table class=\"registros\">\n";
+            echo "<tr class=\"titulos\"><td>CODIGO</td><td>NOMBRE DE MEDICO</td></tr>";
+            $r=0;
+            while($row = pg_fetch_assoc($query)){
+
+            if(isset($page)){
+            echo "\t\t<tr class=\"row$r\"><td align='center'>".$row["codigo_farmacia"]."</td>
+            <td align=\"left\"><a href=\"#\" onclick=\"javascript:UbicarMedico(0,'0','".$row["id"]."','".htmlentities($row["nombreempleado"])."')\">".htmlentities($row["nombreempleado"])."</a></td>
+            </tr>";
+                    }//if
 
           if($r%2==0)++$r;else--$r;
         }

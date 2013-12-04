@@ -1555,15 +1555,16 @@ function ObtenerExistencia($IdMedicina,$IdArea,$Fecha,$IdEstablecimiento,$IdModa
 	$SQL="SELECT sum(Existencia) as Existencia
  	FROM farm_medicinaexistenciaxarea fmea
         INNER JOIN farm_lotes fl ON fmea.IdLote = fl.IdLote
-	where IdMedicina=".$IdMedicina."
-	and IdArea=".$IdArea."
-        and fmea.IdEstablecimiento=".$IdEstablecimiento."
+	WHERE IdMedicina=".$IdMedicina."
+	AND IdArea=".$IdArea."
+        AND fmea.IdEstablecimiento=".$IdEstablecimiento."
         AND fmea.IdModalidad = ".$IdModalidad."
-        AND FechaVencimiento >= '$Fecha'";
+        AND left('$Fecha',7) <= left(FechaVencimiento,7)";
         /* SELECT sum(Existencia) as Existencia
  	FROM farm_medicinaexistenciaxarea 
 	where IdMedicina=".$IdMedicina."
-	and IdArea=".$IdArea */
+	and IdArea=".$IdArea 
+        AND FechaVencimiento >= '$Fecha'*/
 	$resp=mysql_fetch_array(mysql_query($SQL));
         if($resp[0]!='' and $resp[0]!=NULL)
         {

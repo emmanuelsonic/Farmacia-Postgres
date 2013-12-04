@@ -70,7 +70,7 @@ if (!isset($_SESSION["nivel"])) {
         var key = nav4 ? evt.which : evt.keyCode;	
         if( !( (key >= 48 && key <= 57) || key < 13 ) )
         {
-            if (!(key == 116 || key == 84 ))
+            if (!(key == 116 || key == 84 || key == 13))
             {
                 return Saltos(key,Objeto);
             }

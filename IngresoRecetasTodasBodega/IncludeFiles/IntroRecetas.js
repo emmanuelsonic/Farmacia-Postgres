@@ -805,6 +805,7 @@ function FinalizarReceta2(){
 					document.getElementById('Cantidad').disabled=true;
 							document.getElementById('Cantidad').value='';
 					//document.getElementById('Busqueda').disabled=true;
+                                        document.getElementById('CorrelativoAnual').value='';
 					document.getElementById('Agregar').disabled=true;
 					document.getElementById('Finalizar').disabled=true;
 					document.getElementById('Dosis').disabled=true;

@@ -92,9 +92,9 @@ case 1:
 	   $CantidadIntro=  number_format($row["Cantidad"],0,'.','');
 	}
 
-		if($row["CorrelativoAnual"]=="" or $row["CorrelativoAnual"]==NULL){$CodigoReceta=$row["IdReceta"];}else{$CodigoReceta=$row["CorrelativoAnual"];}	
-
-		$reporte.='<tr class="FONDO2"><td align="center" style="vertical-align:middle;"><a style="color:#0033FF;" onclick="VentanaBusqueda3('.$row["IdReceta"].','.$IdMedicina.');">'.$CodigoReceta.'</a></td><td style="vertical-align:middle;">'.htmlentities($row["Nombre"]).', '.$row["Concentracion"].'<br>'.htmlentities($row["FormaFarmaceutica"].' - '.$row["Presentacion"]).'</td><td align="center" style="vertical-align:middle;">'.$CantidadIntro.'</td><td style="vertical-align:middle;"><p>'.htmlentities($row["NombreEmpleado"]).'</p></td><td align="center" style="vertical-align:middle;">'.$row["Fecha"].'</td><td align="center" style="vertical-align:middle;">'.$row["NombreFarmacia"]." -> ".$row["Area"].'</td>
+		if($row["CorrelativoAnual"]=="" or $row["CorrelativoAnual"]==NULL){$CodigoReceta='"'.$row["IdReceta"].'"';}else{$CodigoReceta='"'.$row["CorrelativoAnual"].'"';}	
+                $FechaM = "'".$row["Fecha"]."'";
+		$reporte.='<tr class="FONDO2"><td align="center" style="vertical-align:middle;"><a style="color:#0033FF;" onclick="VentanaBusqueda3('.$row["IdReceta"].','.$row["IdMedicina"].','.$FechaM.');">'.$CodigoReceta.'</a></td><td style="vertical-align:middle;">'.htmlentities($row["Nombre"]).', '.$row["Concentracion"].'<br>'.htmlentities($row["FormaFarmaceutica"].' - '.$row["Presentacion"]).'</td><td align="center" style="vertical-align:middle;">'.$CantidadIntro.'</td><td style="vertical-align:middle;"><p>'.htmlentities($row["NombreEmpleado"]).'</p></td><td align="center" style="vertical-align:middle;">'.$row["Fecha"].'</td><td align="center" style="vertical-align:middle;">'.$row["NombreFarmacia"]." -> ".$row["Area"].'</td>
 	<td align="center" style="vertical-align:middle;">'.htmlentities($row["Digitador"]).'</td>		
 	</tr>';
 		
@@ -446,9 +446,9 @@ break;
 
 case 17:
 	$IdMedicina=$_GET["IdMedicina"];
-	
+	$Fecha=$_GET["Fecha"];
 
-	echo $proceso->ObtenerExistencia($IdMedicina,$_SESSION["TipoFarmacia"],$IdEstablecimiento,$IdModalidad);
+	echo $proceso->ObtenerExistencia($IdMedicina,$_SESSION["TipoFarmacia"],$Fecha, $IdEstablecimiento,$IdModalidad);
 
 break;
 

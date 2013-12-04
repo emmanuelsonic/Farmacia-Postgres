@@ -160,15 +160,9 @@ echo "Resultados que coinciden con tu b&uacute;squeda \"<strong>$busqueda</stron
 			$r=0;
 			while($row = pg_fetch_assoc($query)){
 			
-			/*Ubicaciones segun version MySQL
-				CONEXT: Consulta Externa
-				CONBMG: Bienestar Magisterial
-				
-				*/
 		if(isset($page)){
-				if($row["Ubicacion"]=='INSUMO' or $row["Ubicacion"]=="CONEXT")
-					{$Ubicacion=$row["Ubicacion"]." -> ";}
-						else{$Ubicacion="HOSPIT. -> ";}
+		
+				if($row["Ubicacion"]=='INSUMO' or $row["Ubicacion"]=="CONEXT"){$Ubicacion=$row["Ubicacion"]." -> ";}else{$Ubicacion="HOSPIT. -> ";}
 				if($row["Ubicacion"]=='CONBMG'){$Ubicacion="";}
 echo "\t\t<tr class=\"row$r\">
 <td align=\"left\"><a href=\"#\" onclick=\"javascript:UbicarSubServicio(".$row['IdSubServicioxEstablecimiento'].",'".htmlentities($row['CodigoFarmacia'])."')\">".strtoupper (htmlentities($row['CodigoFarmacia']))."</a></td>

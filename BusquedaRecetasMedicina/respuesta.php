@@ -7,19 +7,19 @@ $Busqueda = $_GET['q'];
 $IdEstablecimiento = $_SESSION["IdEstablecimiento"];
 $IdModalidad = $_SESSION["IdModalidad"];
 
-$querySelect = "select Codigo, Nombre, Concentracion, fcp.IdMedicina, FormaFarmaceutica, Presentacion
-              from farm_catalogoproductos fcp
-inner join farm_catalogoproductosxestablecimiento fcpe
-on fcpe.IdMedicina=fcp.IdMedicina
-where (Nombre like '%$Busqueda%' or Codigo ='$Busqueda')
-and Condicion='H'
-and IdEstablecimiento=$IdEstablecimiento
-and IdModalidad=$IdModalidad";
-$resp = mysql_query($querySelect);
-while ($row = mysql_fetch_array($resp)) {
-    $Nombre = $row["Nombre"] . " - " . $row["Concentracion"] . " - " . $row["FormaFarmaceutica"] . " - " . $row["Presentacion"];
-    $IdMedicina = $row["IdMedicina"];
-    $Codigo = $row["Codigo"];
+$querySelect = "SELECT Codigo, Nombre, Concentracion, fcp.Id, FormaFarmaceutica, Presentacion
+                FROM farm_catalogoproductos AS fcp
+                INNER JOIN farm_catalogoproductosxestablecimiento fcpe
+                ON fcpe.IdMedicina=fcp.Id
+                WHERE (Nombre like '%$Busqueda%' or Codigo ='$Busqueda')
+                AND Condicion='H'
+                AND fcpe.IdEstablecimiento=$IdEstablecimiento
+                AND fcpe.IdModalidad=$IdModalidad";
+$resp = pg_query($querySelect);
+while ($row = pg_fetch_array($resp)) {
+    $Nombre = $row["nombre"] . " - " . $row["concentracion"] . " - " . $row["formafarmaceutica"] . " - " . $row["presentacion"];
+    $IdMedicina = $row["id"];
+    $Codigo = $row["codigo"];
     ?>
     <li onselect="this.text.value = '<?php echo htmlentities($Nombre); ?>';
             $('IdMedicina').value = '<?php echo $IdMedicina; ?>';

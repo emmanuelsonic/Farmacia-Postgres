@@ -158,7 +158,7 @@ echo "Resultados que coinciden con tu b&uacute;squeda \"<strong>$busqueda</stron
 			echo "\t<table class=\"registros\">\n";
 			echo "<tr class=\"titulos\"><td>CODIGO</td><td>ESPECIALIDAD/SERVICIO</td></tr>";
 			$r=0;
-			while($row = pg_fetch_array($query), null, PGSQL_ASSOC){
+		while($row = pg_fetch_assoc($query)){
 			
 		if(isset($page)){
 		

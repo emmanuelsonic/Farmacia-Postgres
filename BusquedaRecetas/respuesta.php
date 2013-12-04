@@ -11,22 +11,24 @@ switch($Bandera){
             $IdArea=$_GET["IdAreaActual"];
 
 
-            $querySelect="select distinct Codigo, Nombre, Concentracion, fcp.IdMedicina, FormaFarmaceutica, Presentacion
-                                from farm_catalogoproductos fcp
-                                inner join farm_catalogoproductosxestablecimiento fcpe on fcpe.IdMedicina=fcp.IdMedicina
-                                inner join farm_medicinaexistenciaxarea fmexa on fmexa.IdMedicina=fcpe.IdMedicina
-                                where (Nombre like '%$Busqueda%' or Codigo ='$Busqueda')
-                                and IdArea='$IdArea'
-                                and fcpe.IdEstablecimiento=".$_SESSION["IdEstablecimiento"]."
-                                and fcpe.IdModalidad=".$_SESSION["IdModalidad"]."
-                                and Condicion = 'H'
-                                and IdTerapeutico is not null
-                                order by fcp.IdMedicina";
-                    $resp=mysql_query($querySelect);
-            while($row=mysql_fetch_array($resp)){
-                    $Nombre=$row["Nombre"]." - ".$row["Concentracion"]." - ".$row["FormaFarmaceutica"]." - ".$row["Presentacion"];
-                    $IdMedicina=$row["IdMedicina"];
-                    $Codigo=$row["Codigo"];
+            $querySelect="SELECT DISTINCT Codigo, Nombre, Concentracion, fcp.Id, FormaFarmaceutica, Presentacion
+                            FROM farm_catalogoproductos AS fcp
+                            INNER JOIN farm_catalogoproductosxestablecimiento fcpe ON fcpe.IdMedicina=fcp.Id
+                            INNER JOIN farm_medicinaexistenciaxarea fmexa ON fmexa.IdMedicina=fcpe.IdMedicina
+
+                            WHERE (Nombre like '%$Busqueda%' or Codigo ='$Busqueda')
+                            AND IdArea='$IdArea'
+                            AND fcpe.IdEstablecimiento=".$_SESSION["IdEstablecimiento"]."
+                            AND fcpe.IdModalidad=".$_SESSION["IdModalidad"]."
+                            AND Condicion = 'H'
+                            AND IdTerapeutico IS NOT NULL
+                            ORDER BY fcp.Id";
+                       
+           $resp=pg_query($querySelect);
+            while($row=pg_fetch_array($resp)){
+                    $Nombre=$row["nombre"]." - ".$row["concentracion"]." - ".$row["formafarmaceutica"]." - ".$row["presentacion"];
+                    $IdMedicina=$row["id"];
+                    $Codigo=$row["codigo"];
             ?>
             <li onselect="this.text.value = '<?php echo htmlentities($Nombre);?>';$('IdMedicina').value='<?php echo $IdMedicina;?>';ObtenerExistenciaTotal();"> 
                     <span><?php echo $Codigo;?></span>
@@ -37,19 +39,17 @@ switch($Bandera){
     break;
     
     case 2:// busqueda de pacientes
-            $querySelect="  select IdNumeroExp,mnt_datospaciente.IdPaciente,
-                            concat_ws(' ',PrimerNombre,SegundoNombre,TercerNombre,PrimerApellido,SegundoApellido) as NombrePaciente
-                            
-                            from mnt_datospaciente
-                            inner join mnt_expediente on mnt_expediente.IdPaciente=mnt_datospaciente.IdPaciente				
-                            where (concat_ws(' ',concat_ws(' ',PrimerNombre,SegundoNombre,TercerNombre),CONCAT_WS(' ',PrimerApellido,SegundoApellido)) like '%$Busqueda%' or IdNumeroExp = '$Busqueda')
+            $querySelect="SELECT mnt_paciente.id, primer_nombre||' '||segundo_nombre||' '||(case when tercer_nombre!='' then tercer_nombre else '' end )||' '||primer_apellido||' '||segundo_apellido as NombrePaciente, numero
+                            FROM mnt_paciente
+                            INNER JOIN mnt_expediente ON mnt_expediente.id_paciente=mnt_paciente.id
+                            WHERE (primer_nombre||' '||segundo_nombre||' '||(case when tercer_nombre!='' then tercer_nombre else '' end )||' '||primer_apellido||' 	'||segundo_apellido)  like '%$Busqueda%' or numero = '$Busqueda'
                             limit 100";
 
-            $resp=mysql_query($querySelect);
-            while($row=mysql_fetch_array($resp)){
-                $NombrePaciente=$row["NombrePaciente"];
-                $IdPaciente=$row["IdPaciente"];
-                $IdNumeroExp=$row["IdNumeroExp"];
+            $resp=pg_query($querySelect);
+            while($row=pg_fetch_array($resp)){
+                $NombrePaciente=$row["nombrepaciente"];
+                //$IdPaciente=$row["IdPaciente"];
+                $IdNumeroExp=$row["numero"];
 ?>
                 <li onselect="this.text.value = '<?php echo htmlentities($NombrePaciente);?>';$('Expediente').value='<?php echo $IdNumeroExp;?>';$('Expediente').innerHTML='<?php echo $IdNumeroExp;?>';$('Nombre').innerHTML='<?php echo htmlentities($NombrePaciente);?>';">        
                     <strong><?php echo htmlentities($NombrePaciente)."   [ ".htmlentities($IdNumeroExp)." ]";?></strong>

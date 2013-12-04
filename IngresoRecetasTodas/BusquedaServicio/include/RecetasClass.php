@@ -14,7 +14,7 @@ class Classquery{
                     and mnt_subservicioxestablecimiento.CodigoFarmacia is not null
                     and mnt_subservicioxestablecimiento.CodigoFarmacia <> 0
                     and mnt_subservicioxestablecimiento.IdEstablecimiento=".$IdEstablecimiento."
-                    and mnt_subservicioxestablecimiento.IdModalidad=$IdModalidad   ";
+                    and mnt_subservicioxestablecimiento.IdModalidad=$IdModalidad    ";
             // le elimine un and para que muestre todos los servicios uncluyendo lo de BM
             //  -- and mse.IdServicio <> 'CONBMG' y agrege and mnt_subservicioxestablecimiento.CodigoFarmacia <> 0
  break;

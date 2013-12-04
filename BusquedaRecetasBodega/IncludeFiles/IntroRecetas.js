@@ -568,6 +568,7 @@ function ObtenerExistenciaTotal() {
     var IdMedicina = document.getElementById('IdMedicina').value;
     var ExistenciaTotal = document.getElementById('ExistenciaTotal');
     var IdArea = document.getElementById('IdAreaActual').value;
+    var Fecha = document.getElementById('Fecha').value;
 
     var ajax = xmlhttp();
     ajax.onreadystatechange = function() {
@@ -580,7 +581,7 @@ function ObtenerExistenciaTotal() {
         }
     }
 
-    ajax.open("GET", "IncludeFiles/IntroduccionRecetasProceso.php?Bandera=17&IdMedicina=" + IdMedicina + "&IdArea=" + IdArea, true);
+    ajax.open("GET", "IncludeFiles/IntroduccionRecetasProceso.php?Bandera=17&IdMedicina=" + IdMedicina + "&IdArea=" + IdArea + "&Fecha=" + Fecha, true);
     ajax.send(null);
     return false;
 
@@ -598,6 +599,19 @@ function validaMedicina() {
 
     var Cantidad2 = parseInt(Cantidad);
     var ExistenciaTotal2 = parseInt(ExistenciaTotal);
+
+    if (isNaN(Cantidad)) {
+            alert("Error:\nEl campo CANTIDAD debe tener sólo números.");
+            document.getElementById('Cantidad').focus();
+            Ok=false;
+    }
+
+    if(Cantidad < 1){
+            alert('La Cantidad medicada debe ser mayor o igual a 1');
+            document.getElementById('Cantidad').focus();
+            Ok=false;
+    }
+
 
     if (Cantidad == '') {
         alert('Introduzca la Cantidad medicada');

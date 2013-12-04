@@ -2,7 +2,7 @@
 $IdArea=$_SESSION["IdArea"];
 
 require('../../Clases/class.php');
-$link=  conexion::conectar2();
+conexion::conectar();
 require('include/funciones.php');
 require('include/pagination.class.php');
 require('include/MedicosClass.php');
@@ -34,8 +34,8 @@ $sqlStr=$Classquery->ObtenerQuery($Bandera,$IdArea,"",$IdEstablecimiento,$IdModa
 $sqlStrAux=$Classquery->ObtenerQueryTotal($Bandera,$IdArea,"",$IdEstablecimiento,$IdModalidad);
 }
     //fecha de vida de una receta son 3 dias habiles
-$query = mysql_query($sqlStr.$limit, $link);
-$aux = Mysql_Fetch_Assoc(mysql_query($sqlStrAux,$link));
+$query = pg_query($sqlStr.$limit);
+$aux = Pg_Fetch_Assoc(pg_query($sqlStrAux));
 ?>
 <html>
 <head>
@@ -159,11 +159,11 @@ echo "Resultados que coinciden con tu b&uacute;squeda \"<strong>$busqueda</stron
 			echo "\t<table class=\"registros\">\n";
 			echo "<tr class=\"titulos\"><td>CODIGO</td><td>NOMBRE DE MEDICO</td></tr>";
 			$r=0;
-			while($row = mysql_fetch_assoc($query)){
+			while($row = pg_fetch_assoc($query)){
 			
 		if(isset($page)){
-echo "\t\t<tr class=\"row$r\"><td align='center'>".$row["CodigoFarmacia"]."</td>
-<td align=\"left\"><a href=\"#\" onclick=\"javascript:UbicarMedico(0,'0','".$row["IdEmpleado"]."','".htmlentities($row["NombreEmpleado"])."')\">".htmlentities($row["NombreEmpleado"])."</a></td>
+echo "\t\t<tr class=\"row$r\"><td align='center'>".$row["codigo_farmacia"]."</td>
+<td align=\"left\"><a href=\"#\" onclick=\"javascript:UbicarMedico(0,'0','".$row["id"]."','".htmlentities($row["nombreempleado"])."')\">".htmlentities($row["nombreempleado"])."</a></td>
 </tr>";
 	}//if
 

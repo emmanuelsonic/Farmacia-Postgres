@@ -109,10 +109,10 @@ function VentanaBusqueda2(){//Para Medicos
 eval("page" + id + " = window.open(URL, '" + id + "', 'toolbar=0,scrollbars=1,location=0,statusbar=0,menubar=0,resizable=0,width=1030,height=580,left = 0,top = 100');");
 }
 
-function VentanaBusqueda3(IdReceta,IdMedicina){//Para Medicos
+function VentanaBusqueda3(IdReceta,IdMedicina,Fecha){//Para Medicos
 	day = new Date();
 	id = day.getTime();
-	var URL="Emergente.php?IdReceta="+IdReceta+"&IdMedicina="+IdMedicina;
+	var URL="Emergente.php?IdReceta="+IdReceta+"&IdMedicina="+IdMedicina+"&Fecha="+Fecha;
 eval("page" + id + " = window.open(URL, '" + id + "', 'toolbar=0,scrollbars=1,location=0,statusbar=0,menubar=0,resizable=0,width=870,height=580,left = 0,top = 100');");
 }
 
@@ -457,6 +457,7 @@ function ObtenerExistenciaTotal(){
 	var IdMedicina=document.getElementById('IdMedicina').value;
 	var ExistenciaTotal=document.getElementById('ExistenciaTotal');
 	var IdArea = document.getElementById('IdReceta').value;
+        var Fecha = document.getElementById('Fecha').value;
 
 var ajax = xmlhttp();
 	ajax.onreadystatechange=function(){
@@ -469,7 +470,7 @@ var ajax = xmlhttp();
 		}
 	}
 
-ajax.open("GET","IncludeFiles/IntroduccionRecetasProceso.php?Bandera=17&IdMedicina="+IdMedicina+"&IdArea="+IdArea,true);
+ajax.open("GET","IncludeFiles/IntroduccionRecetasProceso.php?Bandera=17&IdMedicina="+IdMedicina+"&IdArea="+IdArea+"&Fecha="+Fecha,true);
 		ajax.send(null);
 		return false;
 

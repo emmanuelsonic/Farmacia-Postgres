@@ -1,7 +1,8 @@
 <?php session_start();
 $IdReceta=$_GET['IdReceta'];
 $IdMedicinaOrigen=$_GET["IdMedicina"];
-
+$Fecha=$_GET["Fecha"];
+echo $Fecha;
 ?>
 <html>
 <head>
@@ -15,6 +16,27 @@ $IdMedicinaOrigen=$_GET["IdMedicina"];
 
 <script language="JavaScript" src="../noCeros.js"></script>
 
+<script language="javascript">
+    <!--
+    var nav4 = window.Event ? true : false;
+    function acceptNum(evt,Objeto){	
+      // NOTE: Backspace = 8, Enter = 13, '0' = 48, '9' = 57, 46 = '.'
+        var key = nav4 ? evt.which : evt.keyCode;	
+        if( !( (key >= 48 && key <= 57) || key < 13 ) )
+        {
+            if (!(key == 13 ))
+            {
+                return Saltos(key,Objeto);
+            }
+            return Saltos(evt,Objeto);
+        }
+      // NOTE: Backspace = 8, Enter = 13, '0' = 48, '9' = 57, 46 = '.'
+      // var key = nav4 ? evt.which : evt.keyCode;	
+      // return ((key == 13) || (key >= 48 && key <= 57) || key == 45);
+      // return ((key < 13) || (key >= 48 && key <= 57));
+    }
+</script> 
+
 </head>
 
 <body onLoad="CargarDetalle('<?php echo $IdReceta;?>',<?php echo $IdMedicinaOrigen;?>);document.getElementById('Cantidad').focus();">
@@ -26,13 +48,14 @@ $IdMedicinaOrigen=$_GET["IdMedicina"];
 		<table width="100%">
 		<tr class="FONDO2">
 		<td><strong>Cantidad:</strong></td>
-		<td><input type="text" id="Cantidad" name="Cantidad" size="6" onKeyPress="return Saltos(event,this.id);" onblur="NoCero(this.id);"></td>
+		<td><input type="text" id="Cantidad" name="Cantidad" size="6" onKeyPress="return acceptNum(event,this.id);" onblur="NoCero(this.id);"></td>
 		</tr>
 		<tr>
 		<td><strong>Medicamento</strong>
 		<input type="hidden" id="IdMedicina" name="IdMedicina">
 		<input type="hidden" id="IdMedicinaOrigen" name="IdMedicinaOrigen" value="<?php echo $IdMedicinaOrigen;?>">
 		<input type="hidden" id="IdReceta" name="IdReceta" value="<?php echo $IdReceta;?>">
+                <input type="hidden" id="Fecha" name="Fecha" value="<?php echo $Fecha;?>">
 		</td>
 		<td>
 		<input type="text" id="NombreMedicina" name="NombreMedicina" onKeyPress="return Saltos(event,this.id); Limpieza(event,this.value);" size="80">

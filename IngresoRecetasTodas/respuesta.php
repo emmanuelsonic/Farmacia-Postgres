@@ -35,10 +35,9 @@ switch($Bandera){
                     </li>
                     <?php
                 }// fin while
-            break; // fin case 1	
+            break; // fin case 1
     case 2:// busqueda de pacientes
-            $querySelect="
-				SELECT mnt_paciente.id, primer_nombre||' '||segundo_nombre||' '||(case when tercer_nombre!='' then tercer_nombre else '' end )||' '||primer_apellido||' '||segundo_apellido as NombrePaciente, numero
+            $querySelect="  SELECT mnt_paciente.id, primer_nombre||' '||segundo_nombre||' '||(case when tercer_nombre!='' then tercer_nombre else '' end )||' '||primer_apellido||' '||segundo_apellido as NombrePaciente, numero
 				FROM mnt_paciente
 				INNER JOIN mnt_expediente ON mnt_expediente.id_paciente=mnt_paciente.id
 				WHERE (primer_nombre||' '||segundo_nombre||' '||(case when tercer_nombre!='' then tercer_nombre else '' end )||' '||primer_apellido||' 	'||segundo_apellido)  like '%$Busqueda%' or numero = '$Busqueda'

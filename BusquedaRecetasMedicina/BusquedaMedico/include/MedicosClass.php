@@ -6,26 +6,23 @@ class Classquery{
 	/*FILTRACIONES*/
 	case 1: 
 
-	$sqlStr = "select mnt_empleados.CodigoFarmacia,mnt_empleados.IdEmpleado,mnt_empleados.NombreEmpleado
-				from mnt_empleados
-
-				where (mnt_empleados.NombreEmpleado like '%$q%')
-				and mnt_empleados.HabilitadoFarmacia='H'
-				and (mnt_empleados.IdTipoEmpleado='MED' or mnt_empleados.IdTipoEmpleado='ENF')
-                                and mnt_empleados.IdEstablecimiento=$IdEstablecimiento
-				order by mnt_empleados.NombreEmpleado";
-
- break;
+	$sqlStr = "SELECT mnt_empleado.Codigo_Farmacia,mnt_empleado.Id,mnt_empleado.NombreEmpleado
+                   FROM mnt_empleado
+                   WHERE (mnt_empleado.NombreEmpleado like '%$q%')
+                   AND mnt_empleado.Habilitado_Farmacia='H'
+                   AND (mnt_empleado.Id_Tipo_Empleado=4 or mnt_empleado.Id_Tipo_Empleado=5)
+                   AND mnt_empleado.Id_Establecimiento=$IdEstablecimiento
+                   ORDER BY mnt_empleado.NombreEmpleado";
+      break;
  
- /*TOTALES*/
- case 0: 
- $sqlStr = "select mnt_empleados.CodigoFarmacia,mnt_empleados.IdEmpleado,mnt_empleados.NombreEmpleado
-				from mnt_empleados
-
-				where mnt_empleados.HabilitadoFarmacia='H'
-				and (mnt_empleados.IdTipoEmpleado='MED' or mnt_empleados.IdTipoEmpleado='ENF')
-                                and mnt_empleados.IdEstablecimiento=$IdEstablecimiento
-				order by mnt_empleados.NombreEmpleado";
+        /*TOTALES*/
+        case 0: 
+        $sqlStr = "SELECT mnt_empleado.Codigo_Farmacia,mnt_empleado.Id,mnt_empleado.NombreEmpleado
+                   FROM mnt_empleado
+                   WHERE mnt_empleado.Habilitado_Farmacia='H'
+                   AND (mnt_empleado.Id_Tipo_Empleado=4 or mnt_empleado.Id_Tipo_Empleado=5)
+                   AND mnt_empleado.Id_Establecimiento=$IdEstablecimiento
+                   ORDER BY mnt_empleado.NombreEmpleado";
  break;
       }//switch
  return ($sqlStr);
@@ -35,25 +32,21 @@ class Classquery{
 function ObtenerQueryTotal($Bandera,$IdArea,$q,$IdEstablecimiento,$IdModalidad){
 switch($Bandera){
 case 1:
- $sqlStrAux = "select count(mnt_empleados.IdEmpleado) as total
-				from mnt_empleados
-
-				where (mnt_empleados.NombreEmpleado like '%$q%')
-				and mnt_empleados.HabilitadoFarmacia='H'
-				and (mnt_empleados.IdTipoEmpleado='MED' or mnt_empleados.IdTipoEmpleado='ENF')
-                                and mnt_empleados.IdEstablecimiento=$IdEstablecimiento
-				order by mnt_empleados.NombreEmpleado";
+ $sqlStrAux = "SELECT count(mnt_empleado.Id) as total
+               FROM mnt_empleado
+               WHERE (mnt_empleado.NombreEmpleado like '%$q%')
+               AND mnt_empleado.Habilitado_Farmacia='H'
+               AND (mnt_empleado.Id_Tipo_Empleado=4 or mnt_empleado.Id_Tipo_Empleado=5)
+               AND mnt_empleado.Id_Establecimiento=$IdEstablecimiento";
 
  break;
  
  case 0:
- $sqlStrAux = "select count(mnt_empleados.IdEmpleado) as total
-				from mnt_empleados
-
-				where  mnt_empleados.HabilitadoFarmacia='H'
-				and (mnt_empleados.IdTipoEmpleado='MED' or mnt_empleados.IdTipoEmpleado='ENF')
-                                and mnt_empleados.IdEstablecimiento=$IdEstablecimiento
-				order by mnt_empleados.NombreEmpleado";
+ $sqlStrAux = "SELECT count(mnt_empleado.Id) as total
+               FROM mnt_empleado
+               WHERE mnt_empleado.Habilitado_Farmacia='H'
+               AND (mnt_empleado.Id_Tipo_Empleado=4 or mnt_empleado.Id_Tipo_Empleado=5)
+               AND mnt_empleado.Id_Establecimiento=$IdEstablecimiento";
  break;
 }//switch
 return($sqlStrAux);

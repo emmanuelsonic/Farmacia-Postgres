@@ -489,7 +489,7 @@ class RecetasProceso{
 	
 //**************	FIN DE MANEJO DE LOTES Y EXISTENCIAS	**********************************
 	
-	function ObtenerCodigoFarmacia($IdMedico){
+		function ObtenerCodigoFarmacia($IdMedico){
 		$querySelect="SELECT codigo_farmacia
 					FROM mnt_empleado
 					WHERE id='$IdMedico'";
@@ -514,7 +514,7 @@ class RecetasProceso{
 			inner join farm_recetas
 			on farm_recetas.IdReceta=farm_medicinarecetada.IdReceta
 			where farm_medicinarecetada.IdReceta=".$IdReceta." 
-                        and farm_recetas.IdEstablecimiento=$IdEstablecimiento
+                        and farm_recetas.IdEstablecimiento=$IdEstablecimientocombo
                         and farm_recetas.IdModalidad=$IdModalidad";
 		$resp=mysql_query($SQL);
 		
@@ -538,7 +538,7 @@ class RecetasProceso{
 			mysql_query($SQL);
 		$query="update farm_recetas set IdArea='$IdArea',IdAreaOrigen='$IdArea',IdFarmacia='$IdFarmacia' where IdReceta='$IdReceta' and IdEstablecimiento=$IdEstablecimiento and IdModalidad=$IdModalidad";
 		mysql_query($query);
-		$query2="select Area 
+		$query2="select Area combo
                          from mnt_areafarmacia 
                          inner join mnt_areafarmaciaxestablecimiento maxe
                          on maxe.IdArea=mnt_areafarmacia.IdArea
@@ -607,11 +607,11 @@ class RecetasProceso{
 	$SQL="SELECT sum(Existencia) as Existencia
  	FROM farm_medicinaexistenciaxarea fmea
         INNER JOIN farm_lotes fl ON fmea.IdLote = fl.IdLote
-	where IdMedicina=".$IdMedicina."
-	and IdArea=".$IdArea."
-        and fmea.IdEstablecimiento=".$IdEstablecimiento."
+	WHERE IdMedicina=".$IdMedicina."
+	AND IdArea=".$IdArea."
+        AND fmea.IdEstablecimiento=".$IdEstablecimiento."
         AND fmea.IdModalidad = ".$IdModalidad."
-        AND FechaVencimiento >= '$Fecha'";
+        AND left('$Fecha',7) <= left(FechaVencimiento,7)";
         //se agrego el inner join para validar la fecha y el and de modalidades.
         
 	$resp=mysql_fetch_array(mysql_query($SQL));
@@ -631,12 +631,12 @@ class RecetasProceso{
 
 
    function AreaOrigen($IdArea,$IdEstablecimiento){
-	$SQL="select mafe.IdArea, Area 
-              from mnt_areafarmacia 
-              inner join mnt_areafarmaciaxestablecimiento mafe
-              on mafe.IdArea=mnt_areafarmacia.Id
-              where mafe.Habilitado='S' and mafe.IdArea not in(12,7,".$IdArea.")
-              and mafe.IdEstablecimiento=".$IdEstablecimiento;
+	$SQL="SELECT DISTINCT mafe.IdArea, Area 
+              FROM mnt_areafarmacia 
+              INNER JOIN mnt_areafarmaciaxestablecimiento mafe
+              ON mafe.IdArea=mnt_areafarmacia.Id
+              WHERE mafe.Habilitado='S' and mafe.IdArea not in(12,7,".$IdArea.")
+              AND mafe.IdEstablecimiento=".$IdEstablecimiento;
 	$resp=pg_query($SQL);
 	$combo="<select id='IdAreaOrigen' name='IdAreaOrigen'>
 		<option value='0'>[Opcional ...]</option>";
@@ -647,9 +647,9 @@ class RecetasProceso{
 	return($combo);
    }
 
-   function ActualizarAreaOrigen($IdArea,$IdReceta){
+    function ActualizarAreaOrigen($IdArea,$IdReceta){
 
-		$query="update farm_recetas set IdAreaOrigen='$IdArea' where Id='$IdReceta'";
+		$query="UPDATE farm_recetas SET IdAreaOrigen='$IdArea' WHERE Id='$IdReceta'";
 		pg_query($query);
 
    }

@@ -37,6 +37,24 @@ if (!isset($_SESSION["nivel"])) {
                 <link rel="stylesheet" type="text/css" href="styles/autocomplete.css" />
                 <!-- -->
                 <script language="JavaScript" src="../noCeros.js"></script>
+<script language="javascript">
+    <!--
+    var nav4 = window.Event ? true : false;
+    function acceptNum(evt,Objeto){	
+        // NOTE: Backspace = 8, Enter = 13, '0' = 48, '9' = 57, 46 = '.'
+        var key = nav4 ? evt.which : evt.keyCode;	
+        if( !( (key >= 48 && key <= 57) || key < 13 ) )
+        {
+            if (!(key == 116 || key == 84 || key == 13 ))
+            {
+                return Saltos(key,Objeto);
+            }
+            return Saltos(evt,Objeto);
+        }
+        // return ((key < 13) || (key >= 48 && key <= 57));
+    }
+
+</script>                
 
             </head>
             <body onLoad="javascript:document.getElementById('CodigoReceta').focus();">
@@ -108,7 +126,7 @@ if (!isset($_SESSION["nivel"])) {
                                             <td width="143" align="center">Dosis</td>
                                             <td width="95" align="center">Insatisfecha</td>
                                         </tr>
-                                        <tr><td align="right"><input type="text" id="Cantidad" name="Cantidad" size="6" disabled="disabled" onKeyPress="return Saltos(event, this.id);" onblur="NoCero(this.id);"></td>
+                                        <tr><td align="right"><input type="text" id="Cantidad" name="Cantidad" size="6" disabled="disabled" onKeyPress="return acceptNum(event,this.id);" onblur="NoCero(this.id);"></td>
                                             <td align="center"><input type="hidden" id="IdMedicina" name="IdMedicina">
 
                                                 <input type="text" id="NombreMedicina" name="NombreMedicina" disabled="disabled" onKeyPress="return Saltos(event, this.id);

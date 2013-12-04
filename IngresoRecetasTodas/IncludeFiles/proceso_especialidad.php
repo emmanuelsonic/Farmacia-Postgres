@@ -55,15 +55,14 @@ $selectDestino=$_REQUEST["select"]; $opcionSeleccionada=$_REQUEST["opcion"];
 		$plus='';
 	//if($opcionSeleccionada==3){$plus='or mnt_farmacia.IdFarmacia=2';}
 	$consulta=pg_query("SELECT mnt_areafarmacia.Id,mnt_areafarmacia.Area
-						   FROM mnt_areafarmacia
-						   inner join mnt_farmacia
-						   on mnt_farmacia.Id=mnt_areafarmacia.IdFarmacia
-                                                   inner join mnt_areafarmaciaxestablecimiento mafe
-                                                   on mafe.IdArea=mnt_areafarmacia.Id
-						   WHERE mnt_areafarmacia.Id<>7 and mafe.Habilitado = 'S'
-                                                   and mafe.IdEstablecimiento=".$_SESSION["IdEstablecimiento"]."
-                                                   and mafe.IdModalidad=".$_SESSION["IdModalidad"]."
-							".$plus) or die(pg_error());
+                            FROM mnt_areafarmacia
+                            inner join mnt_farmacia
+                            on mnt_farmacia.Id=mnt_areafarmacia.IdFarmacia
+                            inner join mnt_areafarmaciaxestablecimiento mafe
+                            on mafe.IdArea=mnt_areafarmacia.Id
+                            WHERE mnt_areafarmacia.Id<>7 and mafe.Habilitado = 'S'
+                            and mafe.IdEstablecimiento=".$_SESSION["IdEstablecimiento"]."
+                            and mafe.IdModalidad=".$_SESSION["IdModalidad"]."".$plus) or die(pg_error());
 	
 	$conexion->desconectar();
 	

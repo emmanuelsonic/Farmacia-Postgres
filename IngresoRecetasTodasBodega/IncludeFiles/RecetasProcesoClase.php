@@ -314,7 +314,9 @@ class RecetasProceso{
 				}//else de la comparacion de restante vs existencia
 				
 			}// Recorrido de los demas lotes con existencia
-                /*
+              	}//actualizar inventario
+                
+                 /*
                 $lotesA=mysql_fetch_array($lotes);
 
 		if($Cantidad <= $lotesA["Existencia"]){
@@ -409,7 +411,7 @@ class RecetasProceso{
 		}//else de cantidad vs existencia si no suple la demanda el primer lote  */
 		
 		
-	}//actualizar inventario
+
 	
 	
 	
@@ -696,7 +698,7 @@ function ObtenerExistencia($IdMedicina,$TipoFarmacia,$Fecha,$IdEstablecimiento,$
                 FROM farm_entregamedicamento fem 
                 INNER JOIN farm_lotes fl ON fem.IdLote=fl.IdLote
                 WHERE IdMedicina=$IdMedicina AND fem.IdEstablecimiento=$IdEstablecimiento
-                AND fem.IdModalidad=$IdModalidad AND FechaVencimiento >= '$Fecha'";
+                AND fem.IdModalidad=$IdModalidad AND left('$Fecha',7) <= left(FechaVencimiento,7)";
         
         /*
         SELECT sum(Existencia) as Existencia FROM farm_entregamedicamento where IdMedicina=$IdMedicina and IdEstablecimiento=$IdEstablecimiento and IdModalidad=$IdModalidad

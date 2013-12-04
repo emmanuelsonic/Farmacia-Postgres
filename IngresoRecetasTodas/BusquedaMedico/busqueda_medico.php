@@ -43,8 +43,6 @@ echo "Resultados que coinciden con tu b&uacute;squeda \"<strong>$busqueda</stron
 			}elseif($aux['total'] and !isset($q)){
 				//echo "Total de registros: {$aux['total']}";
 			}elseif(!$aux['total'] and isset($q)){
-			//	echo $aux['total'];
-			//	echo $sqlStr;
 				echo"No hay registros que coincidan con tu b&uacute;squeda \"<strong>$busqueda</strong>\"";
 			}
 	?><br />

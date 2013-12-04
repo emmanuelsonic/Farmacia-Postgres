@@ -30,8 +30,8 @@ case 1:
 
  $Cierre=$proceso->Cierre($FechaInicial);
  $CierreMes=$proceso->CierreMes($FechaInicial);
-	 $respCierre=mysql_fetch_array($Cierre);
-	 $respCierreMes=mysql_fetch_array($CierreMes);
+	 $respCierre=pg_fetch_array($Cierre);
+	 $respCierreMes=pg_fetch_array($CierreMes);
  if(($respCierre[0]!=NULL and $respCierre[0]!='') || ($respCierreMes[0]!=NULL and $respCierreMes[0]!='')){
  
  		if($respCierre[0]!=NULL and $respCierre[0]!=''){$c=$respCierre[0];}else{$c=$respCierreMes[0];}

@@ -789,8 +789,9 @@ if (isset($_SESSION["IdPersonal"])) {
             break;
         case 17:
             $IdMedicina = $_GET["IdMedicina"];
+            $Fecha=$_GET["Fecha"];
             //$IdArea=$_GET["IdArea"];
-            echo $proceso->ObtenerExistencia($IdMedicina, $_SESSION["TipoFarmacia"], $IdEstablecimiento, $IdModalidad);
+            echo $proceso->ObtenerExistencia($IdMedicina, $_SESSION["TipoFarmacia"], $Fecha, $IdEstablecimiento, $IdModalidad);
 
             break;
     }//Fin de switch

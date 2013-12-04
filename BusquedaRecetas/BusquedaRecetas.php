@@ -51,7 +51,7 @@ if (!isset($_SESSION["nivel"])) {
         var key = nav4 ? evt.which : evt.keyCode;	
         if( !( (key >= 48 && key <= 57) || key < 13 ) )
         {
-            if (!(key == 116 || key == 84 ))
+            if (!(key == 116 || key == 84 || key == 13))
             {
                 return Saltos(key,Objeto);
             }
@@ -73,7 +73,7 @@ if (!isset($_SESSION["nivel"])) {
                             </tr>
                             <tr><td colspan="6" class="FONDO"><div align="center">Hoy es:&nbsp;&nbsp;&nbsp;<strong><?php echo date('d-m-Y'); ?></strong></div></td></tr>
                             <tr>
-                                <td colspan="2"  align="right" class="FONDO"><strong>Numero de Receta : </strong></td>
+                                <td colspan="2"  align="right" class="FONDO"><strong>N&uacute;mero de Receta : </strong></td>
                                 <td colspan="4" class="FONDO">
                                     <input type="text" name="CodigoReceta" id="CodigoReceta" value="" onBlur="javascript:document.getElementById('Buscar').focus();" onKeyPress="return Saltos(event,this.id);"/>
                                     <input type="hidden" name="IdRecetaValor" id="IdRecetaValor"/>
@@ -143,7 +143,17 @@ if (!isset($_SESSION["nivel"])) {
                                         <tr><td align="right"><input type="text" id="Cantidad" name="Cantidad" size="6" disabled="disabled" onKeyPress="return acceptNum(event,this.id);" onblur="NoCero(this.id);"></td>
                                             <td align="center"><input type="hidden" id="IdMedicina" name="IdMedicina">
 
-                                                <input type="text" id="NombreMedicina" name="NombreMedicina" disabled="disabled" onKeyPress="return Saltos(event,this.id); Limpieza(event,this.value);" size="40">
+                                                <input tyFROM farm_catalogoproductos AS fcp
+                            INNER JOIN farm_catalogoproductosxestablecimiento fcpe ON fcpe.IdMedicina=fcp.Id
+                            INNER JOIN farm_medicinaexistenciaxarea fmexa ON fmexa.IdMedicina=fcpe.IdMedicina
+
+                            WHERE (Nombre like '%$Busqueda%' or Codigo ='$Busqueda')
+                            AND IdArea='$IdArea'
+                            AND fcpe.IdEstablecimiento=".$_SESSION["IdEstablecimiento"]."
+                            AND fcpe.IdModalidad=".$_SESSION["IdModalidad"]."
+                            AND Condicion = 'H'
+                            AND IdTerapeutico IS NOT NULL
+                            ORDER BY fcp.Id";pe="text" id="NombreMedicina" name="NombreMedicina" disabled="disabled" onKeyPress="return Saltos(event,this.id); Limpieza(event,this.value);" size="40">
                                                 <input type="text" id="ExistenciaTotal" name="ExistenciaTotal"> 		</td>
                                             <td><input type="text" id="Dosis" name="Dosis" disabled="disabled" value="-"></td>
                                             <td align="center">&nbsp;

@@ -1215,7 +1215,55 @@ class RecetasProceso {
                         and fme.IdModalidad=$IdModalidad
 			order by FechaVencimiento asc";
         $lotes = mysql_query($queryLote);
-        $lotesA = mysql_fetch_array($lotes);
+            //Se recorren los siguiente lotes... Modo iterativo
+            while ($lotesA = mysql_fetch_array($lotes)) {
+                if ($Cantidad <= $lotesA["Existencia"]) {
+                    //****** Si la cantidad de medicamento no exede el total del primer lote a descagar...
+                    $IdLote = $lotesA["IdLote"];
+                    $existencia_old = $lotesA["Existencia"];
+                    $existencia_new = $existencia_old - $Cantidad;
+
+                    //se actualiza la existencia del lote en uso
+                    $actualiza = "update farm_entregamedicamento set Existencia='$existencia_new' 
+                                                    where IdLote='$IdLote' 
+                                                    and IdMedicina='$IdMedicina'
+                                                    and IdEstablecimiento=$IdEstablecimiento
+                                                    and IdModalidad=$IdModalidad";
+                    mysql_query($actualiza);
+
+                    //se ingresa el lote utilizado
+                    $query = "insert into farm_medicinadespachada (IdMedicinaRecetada,IdLote,CantidadDespachada,IdEstablecimiento,IdModalidad) 
+                                                                              values('$IdMedicinaRecetada','$IdLote','$Cantidad',$IdEstablecimiento,$IdModalidad)";
+                    mysql_query($query);
+
+                    //Se termina el lazo porque el lote en cuestion suple la demanda restante
+                    break;
+                } else {
+
+                    //Primer lote a agotar...
+                    $IdLote = $lotesA["IdLote"];
+                    $existencia_old = $lotesA["Existencia"];
+                    //Medicina que aun falta por despachar
+                    $restante2 = $Cantidad - $existencia_old;
+                    //Se cierra el lote con existencia = 0
+                    $actualiza = "update farm_entregamedicamento set Existencia='0' 
+                                                    where IdLote='$IdLote' 
+                                                    and IdMedicina='$IdMedicina'
+                                                    and IdEstablecimiento=$IdEstablecimiento
+                                                    and IdModalidad=$IdModalidad";
+                    mysql_query($actualiza);
+
+                    //se ingresa el lote utilizado
+                    $query = "insert into farm_medicinadespachada (IdMedicinaRecetada,IdLote,CantidadDespachada,IdEstablecimiento,IdModalidad) 
+                                                                              values('$IdMedicinaRecetada','$IdLote','$existencia_old',$IdEstablecimiento,$IdModalidad)";
+                    mysql_query($query);
+
+                    $Cantidad = $restante2;
+                }//else de la comparacion de restante vs existencia
+            }// Recorrido de los demas lotes con existencia     while   
+ 
+        }//actualizar inventario
+/*        $lotesA = mysql_fetch_array($lotes);
 
         if ($Cantidad <= $lotesA["Existencia"]) {
             //****** Si la cantidad de medicamento no exede el total del primer lote a descagar...
@@ -1304,10 +1352,12 @@ class RecetasProceso {
                     $restante = $restante2;
                 }//else de la comparacion de restante vs existencia
             }// Recorrido de los demas lotes con existencia
-        }//else de cantidad vs existencia si no suple la demanda el primer lote
-    }
+        }//else de cantidad vs existencia si no suple la demanda el primer lote */
+    
+            
+  
 
-//actualizar inventario
+
     //MANEJO DE LOTES CUANDO SE ELIMINA UNA RECETA POR CORRECCION
 
     function AumentarInventario($IdMedicinaRecetada, $IdArea, $IdEstablecimiento, $IdModalidad) {
@@ -1483,13 +1533,14 @@ class RecetasProceso {
         return($resp);
     }
 
-    function ObtenerExistencia($IdMedicina, $TipoFarmacia, $IdEstablecimiento, $IdModalidad) {
+    function ObtenerExistencia($IdMedicina, $TipoFarmacia, $Fecha, $IdEstablecimiento, $IdModalidad) {
         $SQL = "SELECT sum(Existencia) as Existencia
- 	FROM farm_entregamedicamento 
-	where IdMedicina=" . $IdMedicina . "
-        and IdEstablecimiento=$IdEstablecimiento
-        and IdModalidad=$IdModalidad
-	";
+ 	FROM farm_entregamedicamento fem
+        INNER JOIN farm_lotes fl ON fem.IdLote = fl.IdLote
+	where fem.IdMedicina=" . $IdMedicina . "
+        and fem.IdEstablecimiento=$IdEstablecimiento
+        and fem.IdModalidad=$IdModalidad
+	and left('$Fecha',7) <= left(FechaVencimiento,7)";
         $resp = mysql_fetch_array(mysql_query($SQL));
 
         if ($row = mysql_fetch_array($this->ValorDivisor($IdMedicina, $IdEstablecimiento, $IdModalidad)) and $TipoFarmacia == 1) {

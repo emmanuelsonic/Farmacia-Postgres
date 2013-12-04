@@ -53,7 +53,7 @@ if (!isset($_SESSION["nivel"])) {
             </style>
     <?php head(); ?>
             <link rel="stylesheet" type="text/css" href="../default.css" media="screen" />
-            <title>...:::Introducci&oacute;n de Recetas:::... </title>
+            <title>...:::Introduccion de Recetas:::... </title>
 
             <!-- chat -->
             <script language="javascript" src="../MonitoreoDigitacion/MonitoreoDigitacion.js"></script>
@@ -75,7 +75,7 @@ if (!isset($_SESSION["nivel"])) {
         var key = nav4 ? evt.which : evt.keyCode;	
         if( !( (key >= 48 && key <= 57) || key < 13 ) )
         {
-            if (!(key == 116 || key == 84 ))
+            if (!(key == 116 || key == 84 || key == 13 ))
             {
                 return Saltos(key,Objeto);
             }
@@ -105,7 +105,7 @@ if (!isset($_SESSION["nivel"])) {
       
             <!-- ****************************************************************************** -->        
     <tr>
-      <td class="FONDO"><strong>N&uacute;mero de Expediente :  </strong>
+      <td class="FONDO"><strong>Numero de Expediente :  </strong>
       <td colspan="3" class="FONDO"><input type="text" name="Expediente" id="Expediente" readonly="true" onKeyPress="return Saltos(event,this.id);" /></td>
       <td colspan="2" class="FONDO"> <!-- <input type="button" id="CorreccionArea" name="CorrecionArea" value="Correci&oacute;n de Expediente" onClick="CorregirExpediente();"><span id='ActualizacionExp'></span> --> </td>
     </tr>
@@ -179,7 +179,7 @@ if (!isset($_SESSION["nivel"])) {
 
             <!-- ****************************************************** -->
             <tr>
-                <td class="FONDO"><strong>Codigo de M&eacute;dico: </strong></td>
+                <td class="FONDO"><strong>C&oacute;digo de M&eacute;dico: </strong></td>
                 <td colspan="3" class="FONDO">&nbsp;<input id="CodigoFarmacia" name="CodigoFarmacia" type="text" maxlength="8" onBlur="javascript:ObtenerDatosMedico();" style="width:50px;" onKeyPress="return Saltos(event,this.id);"><input type="button" id="Buscador" name="Buscador" onClick="javascript:VentanaBusqueda2();" value="...">
                         <!-- <input type="text" id="IdEspecialidad" name="IdEspecialidad"> -->
                     <input type="hidden" id="IdMedico" name="IdMedico">		</td>
@@ -198,7 +198,7 @@ if (!isset($_SESSION["nivel"])) {
                 <td width="187" class="FONDO"><div id="ActualizacionEspecialidad">&nbsp;</div></td>
             </tr>
             <tr>
-                <td class="FONDO"><strong>Nombre de Medico:</strong></td>
+                <td class="FONDO"><strong>Nombre de M&eacute;dico:</strong></td>
                 <td colspan="5" class="FONDO">&nbsp;&nbsp;<strong><div id="NombreMedico"></div></strong></td>
             </tr>
             <tr>

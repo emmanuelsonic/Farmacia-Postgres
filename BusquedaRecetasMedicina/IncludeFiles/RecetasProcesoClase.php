@@ -7,8 +7,9 @@ class RecetasProceso{
 		switch($Tipo){
 			case 1:
 				/*COMBO DE FARMACIA*/
-				$query="select Id, Farmacia
-						from mnt_farmacia where Id<> 4";
+				$query="SELECT Id, Farmacia
+                                        FROM mnt_farmacia 
+                                        WHERE Id <> 4";
 				$resp=pg_query($query);
 				$combo='' ;
 				while($row=pg_fetch_row($resp)){
@@ -20,17 +21,16 @@ class RecetasProceso{
 			case 2:
 				/*COMBO DE AREA*/
 				/*COMBO DE FARMACIA*/
-				$query="SELECT mnt_areafarmacia.Id,mnt_areafarmacia.Area
-						   FROM mnt_areafarmacia
-                                                   inner join mnt_areafarmaciaxestablecimiento mafxe
-                                                   on mafxe.IdArea=mnt_areafarmacia.IdArea
-						   inner join mnt_farmacia
-						   on mnt_farmacia.Id=mnt_areafarmacia.Id
-						   WHERE mnt_areafarmacia.Id not in(7,12)
-						   and mafxe.Habilitado='S'
-                                                   and mafxe.IdEstablecimiento=$IdEstablecimiento
-                                                   and mafxe.IdModalidad=$IdModalidad
-						 ";
+				$query="SELECT DISTINCT mnt_areafarmacia.Id,mnt_areafarmacia.Area
+                                        FROM mnt_areafarmacia
+                                        INNER JOIN mnt_areafarmaciaxestablecimiento mafxe
+                                        ON mafxe.IdArea=mnt_areafarmacia.Id
+                                        INNER JOIN mnt_farmacia
+                                        ON mnt_farmacia.Id=mnt_areafarmacia.IdFarmacia
+                                        WHERE mnt_areafarmacia.Id NOT IN(7,12)
+                                        AND mafxe.Habilitado='S'
+                                        AND mafxe.IdEstablecimiento=$IdEstablecimiento
+                                        AND mafxe.IdModalidad=$IdModalidad";
 				$resp=pg_query($query);
 				$combo='';
 				while($row=pg_fetch_row($resp)){
@@ -116,17 +116,16 @@ class RecetasProceso{
 	function ObtenerComboAreas($IdFarmacia,$IdEstablecimiento,$IdModalidad){
 		$filtro='';
 		if($IdFarmacia!=0){$filtro='and farm_recetas.IdFarmacia='.$IdFarmacia;}
-		$query="select distinct mnt_areafarmacia.Id,Area
-				from mnt_areafarmacia
-                                inner join mnt_areafarmaciaxestablecimiento mafxe
-                                on mafxe.IdArea=mnt_areafarmacia.Id
-				inner join farm_recetas
-				on farm_recetas.IdAreaOrigen=mnt_areafarmacia.Id
-				where mnt_areafarmacia.Id <> 7
-				and mafxe.Habilitado ='S'
-                                and mafxe.IdEstablecimiento=$IdEstablecimiento
-                                and mafxe.IdModalidad=$IdModalidad
-				".$filtro;
+		$query="SELECT DISTINCT mnt_areafarmacia.Id AS AREA
+                        FROM mnt_areafarmacia
+                        INNER JOIN mnt_areafarmaciaxestablecimiento mafxe
+                        ON mafxe.IdArea=mnt_areafarmacia.Id
+                        INNER JOIN farm_recetas
+                        ON farm_recetas.IdAreaOrigen=mnt_areafarmacia.Id
+                        WHERE mnt_areafarmacia.Id <> 7
+                        AND mafxe.Habilitado ='S'
+                        AND mafxe.IdEstablecimiento=$IdEstablecimiento
+                        AND mafxe.IdModalidad=$IdModalidad".$filtro;
 		$resp=pg_query($query);
 		return($resp);
 	}//Combo Areas
@@ -305,9 +304,9 @@ class RecetasProceso{
 	
 	
 	function ObtenerCodigoFarmacia($IdMedico){
-		$querySelect="select CodigoFarmacia
-					from mnt_empleados
-					where IdEmpleado='$IdMedico'";
+		$querySelect="SELECT Codigo_Farmacia
+                              FROM mnt_empleado
+                              WHERE Id=$IdMedico";
 		$resp=pg_fetch_row(pg_query($querySelect));
 		return($resp[0]);
 	}//CodigoFarmacia
@@ -371,10 +370,10 @@ class RecetasProceso{
 
 	
 	function Cierre($Fecha){
-		$sql="select AnoCierre
-			from farm_cierre
-			where AnoCierre=year('".$Fecha."')";
-		$resp=mysql_query($sql);
+		$sql="SELECT AnoCierre
+                      FROM farm_cierre
+                      WHERE  AnoCierre=substring('".$Fecha."',1,4)::int";
+		$resp=pg_query($sql);
 		return($resp);		
 	}//Cierre
 		
