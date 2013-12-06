@@ -4,13 +4,13 @@ class fixing {
 
     function NombreArea($IdArea) {
         $query = "select Area from mnt_areafarmacia where IdArea=" . $IdArea;
-        $resp = mysql_fetch_array(mysql_query($query));
+        $resp = pg_fetch_array(pg_query($query));
         return $resp[0];
     }
 
     function NombreMedicina($IdMedicina) {
         $query = "select Nombre from farm_catalogoproductos where IdMedicina=" . $IdMedicina;
-        $resp = mysql_fetch_array(mysql_query($query));
+        $resp = pg_fetch_array(pg_query($query));
         return $resp[0];
     }
 
@@ -35,7 +35,7 @@ class fixing {
             GROUP BY fmr.IdMedicinaRecetada, fr.Fecha
             order by Valido";
 
-        $resp = mysql_query($query);
+        $resp = pg_query($query);
         return $resp;
     }
 
@@ -48,7 +48,7 @@ class fixing {
                 and IdArea=".$IdArea."
                 order by IdLote desc
                 limit 1";
-        $resp=mysql_fetch_array(mysql_query($query));
+        $resp=pg_fetch_array(pg_query($query));
         return $resp;
     }
     
@@ -58,19 +58,19 @@ class fixing {
         $query="select *
                 from farm_medicinadespachada 
                 where IdMedicinaRecetada=".$IdMedicinaRecetada;
-        $resp=mysql_fetch_array(mysql_query($query));
+        $resp=pg_fetch_array(pg_query($query));
         return $resp;
     }
     
     function detalleMedicinaRecetada($IdMedicinaRecetada){
         $query="select Cantidad from farm_medicinarecetada where IdMedicinaRecetada=".$IdMedicinaRecetada;
-        $resp=mysql_fetch_array(mysql_query($query));
+        $resp=pg_fetch_array(pg_query($query));
         return $resp[0];
     }
     
     function ActualizarDespacho($IdMedicinaDespachada,$CantidadDespachada,$IdLote){
         $query="update farm_medicinadespachada set CantidadDespachada=$CantidadDespachada,IdLote=$IdLote where IdMedicinaDespachada=".$IdMedicinaDespachada;
-        $resp=mysql_query($query);       
+        $resp=pg_query($query);       
     }
     
 }

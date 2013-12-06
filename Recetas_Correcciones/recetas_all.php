@@ -51,12 +51,12 @@ var valor=confirm('             Esta receta sera enviada \n�Son los datos de e
 		  <td ><strong>Area:</strong></td>
 		  <td><select id="IdArea" name="IdArea">
             <?php conexion::conectar();
-								$resp=mysql_query("select IdArea,concat_ws(' ',Area,'  [',Farmacia,']') as Area
+								$resp=pg_query("select IdArea,concat_ws(' ',Area,'  [',Farmacia,']') as Area
 													from mnt_areafarmacia
 													inner join mnt_farmacia
 													on mnt_farmacia.IdFarmacia=mnt_areafarmacia.IdFarmacia");
 								conexion::desconectar();
-								while($row=mysql_fetch_array($resp)){
+								while($row=pg_fetch_array($resp)){
 									echo '<option value="'.$row["IdArea"].'">'.$row["Area"].'</option>';
 								}
 							?>

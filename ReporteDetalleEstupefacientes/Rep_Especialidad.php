@@ -32,7 +32,7 @@ if (!isset($_SESSION["nivel"])) {
         function generaSelect2($IdEstablecimiento,$IdModalidad) { //creacioon de combo para las Regiones
             $conexion = new conexion;
             $conexion->conectar();
-            $consulta = mysql_query("select * 
+            $consulta = pg_query("select * 
                                     from mnt_farmacia  mf
                                     inner join mnt_farmaciaxestablecimiento mfe
                                     on mf.IdFarmacia=mfe.IdFarmacia
@@ -44,7 +44,7 @@ if (!isset($_SESSION["nivel"])) {
             // Voy imprimiendo el primer select compuesto por los paises
             echo "<select name='farmacia' id='farmacia' onChange='cargaContenido8(this.value,this.id)'>";
             echo "<option value='0'>SELECCIONE UNA FARMACIA</option>";
-            while ($registro = mysql_fetch_row($consulta)) {
+            while ($registro = pg_fetch_row($consulta)) {
                 if ($registro[1] != "--") {
                     echo "<option value='" . $registro[0] . "'>" . $registro[1] . "</option>";
                 }
@@ -76,12 +76,12 @@ if (!isset($_SESSION["nivel"])) {
 
             $conexion = new conexion;
             $conexion->conectar();
-            $consulta = mysql_query($query);
+            $consulta = pg_query($query);
             $conexion->desconectar();
 
             echo "<select name='IdSubServicio' id='IdSubServicio' onChange='cargaContenido8(this.value,this.id)'>";
             echo "<option value='0'>SELECCIONE UNA ESPECIALIDAD / SERVICIO</option>";
-            while ($registro = mysql_fetch_row($consulta)) {
+            while ($registro = pg_fetch_row($consulta)) {
                 if ($registro[1] != "--") {
                     echo "<option value='" . $registro[0] . "'>[" . $registro[1] . "] " . $registro[2] . "</option>";
                 }
@@ -102,13 +102,13 @@ if (!isset($_SESSION["nivel"])) {
 
             $conexion = new conexion;
             $conexion->conectar();
-            $resp = mysql_query($query);
+            $resp = pg_query($query);
             $conexion->desconectar();
 
             $comboMedico = '<select name="IdEmpleado" id="IdEmpleado">
 		  <option value="0">TODOS LOS MEDICOS</option>';
 
-            while ($row = mysql_fetch_array($resp)) {
+            while ($row = pg_fetch_array($resp)) {
                 $comboMedico.='<option value="' . $row["IdEmpleado"] . '">' . $row["NombreEmpleado"] . '</option>';
             }
             $comboMedico.="</select>";
@@ -135,12 +135,12 @@ if (!isset($_SESSION["nivel"])) {
 
             $conexion = new conexion;
             $conexion->conectar();
-            $consulta2 = mysql_query($query2);
+            $consulta2 = pg_query($query2);
             $conexion->desconectar();
 
             $combo = "<select id='IdMedicina' name='IdMedicina'>
 	<option value='0'>TODAS LAS MEDICINAS</option>";
-            while ($row = mysql_fetch_array($consulta2)) {
+            while ($row = pg_fetch_array($consulta2)) {
                 $combo.="<option value='" . $row["IdMedicina"] . "'>" . $row["Codigo"] . " - " . $row["Nombre"] . " - " . $row["Concentracion"] . "</option>";
             }
 

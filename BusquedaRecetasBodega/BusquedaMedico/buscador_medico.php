@@ -34,8 +34,8 @@ if (isset($_GET['q']) and !eregi('^ *$', $_GET['q'])) {
     $sqlStrAux = $Classquery->ObtenerQueryTotal($Bandera, $IdArea, "");
 }
 //fecha de vida de una receta son 3 dias habiles
-$query = mysql_query($sqlStr . $limit, $link);
-$aux = Mysql_Fetch_Assoc(mysql_query($sqlStrAux, $link));
+$query = pg_query($sqlStr . $limit, $link);
+$aux = pg_Fetch_Assoc(pg_query($sqlStrAux, $link));
 ?>
 <html>
     <head>
@@ -159,7 +159,7 @@ $aux = Mysql_Fetch_Assoc(mysql_query($sqlStrAux, $link));
                 echo "\t<table class=\"registros\">\n";
                 echo "<tr class=\"titulos\"><td>CODIGO</td><td>NOMBRE DE MEDICO</td></tr>";
                 $r = 0;
-                while ($row = mysql_fetch_assoc($query)) {
+                while ($row = pg_fetch_assoc($query)) {
 
                     if (isset($page)) {
                         echo "\t\t<tr class=\"row$r\"><td align='center'>" . $row["CodigoFarmacia"] . "</td>

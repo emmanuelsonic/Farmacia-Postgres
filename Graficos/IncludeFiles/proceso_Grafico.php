@@ -41,13 +41,13 @@ $tabla = $listadoSelects[$selectDestino];
 if ($tabla == "mnt_farmacia") {
     $conexion = new conexion;
     $conexion->conectar();
-    $consulta = mysql_query("SELECT * FROM $tabla'") or die(mysql_error());
+    $consulta = pg_query("SELECT * FROM $tabla'") or die(pg_error());
     $conexion->desconectar();
 
     // Comienzo a imprimir el selec
     echo "<select name='" . $selectDestino . "' id='" . $selectDestino . "' onChange='cargaContenido(this.id)'>";
     echo "<option value='0'>[Seleccione ...]</option>";
-    while ($registro = mysql_fetch_row($consulta)) {
+    while ($registro = pg_fetch_row($consulta)) {
         // Convierto los caracteres conflictivos a sus entidades HTML correspondientes para su correcta visualizacion
         $registro[1] = htmlentities($registro[1]);
         // Imprimo las opciones del select
@@ -61,18 +61,18 @@ if ($tabla == "mnt_farmacia") {
 if ($tabla == "mnt_areafarmacia") {
     $conexion = new conexion;
     $conexion->conectar();
-    $consulta = mysql_query("SELECT mnt_areafarmacia.IdArea,mnt_areafarmacia.Area
+    $consulta = pg_query("SELECT mnt_areafarmacia.IdArea,mnt_areafarmacia.Area
 						   FROM mnt_areafarmacia
 						   inner join mnt_farmacia
 						   on mnt_farmacia.IdFarmacia=mnt_areafarmacia.IdFarmacia
-						   WHERE mnt_farmacia.IdFarmacia='$opcionSeleccionada'") or die(mysql_error());
+						   WHERE mnt_farmacia.IdFarmacia='$opcionSeleccionada'") or die(pg_error());
 
     $conexion->desconectar();
 
     // Comienzo a imprimir el select
     echo "<select name='" . $selectDestino . "' id='" . $selectDestino . "' onChange='cargaContenido(this.id)' onmouseover=\"Tip('Selecci&oacute;n de &Aacute;rea')\" onmouseout=\"UnTip()\">";
     echo "<option value='0'>[Seleccione ...]</option>";
-    while ($registro = mysql_fetch_row($consulta)) {
+    while ($registro = pg_fetch_row($consulta)) {
         // Convierto los caracteres conflictivos a sus entidades HTML correspondientes para su correcta visualizacion
         $registro[1] = htmlentities($registro[1]);
         // Imprimo las opciones del select
@@ -85,13 +85,13 @@ if ($tabla == "mnt_areafarmacia") {
 if ($tabla == "mnt_grupoterapeutico") {
     $conexion = new conexion;
     $conexion->conectar();
-    $consulta = mysql_query("SELECT * FROM $tabla") or die(mysql_error());
+    $consulta = pg_query("SELECT * FROM $tabla") or die(pg_error());
     $conexion->desconectar();
 
     // Comienzo a imprimir el select
     echo "<select name='" . $selectDestino . "' id='" . $selectDestino . "' onChange='cargaContenido(this.id)'>";
     echo "<option value='0'>[Seleccione ...]</option>";
-    while ($registro = mysql_fetch_row($consulta)) {
+    while ($registro = pg_fetch_row($consulta)) {
         // Convierto los caracteres conflictivos a sus entidades HTML correspondientes para su correcta visualizacion
         $registro[1] = htmlentities($registro[1]);
         // Imprimo las opciones del select
@@ -107,7 +107,7 @@ if ($tabla == "mnt_grupoterapeutico") {
 if ($tabla == "farm_catalogoproductos") {
     $conexion = new conexion;
     $conexion->conectar();
-    $consulta = mysql_query("SELECT $tabla.IdMedicina,$tabla.Nombre,$tabla.FormaFarmaceutica, $tabla.Concentracion, Presentacion
+    $consulta = pg_query("SELECT $tabla.IdMedicina,$tabla.Nombre,$tabla.FormaFarmaceutica, $tabla.Concentracion, Presentacion
 						   FROM $tabla
 						   inner join mnt_grupoterapeutico 
 						   on mnt_grupoterapeutico.IdTerapeutico=$tabla.IdTerapeutico
@@ -116,14 +116,14 @@ if ($tabla == "farm_catalogoproductos") {
 						   WHERE mnt_grupoterapeutico.IdTerapeutico='$opcionSeleccionada' 
                                                    and fcpe.IdEstablecimiento=$IdEstablecimiento
                                                    and fcpe.IdModalidad=$IdModalidad
-                                                   order by $tabla.Nombre") or die(mysql_error());
+                                                   order by $tabla.Nombre") or die(pg_error());
 
     $conexion->desconectar();
 
     // Comienzo a imprimir el select
     echo "&nbsp;<select name='" . $selectDestino . "' id='" . $selectDestino . "' onChange='cargaContenido(this.id)' onmouseover=\"Tip('Selecci&oacute;n de Medicamento')\" onmouseout=\"UnTip()\">";
     echo "<option value='0'>[Seleccione ...]</option>";
-    while ($registro = mysql_fetch_row($consulta)) {
+    while ($registro = pg_fetch_row($consulta)) {
         // Convierto los caracteres conflictivos a sus entidades HTML correspondientes para su correcta visualizacion
         $registro[1] = htmlentities($registro[1]);
         // Imprimo las opciones del select

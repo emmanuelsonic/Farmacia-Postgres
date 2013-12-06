@@ -29,19 +29,19 @@ if (!isset($_SESSION["Reportes"])) {
         $IdModalidad = $_SESSION["IdModalidad"];
 
         function generaSelect($IdEstablecimiento, $IdModalidad) {
-            $querySelect = "select distinct farm_usuarios.IdPersonal,farm_usuarios.Nombre
-						from farm_usuarios
+            $querySelect = "select distinct fos_user_user.Id,fos_user_user.firstname
+						from fos_user_user
 						inner join farm_transferencias
-						on farm_transferencias.IdPersonal=farm_usuarios.IdPersonal
+						on farm_transferencias.IdPersonal=fos_user_user.Id
                                                 where farm_transferencias.IdEstablecimiento=$IdEstablecimiento
                                                 and farm_transferencias.IdModalidad=$IdModalidad";
-            $resp = mysql_fetch_array(mysql_query($querySelect));
+            $resp = pg_fetch_array(pg_query($querySelect));
             if ($resp[0] != NULL) {
-                $resp = mysql_query($querySelect);
+                $resp = pg_query($querySelect);
                 $combo = "<select id='Usuarios' name='Usuarios'>
 						<option value='0'>[Todos los usuarios]</option>";
-                while ($row = mysql_fetch_array($resp)) {
-                    $combo.="<option value='" . $row["IdPersonal"] . "'>" . $row["Nombre"] . "</option>";
+                while ($row = pg_fetch_array($resp)) {
+                    $combo.="<option value='" . $row["id"] . "'>" . $row["firstname"] . "</option>";
                 }//while
                 $combo.="</select>";
                 echo $combo;

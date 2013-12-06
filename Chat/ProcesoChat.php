@@ -24,8 +24,8 @@ if (isset($_GET["Enviar"]) and $_GET["Enviar"] == "si") {
     //$update="update chat set IdEstado='R' where whosays='$IdPersonalD' and IdEstado<>'X'";
 
     if (trim($_REQUEST["comentario"]) != NULL) {
-        $insert = mysql_query($insert);
-        //mysql_query($update);
+        $insert = pg_query($insert);
+        //pg_query($update);
     }
     exit();
 }
@@ -43,9 +43,9 @@ if (isset($_GET["Leer"]) and $_GET["Leer"] == "si") {
                 and IdModalidad=$IdModalidad
                 order by id asc";
 
-    $select = mysql_query($select);
+    $select = pg_query($select);
     //echo "<table>";
-    while ($row = mysql_fetch_array($select)) {
+    while ($row = pg_fetch_array($select)) {
         if ($row["comentario"] != NULL) {
 
             if ($row["IdPersonal"] != $_SESSION["IdPersonal"]) {
@@ -71,8 +71,8 @@ if (isset($_GET["Hash"]) and $_GET["Hash"] == "si") {
             from chat
             and IdEstablecimiento=$IdEstablecimiento
             and IdModalidad=$IdModalidad";
-    $max = mysql_query($max);
-    $max = mysql_result($max, 0, 0);
+    $max = pg_query($max);
+    $max = pg_result($max, 0, 0);
     //
     $select = "select * 
                 from chat 
@@ -80,11 +80,11 @@ if (isset($_GET["Hash"]) and $_GET["Hash"] == "si") {
                 and IdEstablecimiento=$IdEstablecimiento
                 and IdModalidad=$IdModalidad
                 limit 1";
-    $select = mysql_query($select);
+    $select = pg_query($select);
     //
-    $id = mysql_result($select, 0, "id");
-    $comentario = mysql_result($select, 0, "comentario");
-    $fecha = mysql_result($select, 0, "fecha");
+    $id = pg_result($select, 0, "id");
+    $comentario = pg_result($select, 0, "comentario");
+    $fecha = pg_result($select, 0, "fecha");
     //
     $hash = $id . $comentario . $fecha;
     if ($hash == NULL) {
@@ -106,7 +106,7 @@ if (isset($_GET["Borrar"]) and $_GET["Borrar"] == "si") {
                 where ((whosays='$IdPersonal' and IdPersonalD='$IdPersonalD') or (whosays='$IdPersonalD' and IdPersonalD='$IdPersonal'))
                 and IdEstablecimiento=$IdEstablecimiento
                 and IdModalidad=$IdModalidad";
-    mysql_query($insert);
+    pg_query($insert);
 
     exit();
 }
@@ -121,7 +121,7 @@ if (isset($_GET["Leido"]) and $_GET["Leido"] == "si") {
                and IdEstado<>'X'
                and IdEstablecimiento=$IdEstablecimiento
                and IdModalidad=$IdModalidad";
-    mysql_query($update);
+    pg_query($update);
 
     exit();
 }
@@ -140,8 +140,8 @@ if (isset($_GET["Nuevos"]) and $_GET["Nuevos"] == "si") {
                 and IdEstablecimiento=$IdEstablecimiento
                 and IdModalidad=$IdModalidad";
 
-    $respNuevo = mysql_query($select2);
-    if ($rowNuevo = mysql_fetch_array($respNuevo)) {
+    $respNuevo = pg_query($select2);
+    if ($rowNuevo = pg_fetch_array($respNuevo)) {
         $salida = 'S';
     } else {
         $salida = 'N';

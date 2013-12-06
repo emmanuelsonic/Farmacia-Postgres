@@ -33,8 +33,8 @@ if (isset($_GET['q']) and !eregi('^ *$', $_GET['q'])) {
     $sqlStr = $Classquery->ObtenerQuery($Bandera, $IdArea, "");
     $sqlStrAux = $Classquery->ObtenerQueryTotal($Bandera, $IdArea, "");
 }
-$query = mysql_query($sqlStr . $limit, $link);
-$aux = Mysql_Fetch_Assoc(mysql_query($sqlStrAux, $link));
+$query = pg_query($sqlStr . $limit, $link);
+$aux = pg_Fetch_Assoc(pg_query($sqlStrAux, $link));
 ?><br>
 
 <?php
@@ -62,7 +62,7 @@ if ($aux['total'] > 0) {
     echo "\t<table class=\"registros\">\n";
     echo "<tr class=\"titulos\"><td>CODIGO</td><td>NOMBRE DE MEDICO</td></tr>";
     $r = 0;
-    while ($row = mysql_fetch_assoc($query)) {
+    while ($row = pg_fetch_assoc($query)) {
         if (isset($page)) {
             echo "\t\t<tr class=\"row$r\"><td align='center'>" . $row["CodigoFarmacia"] . "</td>
 <td align=\"left\"><a href=\"#\" onclick=\"javascript:UbicarMedico(0,'0','" . $row["IdEmpleado"] . "','" . htmlentities($row["NombreEmpleado"]) . "')\">" . htmlentities($row["NombreEmpleado"]) . "</a></td>

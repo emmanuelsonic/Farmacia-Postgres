@@ -3,7 +3,7 @@
 class Cambios{
 function ActulizarFecha($NuevaFecha,$IdReceta){
 $queryUpdate="update farm_recetas set Fecha = '$NuevaFecha' where IdReceta = '$IdReceta'";
-mysql_query($queryUpdate);
+pg_query($queryUpdate);
 
 
 }//ActualizarFecha
@@ -24,7 +24,7 @@ function ObtencionNombrePaciente($Expediente){
 	inner join mnt_datospaciente
 	on mnt_datospaciente.IdPaciente=mnt_expediente.IdPaciente
 	where mnt_expediente.IdNumeroExp='$Expediente'";
-$resp=mysql_query($querySelect);
+$resp=pg_query($querySelect);
 return($resp);
 
 
@@ -60,7 +60,7 @@ function ObtencionDatosRecetas($Expediente){
 	and farm_recetas.Fecha >= curdate()
 	order by farm_recetas.Fecha";
 	
-$resp=mysql_query($querySelect);	
+$resp=pg_query($querySelect);	
 return($resp);
 }//ObtencionDatosRecetas
 
@@ -68,8 +68,8 @@ return($resp);
 function ModificaFechaReceta($IdReceta,$NuevaFecha){
 $queryUpdate="update farm_recetas set Fecha = '$NuevaFecha' where farm_recetas.IdReceta = '$IdReceta'";
 $querySelect="select farm_recetas.Fecha from farm_recetas where farm_recetas.IdReceta='$IdReceta'";
-mysql_query($queryUpdate);
-$resp=mysql_query($querySelect);
+pg_query($queryUpdate);
+$resp=pg_query($querySelect);
 return($resp);
 }//DatosRecetaModifica
 

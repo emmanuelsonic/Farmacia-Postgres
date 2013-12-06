@@ -20,8 +20,8 @@ $Classquery=new Classquery;
 //****obtencion de fechas validas de recetas (3 dias habiles)
 
 $selectNombreFecha="select dayname(curdate()) as NombreFechaActual";
-$NombreDiaActual = mysql_query($selectNombreFecha, $link);
-$rowNombre=mysql_fetch_array($NombreDiaActual);
+$NombreDiaActual = pg_query($selectNombreFecha, $link);
+$rowNombre=pg_fetch_array($NombreDiaActual);
 $NombreFecha=$rowNombre["NombreFechaActual"];
 
 //***
@@ -48,8 +48,8 @@ $sqlStr=$Classquery->ObtenerQuery($Bandera,$IdArea,"");
 $sqlStrAux=$Classquery->ObtenerQueryTotal($Bandera,$IdArea,"");
 }
     //fecha de vida de una receta son 3 dias habiles
-$query = mysql_query($sqlStr.$limit, $link);
-$aux = Mysql_Fetch_Assoc(mysql_query($sqlStrAux,$link));
+$query = pg_query($sqlStr.$limit, $link);
+$aux = pg_Fetch_Assoc(pg_query($sqlStrAux,$link));
 ?>
 <html>
 <head>
@@ -168,7 +168,7 @@ echo "Resultados que coinciden con tu b&uacute;squeda \"<strong>$busqueda</stron
 			$p->show();
 			echo "\t<table class=\"registros\">\n";
 			$r=0;
-			while($row = mysql_fetch_assoc($query)){
+			while($row = pg_fetch_assoc($query)){
 			
 		if(isset($page)){
 		
@@ -185,8 +185,8 @@ echo '<tr><td align="center" colspan="3">
 <tr><td align="center" colspan="6"><strong>RECETA ENTREGADA</</td></tr>
 <tr class="MYTABLE"><td align="center">CANTIDAD</td><td align="center">MEDICAMENTO</td><td align="center">CONCENTRACION</td><td align="center">PRESENTACION</td><td align="center">DOSIS</td><td align="center">SATISFECHO</td></tr>';
 $DetalleReceta=ClassQuery::MedicinaReceta($Id,$IdArea);
-$DetalleReceta=mysql_query($DetalleReceta,$link);
-while($rowDetalle=mysql_fetch_array($DetalleReceta)){
+$DetalleReceta=pg_query($DetalleReceta,$link);
+while($rowDetalle=pg_fetch_array($DetalleReceta)){
 $Cantidad=$rowDetalle["Cantidad"];$Nombre=$rowDetalle["Nombre"];$Concentracion=$rowDetalle["Concentracion"];$Presentacion=$rowDetalle["FormaFarmaceutica"];
 $Dosis=$rowDetalle["Dosis"];$IdEstado=$rowDetalle["IdEstado"];
 if($IdEstado=='' || $IdEstado=='S'){$Satisfecho="SI";$Colore="";}else{$Satisfecho="NO";$Colore='style="background-color:#FF6633"';}

@@ -39,7 +39,7 @@ $reporte.='
 			</tr>';
 $Total=0;
 $respGrupos=$puntero->GrupoTerapeutico(0);
-if($rowGrupo=mysql_fetch_array($respGrupos)){
+if($rowGrupo=pg_fetch_array($respGrupos)){
 
 do{
 
@@ -49,7 +49,7 @@ $respMedicina=$puntero->MedicinasGrupo($rowGrupo["IdTerapeutico"],$_SESSION["IdE
 $contador=0;
 $SubTotal=0;
 $SubTotalB=0;
-if($rowMedicina=mysql_fetch_array($respMedicina)){
+if($rowMedicina=pg_fetch_array($respMedicina)){
 
 
 
@@ -58,7 +58,7 @@ do{
 
 $resp=$puntero->ObtenerInformacionVencimientoProximo(0,$rowMedicina["IdMedicina"]);
 
-while($row=mysql_fetch_array($resp)){
+while($row=pg_fetch_array($resp)){
 $SubTotalB=1;
 if($contador==0){
 $reporte.='<tr class="MYTABLE">
@@ -84,7 +84,7 @@ $contador++;
 	
 	$respDetalleMedicina=$puntero->ObtenerVencimientoProximo(0,$rowMedicina["IdMedicina"]);
 		$Existencias=0;$CodigoLote=''; $Vencimiento='';$Costo=0;
-	while($rowDetalle=mysql_fetch_array($respDetalleMedicina)){
+	while($rowDetalle=pg_fetch_array($respDetalleMedicina)){
 	$Existencias+=$rowDetalle["Existencia"];
 		
 	$CodigoLote.=strtoupper($rowDetalle["Lote"])."<br>";
@@ -96,7 +96,7 @@ $contador++;
 	}
 	
 $TotalExistencia=$Existencias;
-	if($respDivisor=mysql_fetch_array($puntero->ValorDivisor($rowMedicina["IdMedicina"]))){
+	if($respDivisor=pg_fetch_array($puntero->ValorDivisor($rowMedicina["IdMedicina"]))){
 		$Divisor=$respDivisor[0];
 
 		if($TotalExistencia < 1){
@@ -135,9 +135,9 @@ $TotalExistencia=$Existencias;
 	$respLotes=$puntero->ObtenerLotes($rowMedicina["IdMedicina"]);
             $respLotes2=$puntero->ObtenerLotes($rowMedicina["IdMedicina"]);
 	$CodigoLote="";
-            $lote_temporal=mysql_fetch_array($respLotes2);
-	while($rowLotes=mysql_fetch_array($respLotes)){
-            $lote_temporal=mysql_fetch_array($respLotes2);
+            $lote_temporal=pg_fetch_array($respLotes2);
+	while($rowLotes=pg_fetch_array($respLotes)){
+            $lote_temporal=pg_fetch_array($respLotes2);
             
             if($rowLotes[0]!=$lote_temporal[0]){
                // echo $rowLotes[0]."!=".$lote_temporal[0]."<br>";
@@ -158,7 +158,7 @@ $reporte.='<tr class="FONDO">
 	$SubTotal+=$Costo;
  }//fin de while
 
-}while($rowMedicina=mysql_fetch_array($respMedicina));
+}while($rowMedicina=pg_fetch_array($respMedicina));
 }
 
 if($SubTotalB!=0){
@@ -166,7 +166,7 @@ $reporte.='<tr class="FONDO"><td align="right" style="vertical-align:middle;" co
 }
 
 $Total+=$SubTotal;
-}while($rowGrupo=mysql_fetch_array($respGrupos));//Grupo terapeutico
+}while($rowGrupo=pg_fetch_array($respGrupos));//Grupo terapeutico
 
 }else{
 

@@ -111,7 +111,7 @@ echo"$DateNow";?>
 //*************************************
 //******************************* QUERIES Y RECORRIDOS
 $respServicios=Servicios($IdSubEspecialidad,$FechaInicio,$FechaFin);
-while($rowServicios=mysql_fetch_array($respServicios)){
+while($rowServicios=pg_fetch_array($respServicios)){
 	$IdSubEspecialidad=$rowServicios[0];
 	$NombreSubEspecialidad=$rowServicios[1];
 		$SubTotalServicio=0;
@@ -124,7 +124,7 @@ while($rowServicios=mysql_fetch_array($respServicios)){
 
 	<?php 
 	$nombreTera=NombreTera($IdGrupoTerapeutico,$IdSubEspecialidad,$FechaInicio,$FechaFin);
-	while($grupos=mysql_fetch_array($nombreTera)){
+	while($grupos=pg_fetch_array($nombreTera)){
 		$NombreTerapeutico=$grupos["GrupoTerapeutico"];
 		$IdTerapeutico=$grupos["IdTerapeutico"];
 			$SubTotal=0;
@@ -149,7 +149,7 @@ while($rowServicios=mysql_fetch_array($respServicios)){
 			</tr>
 			<?php
 		$resp1=QueryExterna($IdTerapeutico,$IdMedicina,$IdSubEspecialidad,$FechaInicio,$FechaFin);
-			while($row=mysql_fetch_array($resp1)){
+			while($row=pg_fetch_array($resp1)){
 		$GrupoTerapeutico=$IdTerapeutico;
 		$Medicina=$row["IdMedicina"];
 		$codigoMedicina=$row["Codigo"];
@@ -163,9 +163,9 @@ while($rowServicios=mysql_fetch_array($respServicios)){
 		
 		$respuesta=ObtenerReporteGrupoTerapeutico($IdTerapeutico,$Medicina,$FechaInicio,$FechaFin,$IdSubEspecialidad);
 			
-				if($row2=mysql_fetch_array($respuesta)){ /* verificacion de datos */
+				if($row2=pg_fetch_array($respuesta)){ /* verificacion de datos */
 		$precioActual=0;
-		$Nrecetas=mysql_num_rows($respuesta); 
+		$Nrecetas=pg_num_rows($respuesta); 
         
 		$IdReceta=$row2["IdReceta"];
 		$Divisor=$row2["Divisor"];//Divisor de conversion

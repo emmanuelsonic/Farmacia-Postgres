@@ -110,7 +110,7 @@ $querySelect="select farm_catalogoproductos.Nombre,farm_catalogoproductos.Concen
 			inner join farm_recetas
 			on farm_recetas.IdReceta=farm_medicinarecetada.IdReceta
 			where farm_medicinarecetada.IdEstado='I' and farm_recetas.IdReceta='$IdReceta'";
-$resp = mysql_query($querySelect,$link);
+$resp = pg_query($querySelect,$link);
 
 return($resp);
 

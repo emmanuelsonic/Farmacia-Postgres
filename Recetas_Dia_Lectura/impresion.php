@@ -9,7 +9,7 @@ $query=new queries;
 conexion::conectar();
 $respDatos=$query->ObtenerDatosPacienteReceta(2,$IR,$IdArea);
 
-while($row=mysql_fetch_array($respDatos)){
+while($row=pg_fetch_array($respDatos)){
 	//Datos Generales de todos los pacientes.-
 	$paciente=$row["NOMBRE"];
 	$paciente=htmlentities(strtoupper($paciente));
@@ -81,7 +81,7 @@ P{page-break-before:always;}
 <?php 
 		//Detalles de Receta
 		$respDetalles=$query->datosReceta($IdReceta,$IdArea);
-			while($row2=mysql_fetch_array($respDetalles)){
+			while($row2=pg_fetch_array($respDetalles)){
 			$EstadoMedicina=$row2["EstadoMedicina"];
 				if($EstadoMedicina!='I'){
 				?>

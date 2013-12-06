@@ -77,8 +77,8 @@ if(isset($_GET['q']) and !eregi('^ *$',$_GET['q'])){
 					WHERE mnt_farmacia.IdFarmacia='$IdFarmacia' and mnt_areafarmacia.IdArea='$IdArea'";
 	}
 
-$aux = Mysql_Fetch_Assoc(mysql_query($sqlStrAux,$link));
-$query = mysql_query($sqlStr.$limit, $link);
+$aux = pg_Fetch_Assoc(pg_query($sqlStrAux,$link));
+$query = pg_query($sqlStr.$limit, $link);
 ?>
 <html>
 <head>
@@ -169,10 +169,10 @@ document.form.q.focus();
 	 <tr>
 	   <td width="830" align="left"><strong><span class="style1">Busqueda de Medicina y Control de Existencias de la Farmacia:</span>  <span style="color:#B13F42"><?php 
 	   $conexion->conectar();
-	   $resp=mysql_query("select Farmacia from mnt_farmacia where IdFarmacia='$IdFarmacia'");
-	   $resp2=mysql_query("select Area from mnt_areafarmacia where IdArea='$IdArea'");
-	   $data=mysql_fetch_array($resp);
-	   $data2=mysql_fetch_array($resp2);
+	   $resp=pg_query("select Farmacia from mnt_farmacia where IdFarmacia='$IdFarmacia'");
+	   $resp2=pg_query("select Area from mnt_areafarmacia where IdArea='$IdArea'");
+	   $data=pg_fetch_array($resp);
+	   $data2=pg_fetch_array($resp2);
 	   $conexion->desconectar();
 	   $farmacia=$data["Farmacia"];
 	   $area=$data2["Area"];
@@ -215,7 +215,7 @@ echo"No hay registros que coincidan con tu b&uacute;squeda \"<strong>$busqueda</
 			echo "\t<table class=\"registros\">\n";
 			echo "<tr class=\"titulos\"><td>Titulo</td><td>PRECIO</td></tr>\n";
 			$r=0;
-			while($row = mysql_fetch_assoc($query)){
+			while($row = pg_fetch_assoc($query)){
 		if(isset($page)){
 	echo "\t\t<tr class=\"row$r\"><td><a href=\"detalle_medicina.php?p={$row['IdMedicina']}&page=$page\" target=\"_self\">".htmlentities($row['Codigo'])."  --  ".htmlentities($row['Nombre'])."  --  ".htmlentities($row['Concentracion'])."  --  ".htmlentities($row['FormaFarmaceutica'])."</a></td>
 <td><a href=\"detalle_medicina.php?p={$row['IdMedicina']}&page=$page\" target=\"_self\">"."$ ".htmlentities($row['PrecioActual'])."</a></td>

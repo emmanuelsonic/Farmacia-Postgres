@@ -12,12 +12,7 @@
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/var/www/SIAP/Farmacia-Postgres/BusquedaRecetasMedicina/BusquedaMedico/busqueda_medico.php</file>
-            <file>file:/var/www/SIAP/Farmacia-Postgres/IngresoRecetasTodas/IncludeFiles/IntroRecetas.js</file>
-            <file>file:/var/www/SIAP/Farmacia-Postgres/BusquedaRecetasMedicina/BusquedaMedico/buscador_medico.php</file>
-            <file>file:/var/www/SIAP/Farmacia-Postgres/BusquedaRecetasMedicina/IncludeFiles/IntroRecetas.js</file>
-            <file>file:/var/www/SIAP/Farmacia-Postgres/BusquedaRecetasMedicina/IncludeFiles/IntroduccionRecetasProceso.php</file>
-            <file>file:/var/www/SIAP/Farmacia-Postgres/BusquedaRecetasMedicina/IncludeFiles/RecetasProcesoClase.php</file>
+            <file>file:/var/www/siap/autenticacion/signIn.php</file>
         </group>
     </open-files>
 </project-private>

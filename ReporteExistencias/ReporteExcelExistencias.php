@@ -21,8 +21,8 @@ $FechaFin=$_REQUEST["fechaFin"];
 
 $Area=$_REQUEST["select2"];
 
-$NomArea=mysql_query("select Area from mnt_areafarmacia where IdArea='$Area'");
-$N=mysql_fetch_array($NomArea);
+$NomArea=pg_query("select Area from mnt_areafarmacia where IdArea='$Area'");
+$N=pg_fetch_array($NomArea);
 $Area=$N["Area"];
 ?>
   <table cellpadding="0" cellspacing="0" width="967">
@@ -55,13 +55,13 @@ $separador2=0;
 $nombreTera=$query->NombreTera($grupoTerapeutico);?>
 <table width="968" border="1" cellpadding="0.5" cellspacing="0.5">
 <?php
-while($grupos=mysql_fetch_array($nombreTera)){
+while($grupos=pg_fetch_array($nombreTera)){
 $NombreTerapeutico=$grupos["GrupoTerapeutico"];
 $IdTerapeutico=$grupos["IdTerapeutico"];
 if($NombreTerapeutico!="--"){
 //*****Verificacion de numero de datos, asi se rompe el lazo para evitar impresiones de datos no existentes
 $respuesta2=$query->ObtenerReporteExistencias($IdTerapeutico,$farmacia,$medicina,$FechaInicio,$FechaFin);
-if($row=mysql_fetch_array($respuesta2)) {
+if($row=pg_fetch_array($respuesta2)) {
 //***************
 ?>
     <tr>
@@ -83,9 +83,9 @@ if($row=mysql_fetch_array($respuesta2)) {
 
 $respuesta=$query->ObtenerReporteExistencias($IdTerapeutico,$area,$medicina,$FechaInicio,$FechaFin);
 $temp=$query->ObtenerReporteExistencias($IdTerapeutico,$area,$medicina,$FechaInicio,$FechaFin);
-$Rowtmp=mysql_fetch_array($temp);
-		while($row3=mysql_fetch_array($respuesta)){
-$Rowtmp=mysql_fetch_array($temp); //adelante una posicion
+$Rowtmp=pg_fetch_array($temp);
+		while($row3=pg_fetch_array($respuesta)){
+$Rowtmp=pg_fetch_array($temp); //adelante una posicion
 $consumo=0;
 $IdHistorialClinico=0;
 $existencias=0;
@@ -121,7 +121,7 @@ $consumo=$query->MedicinaEntregada($Medicina,$area,$FechaInicio,$FechaFin);
 	  ?>
 	  <td align="center" style="vertical-align:middle;"><?php echo queries::ObtenerExistenciaTotal($Medicina,$area)/$Divisor;?></td>
 	  <td align="center"><?php
-	  while($rowLote=mysql_fetch_array($respLotes)){
+	  while($rowLote=pg_fetch_array($respLotes)){
 	  $Existencia=$rowLote["Existencia"];
 	  $Lote=$rowLote["Lote"];
 	  $mes=$rowLote["mes"];

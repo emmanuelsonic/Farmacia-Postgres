@@ -78,7 +78,7 @@ if (!isset($_SESSION["nivel"])) {
                                 <option value="0">[Seleccione ...]</option>
                                 <?php
                                 conexion::conectar();
-                                $resp = mysql_query("select * 
+                                $resp = pg_query("select * 
                                                      from mnt_farmacia mf
                                                      inner join mnt_farmaciaxestablecimiento mfxe
                                                      on mf.IdFarmacia=mfxe.IdFarmacia
@@ -86,7 +86,7 @@ if (!isset($_SESSION["nivel"])) {
                                                      and mfxe.IdEstablecimiento=$IdEstablecimiento
                                                     and mfxe.IdModalidad=$IdModalidad");
                                 conexion::desconectar();
-                                while ($row = mysql_fetch_array($resp)) {
+                                while ($row = pg_fetch_array($resp)) {
                                     ?>
                                     <option value="<?php echo $row[0]; ?>"><?php echo $row[1]; ?></option>
         <?php

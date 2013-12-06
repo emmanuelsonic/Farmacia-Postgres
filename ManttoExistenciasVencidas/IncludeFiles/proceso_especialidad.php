@@ -8,10 +8,10 @@ switch($_GET["Bandera"]){
 	$valor = $_GET["ValorOrigen"];
 	if($valor!=0){
 	$SQL="select * from mnt_areafarmacia where IdArea <> 7 and IdArea <> 12 and Habilitado ='S' and IdArea <> ".$valor;
-	$resp=mysql_query($SQL);
+	$resp=pg_query($SQL);
 	$comboDestino="<select id='IdAreaDestino'>
 		<option>[Seleccion Area Destino]</option>";
-	while($row=mysql_fetch_array($resp)){
+	while($row=pg_fetch_array($resp)){
 	   $comboDestino.="<option value='".$row["IdArea"]."'>".$row["Area"]."</option>";
 	}
 	$comboDestino.="</select>";

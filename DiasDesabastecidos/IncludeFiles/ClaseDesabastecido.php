@@ -8,7 +8,7 @@ class Desabastecimiento{
 		and IdMedicina=".$IdMedicina." and
 		IdEstablecimiento=".$IdEstablecimiento." 
                 and IdModalidad=$IdModalidad";
-	$resp=mysql_query($SQL);	
+	$resp=pg_query($SQL);	
 	return($resp);
    }
 
@@ -33,14 +33,14 @@ ceil((count(IdMedicinaRecetada)/ceil(datediff('$FechaInicio',adddate('$FechaInic
         and fr.IdModalidad=$IdModalidad
 	and fr.Fecha between adddate('$FechaInicio',interval -1 month) and '$FechaFin'
 	";
-	$resp=mysql_query($SQL);
+	$resp=pg_query($SQL);
 	return($resp);
    }
 
    function IngresarDatosInsatisfecha($IdMedicina,$FechaInicio,$FechaFin,$InsatisfechasTotal,$PromedioDiaRecetas,$IdEstablecimiento,$IdModalidad){
 	$SQL="insert into farm_periododesabastecido (IdMedicina,FechaInicio,FechaFin,PromedioRecetas,PromedioDiarias,IdEstablecimiento, IdModalidad) 
                                               values('$IdMedicina','$FechaInicio','$FechaFin','$InsatisfechasTotal','$PromedioDiaRecetas','$IdEstablecimiento',$IdModalidad)";
-	mysql_query($SQL);
+	pg_query($SQL);
    }
 
 }

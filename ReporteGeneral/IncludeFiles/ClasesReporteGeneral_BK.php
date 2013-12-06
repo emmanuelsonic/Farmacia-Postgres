@@ -10,7 +10,7 @@ class ReporteGeneral{
 			on mnt_subservicio.IdSubServicio=mnt_subservicioxestablecimiento.IdSubServicio
 			where IdEstablecimiento=".$_SESSION["IdEstablecimiento"]." 
 			and IdSubServicio=".$IdSubEspecialidad;
-		$resp=mysql_fetch_array(mysql_query($query));
+		$resp=pg_fetch_array(pg_query($query));
 		return($resp[0].''.$resp[1]);
 	}
     
@@ -26,7 +26,7 @@ class ReporteGeneral{
 		
 		where Fecha between '$FechaInicial' and  '$FechaFinal' 
 		".$comp;
-        $resp=mysql_query($query);
+        $resp=pg_query($query);
 		return($resp);   
     }
     
@@ -78,7 +78,7 @@ class ReporteGeneral{
 				group by sec_historial_clinico.IdSubServicio
 				order by CodigoFarmacia";
 		
-		$resp=mysql_query($query);
+		$resp=pg_query($query);
 		return($resp);
 	}
 	
@@ -89,7 +89,7 @@ class ReporteGeneral{
 function Farmacias($TipoFarmacia){
 	if($TipoFarmacia==1){$comp=" and IdFarmacia <> 4";}else{$comp="";}
 	$SQL="select IdFarmacia,Farmacia from mnt_farmacia where HabilitadoFarmacia='S'".$comp;
-	$resp=mysql_query($SQL);
+	$resp=pg_query($SQL);
 	return($resp);
 }
 
@@ -138,7 +138,7 @@ function ObtenerRecetasFarmacia($IdFarmacia,$IdSubEspecialidad,$FechaInicial,$Fe
 				group by sec_historial_clinico.IdSubServicio
 				order by CodigoFarmacia";
 		
-		$resp=mysql_query($query);
+		$resp=pg_query($query);
 		return($resp);
 
 }
@@ -185,7 +185,7 @@ function ObtenerNumeroRecetasFarmacia($IdFarmacia,$IdSubEspecialidad,$FechaInici
 				group by sec_historial_clinico.IdSubServicio
 				order by CodigoFarmacia";
 		
-		$resp=mysql_fetch_array(mysql_query($query));
+		$resp=pg_fetch_array(pg_query($query));
 		return($resp[0]);
 
 }
@@ -207,7 +207,7 @@ where Fecha between '$FechaInicial' and '$FechaFinal'
 	and shc.IdSubServicio='$IdSubEspecialidad'
 	and IdFarmacia=".$IdFarmacia."
 order by IdFarmacia,IdAreaOrigen";
-$resp=mysql_query($SQL);
+$resp=pg_query($SQL);
 return($resp);
 }
 
@@ -236,7 +236,7 @@ function MonitoreoRecetas2($IdFarmacia,$IdArea,$IdSubEspecialidad,$FechaInicial,
 				
 				and sec_historial_clinico.IdSubServicio='$IdSubEspecialidad'
 				group by mnt_subservicio.IdSubServicio";
-		$resp=mysql_query($SQL);
+		$resp=pg_query($SQL);
 		return($resp);
 	
 	}

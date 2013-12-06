@@ -40,13 +40,13 @@ if(isset($_REQUEST["select2"])){$medicina=$_REQUEST["select2"];}else{$medicina=0
 $nombreTera=$query->NombreTera($grupoTerapeutico);?>
 <table width="968" border="1" cellpadding="0.5" cellspacing="0.5">
 <?php
-while($grupos=mysql_fetch_array($nombreTera)){
+while($grupos=pg_fetch_array($nombreTera)){
 $NombreTerapeutico=$grupos["GrupoTerapeutico"];
 $IdTerapeutico=$grupos["IdTerapeutico"];
 if($NombreTerapeutico!="--"){
 
 $resp=$query->QueryExterna($IdTerapeutico,$medicina,$IdArea,$FechaInicio,$FechaFin);
-if($test=mysql_fetch_array($resp)){?>
+if($test=pg_fetch_array($resp)){?>
     <tr>
       <td colspan="11" align="center" style="background:#CCCCCC;"><P>
 &nbsp;<strong><?php echo"$NombreTerapeutico";?></strong></td>
@@ -66,7 +66,7 @@ if($test=mysql_fetch_array($resp)){?>
     </tr>
 	<?php
 $resp1=$query->QueryExterna($IdTerapeutico,$medicina,$IdArea,$FechaInicio,$FechaFin);
-	while($row=mysql_fetch_array($resp1)){
+	while($row=pg_fetch_array($resp1)){
 $GrupoTerapeutico=$IdTerapeutico;
 $Medicina=$row["IdMedicina"];
 $codigoMedicina=$row["Codigo"];
@@ -76,11 +76,11 @@ $presentacion=$row["FormaFarmaceutica"];
 $Nrecetas=0;//conteo de recetas
 $consumo=0;
 $respuesta=$query->ObtenerReporteGrupoTerapeutico($GrupoTerapeutico,$Medicina,$FechaInicio,$FechaFin,$IdArea);
-	$Nrecetas=mysql_num_rows($respuesta);
-		if($row2=mysql_fetch_array($respuesta)){
+	$Nrecetas=pg_num_rows($respuesta);
+		if($row2=pg_fetch_array($respuesta)){
 $precioActual=$row2["PrecioActual"];
 $respuesta2=$query->ObtenerReporteGrupoTerapeutico($GrupoTerapeutico,$Medicina,$FechaInicio,$FechaFin,$IdArea);  
-$row3=mysql_fetch_array($respuesta2);
+$row3=pg_fetch_array($respuesta2);
 //IdReceta
 $IdReceta=$row3["IdReceta"];
 $IdHistorialClinico=$row3["IdHistorialClinico"];
@@ -93,7 +93,7 @@ $Cantidad_1=0;$Cantidad_2=0;$Monto_Total=0;$Monto_Total2=0;$Lote=array();$Lote2_
 
 $i=0;//Posicion inicial de los vectores
 $j=0;
-			while($rowLotes=mysql_fetch_array($respLotes)){//OBTENGO LOTES RECETAS ETC
+			while($rowLotes=pg_fetch_array($respLotes)){//OBTENGO LOTES RECETAS ETC
 				$Cantidad1=$rowLotes["TotalLote1"];
 				$Lote1=$rowLotes["Lote1"];
 				
@@ -202,7 +202,7 @@ $insat=$query->ObtenerRecetasInsatisfechas($IdReceta,$Medicina,$FechaInicio,$Fec
 $cantidad=$row3["Cantidad"];
 
 $VerSatisfecha=$query->verificaSatisfecha($Medicina,$IdReceta,$IdHistorialClinico);
-if($vector=mysql_fetch_array($VerSatisfecha)){$consumo=$consumo+$cantidad;}
+if($vector=pg_fetch_array($VerSatisfecha)){$consumo=$consumo+$cantidad;}
 			
 $costo=$consumo*$precioActual;//}//while row3
 $Cantidad_Total=$Cantidad_1+$Cantidad_2;//CANTIDAD TOTAL DE RECETAS SATIS. Y NO SATIS.

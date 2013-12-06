@@ -28,7 +28,7 @@ $poss++;
 	if($poss!=$ultimo){$cola='~';}else{$cola='';}
 	$salida.=$row["id"]."".$cola;
 
-}while($row=mysql_fetch_array($resp));
+}while($row=pg_fetch_array($resp));
 
 
 echo $salida;

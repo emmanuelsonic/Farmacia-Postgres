@@ -18,7 +18,7 @@ if($IdEstado==''){
 		where IdReceta='$IdReceta' and IdMedicina='$IdMedicina'";
 }//ELSE
 
-mysql_query($queryUpdate); 
+pg_query($queryUpdate); 
 
 
 conexion::desconectar();

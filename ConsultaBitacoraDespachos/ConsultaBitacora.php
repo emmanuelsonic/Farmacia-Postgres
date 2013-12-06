@@ -55,10 +55,10 @@ if (!isset($_SESSION["nivel"])) {
             //<!--  INICIO DE REPORTE  -->
 
             $resp = $puntero->ExisteBitacora($FechaInicio, $FechaFin, $IdEstablecimiento, $IdModalidad);
-            if ($row = mysql_fetch_array($resp)) {
+            if ($row = pg_fetch_array($resp)) {
 
                 $respGrupo = $puntero->ObtenerGrupos($IdTeraputico, $FechaInicio, $FechaFin, $IdFarmacia, $IdEstablecimiento, $IdModalidad);
-                if ($rowGrupo = mysql_fetch_array($respGrupo)) {
+                if ($rowGrupo = pg_fetch_array($respGrupo)) {
                     do {
 
                         $reporte.="<tr class='FONDO'><td colspan=9 align=center><strong><h4>" . $rowGrupo[1] . "</h4></strong></td></tr>
@@ -75,7 +75,7 @@ if (!isset($_SESSION["nivel"])) {
 		</tr>";
 
                         $resp = $puntero->ObtenerBitacora($IdMedicina, $rowGrupo[0], $FechaInicio, $FechaFin, $IdFarmacia, $IdEstablecimiento, $IdModalidad);
-                        while ($row = mysql_fetch_array($resp)) {
+                        while ($row = pg_fetch_array($resp)) {
                             $Medicina = $row["IdMedicina"];
                             $Codigo = "'" . $row["Codigo"] . "'";
                             $Descripcion = htmlentities($row["Nombre"]) . " " . htmlentities($row["Concentracion"]) . "<br>" . htmlentities($row["FormaFarmaceutica"]) . "<br>" . htmlentities($row["Presentacion"]);
@@ -97,7 +97,7 @@ if (!isset($_SESSION["nivel"])) {
                             }
 
                             $CantidadReal = $CantidadIngresada;
-                            if ($respDivisor = mysql_fetch_array($puntero->ValorDivisor($Medicina, $IdEstablecimiento, $IdModalidad))) {
+                            if ($respDivisor = pg_fetch_array($puntero->ValorDivisor($Medicina, $IdEstablecimiento, $IdModalidad))) {
                                 $Divisor = $respDivisor[0];
 
                                 $CantidadReal = number_format($CantidadReal, 3, '.', '');
@@ -149,7 +149,7 @@ if (!isset($_SESSION["nivel"])) {
 			<td align=center>" . $EstadoRegistro . "</td>
 			</tr>";
                         }
-                    } while ($rowGrupo = mysql_fetch_array($respGrupo)); //while de GrupoTerapeutico
+                    } while ($rowGrupo = pg_fetch_array($respGrupo)); //while de GrupoTerapeutico
                 } else {
                     $reporte.="<tr class='FONDO'><td colspan=9 align=center><strong>NO EXISTEN MOVIMIENTOS EN LA BITACORA PARA ESTE GRUPO TERAPEUTICO PARA EL PERIODO SELECCIONADO</strong></td></tr>";
                 }
@@ -198,7 +198,7 @@ if (!isset($_SESSION["nivel"])) {
             $combo = "<select id='IdMedicina' name='IdMedicina' >
                <option value='0'>[GENERAL...]</option>";
 
-            while ($row = mysql_fetch_array($resp)) {
+            while ($row = pg_fetch_array($resp)) {
                 $combo.="<option value='" . $row["IdMedicina"] . "'>" . htmlentities($row["Nombre"]) . " - " . $row["Concentracion"] . "-" . htmlentities($row["FormaFarmaceutica"]) . "</option>";
             }
 

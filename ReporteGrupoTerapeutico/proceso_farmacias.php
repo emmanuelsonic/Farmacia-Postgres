@@ -33,13 +33,13 @@ $selectDestino=$_REQUEST["select"]; $opcionSeleccionada=$_REQUEST["opcion"];
 	if ($tabla == "mnt_farmacia"){
 	$conexion=new conexion;
 	$conexion->conectar();
-	$consulta=mysql_query("SELECT * FROM $tabla'") or die(mysql_error());
+	$consulta=pg_query("SELECT * FROM $tabla'") or die(pg_error());
 	$conexion->desconectar();
 	
 	// Comienzo a imprimir el selec
 	echo "<select name='".$selectDestino."' id='".$selectDestino."' onChange='cargaContenido(this.id)'>";
 	echo "<option value='0'>TODAS LAS FARMACIAS</option>";
-	while($registro=mysql_fetch_row($consulta))
+	while($registro=pg_fetch_row($consulta))
 	{
 		// Convierto los caracteres conflictivos a sus entidades HTML correspondientes para su correcta visualizacion
 		$registro[1]=htmlentities($registro[1]);
@@ -53,19 +53,19 @@ $selectDestino=$_REQUEST["select"]; $opcionSeleccionada=$_REQUEST["opcion"];
 	if($tabla=="mnt_areafarmacia"){
 	$conexion=new conexion;	
 	$conexion->conectar();
-	$consulta=mysql_query("SELECT mnt_areafarmacia.IdArea,mnt_areafarmacia.Area
+	$consulta=pg_query("SELECT mnt_areafarmacia.IdArea,mnt_areafarmacia.Area
 						   FROM mnt_areafarmacia
 						   inner join mnt_farmacia
 						   on mnt_farmacia.IdFarmacia=mnt_areafarmacia.IdFarmacia
 						   WHERE mnt_farmacia.IdFarmacia='$opcionSeleccionada'
-						    and mnt_areafarmacia.IdArea <> '7'") or die(mysql_error());
+						    and mnt_areafarmacia.IdArea <> '7'") or die(pg_error());
 	
 	$conexion->desconectar();
 	
 	// Comienzo a imprimir el select
 	echo "<select name='".$selectDestino."' id='".$selectDestino."' onChange='cargaContenido(this.id)' onmouseover=\"Tip('Selecci&oacute;n de &Aacute;rea')\" onmouseout=\"UnTip()\">";
 	echo "<option value='0'>TODAS LAS AREAS</option>";
-	while($registro=mysql_fetch_row($consulta))
+	while($registro=pg_fetch_row($consulta))
 	{
 		// Convierto los caracteres conflictivos a sus entidades HTML correspondientes para su correcta visualizacion
 		$registro[1]=htmlentities($registro[1]);
@@ -78,13 +78,13 @@ $selectDestino=$_REQUEST["select"]; $opcionSeleccionada=$_REQUEST["opcion"];
 		if ($tabla == "mnt_grupoterapeutico"){
 	$conexion=new conexion;
 	$conexion->conectar();
-	$consulta=mysql_query("SELECT * FROM $tabla ORDER BY GrupoTerapeutico") or die(mysql_error());
+	$consulta=pg_query("SELECT * FROM $tabla ORDER BY GrupoTerapeutico") or die(pg_error());
 	$conexion->desconectar();
 	
 	// Comienzo a imprimir el select
 	echo "<select name='".$selectDestino."' id='".$selectDestino."' onChange='cargaContenido(this.id)'>";
 	echo "<option value='0'>TODOS LOS GRUPOS</option>";
-	while($registro=mysql_fetch_row($consulta))
+	while($registro=pg_fetch_row($consulta))
 	{
 		// Convierto los caracteres conflictivos a sus entidades HTML correspondientes para su correcta visualizacion
 		$registro[1]=htmlentities($registro[1]);
@@ -99,18 +99,18 @@ $selectDestino=$_REQUEST["select"]; $opcionSeleccionada=$_REQUEST["opcion"];
 if($tabla=="farm_catalogoproductos"){
 	$conexion=new conexion;	
 	$conexion->conectar();
-	$consulta=mysql_query("SELECT $tabla.IdMedicina,$tabla.Nombre,$tabla.FormaFarmaceutica
+	$consulta=pg_query("SELECT $tabla.IdMedicina,$tabla.Nombre,$tabla.FormaFarmaceutica
 						   FROM $tabla
 						   inner join mnt_grupoterapeutico 
 						   on mnt_grupoterapeutico.IdTerapeutico=$tabla.IdTerapeutico
-						   WHERE mnt_grupoterapeutico.IdTerapeutico='$opcionSeleccionada' order by $tabla.Nombre") or die(mysql_error());
+						   WHERE mnt_grupoterapeutico.IdTerapeutico='$opcionSeleccionada' order by $tabla.Nombre") or die(pg_error());
 	
 	$conexion->desconectar();
 	
 	// Comienzo a imprimir el select
 	echo "<select name='".$selectDestino."' id='".$selectDestino."' onChange='cargaContenido(this.id)' onmouseover=\"Tip('Selecci&oacute;n de Medicamento')\" onmouseout=\"UnTip()\">";
 	echo "<option value='0'>TODAS LAS MEDICINAS</option>";
-	while($registro=mysql_fetch_row($consulta))
+	while($registro=pg_fetch_row($consulta))
 	{
 		// Convierto los caracteres conflictivos a sus entidades HTML correspondientes para su correcta visualizacion
 		$registro[1]=htmlentities($registro[1]);

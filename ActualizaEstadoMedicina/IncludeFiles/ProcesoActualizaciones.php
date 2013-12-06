@@ -50,7 +50,7 @@ switch($Bandera){
 		<td width='22%' align='center'><strong>Estado</strong></td>
 		</tr>";
 		
-		while($row=mysql_fetch_array($resp)){
+		while($row=pg_fetch_array($resp)){
 			
 			if($row["IdEstado"]=='H'){
 				$CuentaEstado='HABILITADO';
@@ -121,7 +121,7 @@ switch($Bandera){
 		<td width='22%' align='center'><strong>Estado</strong></td>
 		</tr>";
 		
-		while($row=mysql_fetch_array($resp)){
+		while($row=pg_fetch_array($resp)){
 			
 			if($row["IdEstado"]=='H'){
 				$CuentaEstado='HABILITADO';

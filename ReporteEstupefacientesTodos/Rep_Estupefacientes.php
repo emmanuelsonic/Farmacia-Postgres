@@ -27,7 +27,7 @@ if (!isset($_SESSION["nivel"])) {
 
         function generaSelect2($IdEstablecimiento,$IdModalidad) {//creacioon de combo para las Regiones
             conexion::conectar();
-            $consulta = mysql_query("select msse.IdSubServicioxEstablecimiento,NombreServicio,NombreSubServicio 
+            $consulta = pg_query("select msse.IdSubServicioxEstablecimiento,NombreServicio,NombreSubServicio 
 				from mnt_subservicio mss
 				inner join mnt_subservicioxestablecimiento msse
 				on msse.IdSubServicio=mss.IdSubServicio
@@ -45,7 +45,7 @@ if (!isset($_SESSION["nivel"])) {
             // Voy imprimiendo el primer select compuesto por los paises
             echo "<select name='IdSubServicio' id='IdSubServicio'>";
             echo "<option value='0'>[General ...]</option>";
-            while ($registro = mysql_fetch_row($consulta)) {
+            while ($registro = pg_fetch_row($consulta)) {
 
                 echo "<option value='" . $registro[0] . "'>[" . $registro[1] . '] ' . $registro[2] . "</option>";
             }
@@ -65,13 +65,13 @@ if (!isset($_SESSION["nivel"])) {
 
             $conexion = new conexion;
             $conexion->conectar();
-            $resp = mysql_query($query);
+            $resp = pg_query($query);
             $conexion->desconectar();
 
             $comboMedico = '<select name="IdEmpleado" id="IdEmpleado">
 		  <option value="0">[General ...]</option>';
 
-            while ($row = mysql_fetch_array($resp)) {
+            while ($row = pg_fetch_array($resp)) {
                 $comboMedico.='<option value="' . $row["IdEmpleado"] . '">' . $row["NombreEmpleado"] . '</option>';
             }
             $comboMedico.="</select>";
@@ -86,7 +86,7 @@ if (!isset($_SESSION["nivel"])) {
             } else {
                 $comp = "";
             }
-            $consulta = mysql_query("select mf.IdFarmacia,Farmacia
+            $consulta = pg_query("select mf.IdFarmacia,Farmacia
                                         from mnt_farmacia mf
                                         inner join mnt_farmaciaxestablecimiento mfe
                                         on mfe.IdFarmacia=mf.IdFarmacia
@@ -97,7 +97,7 @@ if (!isset($_SESSION["nivel"])) {
             // Voy imprimiendo el primer select compuesto por los paises
             echo "<select name='IdFarmacia' id='IdFarmacia'>";
             echo "<option value='0'>[Consumo General ...]</option>";
-            while ($registro = mysql_fetch_row($consulta)) {
+            while ($registro = pg_fetch_row($consulta)) {
                 echo "<option value='" . $registro[0] . "'>" . $registro[1] . "</option>";
             }
             echo "</select>";
@@ -174,15 +174,15 @@ if (!isset($_SESSION["nivel"])) {
                                     <option value="0">[General ...]</option>
                                     <?php
                                     conexion::conectar();
-                                    $consulta = mysql_query("SELECT distinct mnt_grupoterapeutico.* FROM mnt_grupoterapeutico
+                                    $consulta = pg_query("SELECT distinct mnt_grupoterapeutico.* FROM mnt_grupoterapeutico
 						inner join farm_catalogoproductos fcp
 						on fcp.IdTerapeutico=mnt_grupoterapeutico.IdTerapeutico
 						inner join farm_catalogoproductosxestablecimiento fcpe
 						on fcpe.IdMedicina=fcp.IdMedicina
 						where fcpe.Estupefaciente='S'
-						order by mnt_grupoterapeutico.IdTerapeutico") or die(mysql_error());
+						order by mnt_grupoterapeutico.IdTerapeutico") or die(pg_error());
                                     conexion::desconectar();
-                                    while ($registro = mysql_fetch_row($consulta)) {
+                                    while ($registro = pg_fetch_row($consulta)) {
                                         // Convierto los caracteres conflictivos a sus entidades HTML correspondientes para su correcta visualizacion
                                         $registro[1] = htmlentities($registro[1]);
                                         // Imprimo las opciones del select

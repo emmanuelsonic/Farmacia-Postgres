@@ -5,7 +5,7 @@ class Obtencion {
     function ObtenerGrupos() {
 
         $selectGrupo = "select * from mnt_grupoterapeutico";
-        $Grupo = mysql_query($selectGrupo);
+        $Grupo = pg_query($selectGrupo);
 
         return($Grupo);
     }
@@ -41,7 +41,7 @@ class Obtencion {
                             and farm_medicinaexistenciaxarea.IdModalidad=$IdModalidad
                             order by Codigo";
         }
-        $resp = mysql_query($querySelect);
+        $resp = pg_query($querySelect);
 
         return($resp);
     }
@@ -50,7 +50,7 @@ class Obtencion {
 
     function ObtenerExistencias($IdArea, $IdMedicina, $IdEstablecimiento, $IdModalidad) {
 
-        $RespEx = mysql_query("select sum(farm_medicinaexistenciaxarea.Existencia) as TotalExistencia
+        $RespEx = pg_query("select sum(farm_medicinaexistenciaxarea.Existencia) as TotalExistencia
                                 from farm_medicinaexistenciaxarea
                                 inner join farm_lotes
                                 on farm_lotes.IdLote=farm_medicinaexistenciaxarea.IdLote
@@ -70,7 +70,7 @@ class Obtencion {
 
     function ObtenerExistenciasBodega($IdMedicina, $IdEstablecimiento, $IdModalidad) {
 
-        $RespEx = mysql_query("select sum(farm_entregamedicamento.Existencia) as TotalExistencia
+        $RespEx = pg_query("select sum(farm_entregamedicamento.Existencia) as TotalExistencia
                                 from farm_entregamedicamento
                                 inner join farm_lotes
                                 on farm_lotes.IdLote=farm_entregamedicamento.IdLote
@@ -126,7 +126,7 @@ class Obtencion {
                 ";
         }
 
-        $resp = mysql_fetch_array(mysql_query($SQL));
+        $resp = pg_fetch_array(pg_query($SQL));
         return($resp[0]);
     }
 
@@ -161,9 +161,9 @@ class Obtencion {
 				where farm_medicinaexistenciaxarea.IdArea='$IdArea'
 				and farm_medicinaexistenciaxarea.IdMedicina='$IdMedicina'";
 
-        $resp1 = mysql_fetch_array(mysql_query($querySelect));
-        $resp2 = mysql_fetch_array(mysql_query($querySelect2));
-        $resp3 = mysql_fetch_array(mysql_query($querySelect3));
+        $resp1 = pg_fetch_array(pg_query($querySelect));
+        $resp2 = pg_fetch_array(pg_query($querySelect2));
+        $resp3 = pg_fetch_array(pg_query($querySelect3));
         $datos[0] = $resp1[0]; //mes anterior
         $datos[1] = $resp2[0]; //mes actual
         $datos[2] = $resp3[0]; //mes actual
@@ -200,9 +200,9 @@ class Obtencion {
 				from farm_entregamedicamento
 				where farm_entregamedicamento.IdMedicina='$IdMedicina'";
 
-        $resp1 = mysql_fetch_array(mysql_query($querySelect));
-        $resp2 = mysql_fetch_array(mysql_query($querySelect2));
-        $resp3 = mysql_fetch_array(mysql_query($querySelect3));
+        $resp1 = pg_fetch_array(pg_query($querySelect));
+        $resp2 = pg_fetch_array(pg_query($querySelect2));
+        $resp3 = pg_fetch_array(pg_query($querySelect3));
         $datos[0] = $resp1[0]; //mes anterior
         $datos[1] = $resp2[0]; //mes actual
         $datos[2] = $resp3[0]; //mes actual
@@ -217,7 +217,7 @@ class Obtencion {
                 where IdMedicina= $IdMedicina
                 and IdEstablecimiento=$IdEstablecimiento
                 and IdModalidad=$IdModalidad";
-        $resp = mysql_query($SQL);
+        $resp = pg_query($SQL);
         return($resp);
     }
 
@@ -236,7 +236,7 @@ class Combos {
                   where mfe.IdEstablecimiento=$IdEstablecimiento
                  and mfe.IdModalidad=$IdModalidad
                  and mfe.HabilitadoFarmacia='S'";
-        $resp = mysql_query($SQL);
+        $resp = pg_query($SQL);
         return($resp);
     }
 
@@ -250,7 +250,7 @@ class Combos {
                     and mafe.IdEstablecimiento=$IdEstablecimiento
                     and mafe.IdModalidad=$IdModalidad
                     and maf.IdFarmacia=" . $IdFarmacia;
-        $resp = mysql_query($SQL);
+        $resp = pg_query($SQL);
         return($resp);
     }
 

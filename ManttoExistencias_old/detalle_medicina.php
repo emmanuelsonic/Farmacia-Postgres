@@ -123,18 +123,18 @@ function valida(form){
 <?php   
 //Obtencion del IDMEDICINA
 $IdArea=$_SESSION["IdAreaFarmacia"];
-$RespArea=mysql_query("select Area from mnt_areafarmacia where IdArea='$IdArea'");
-$RowArea=mysql_fetch_array($RespArea);
+$RespArea=pg_query("select Area from mnt_areafarmacia where IdArea='$IdArea'");
+$RowArea=pg_fetch_array($RespArea);
 $Area=$RowArea[0];
 $idMedicina=$_REQUEST["p"];
 $ventto='';
 $respuesta=$query->ConfirmaExistencia($idMedicina,$IdArea,$ventto);
-if(mysql_fetch_array($respuesta)){
+if(pg_fetch_array($respuesta)){
 	$info=$query->ObtenerDatosMedicina2($idMedicina,$IdArea);//obtencion de datos nuevo
 }else{
 	$info=$query->ObtenerDatosMedicina($idMedicina);//sino hay  datos aun en tabla
 }
-$med=mysql_fetch_array($info);
+$med=pg_fetch_array($info);
 $IdMedicina=$med["IdMedicina"];
 $CodigoMedicina=$med["Codigo"];
 $NombreMedicina=$med["Nombre"];

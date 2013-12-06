@@ -23,8 +23,8 @@ switch($Bandera){
 		on farm_unidadmedidas.IdUnidadMedida=farm_catalogoproductos.IdUnidadMedida
 		where Nombre like '%$Busqueda%'
 		and farm_catalogoproductos.IdEstado='H'";
-			$resp=mysql_query($querySelect);
-		while($row=mysql_fetch_array($resp)){
+			$resp=pg_query($querySelect);
+		while($row=pg_fetch_array($resp)){
 			$Nombre=$row["Nombre"];
 			$Concentracion=$row["Concentracion"];
 			$IdMedicina=$row["IdMedicina"];
@@ -51,7 +51,7 @@ switch($Bandera){
 					inner join farm_lotes
 					on farm_lotes.IdLote=alm_existencias.IdLote
 					where farm_lotes.IdLote=".$IdLote;
-		$resp=mysql_fetch_array(mysql_query($querySelect));
+		$resp=pg_fetch_array(pg_query($querySelect));
 		echo $resp[0];
 	break;
 	

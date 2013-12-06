@@ -14,7 +14,7 @@ on farm_catalogoproductos.IdMedicina=farm_medicinarecetada.IdMedicina
 group by farm_medicinarecetada.IdMedicina 
 order by farm_medicinarecetada.IdMedicina";
 
-        $resp = mysql_query($querySelect);
+        $resp = pg_query($querySelect);
 
         return($resp);
     }
@@ -54,7 +54,7 @@ order by farm_medicinarecetada.IdMedicina";
                         order by farm_medicinarecetada.IdMedicina,month(farm_medicinarecetada.FechaEntrega)
                         ";
 
-        $resp = mysql_query($querySelect);
+        $resp = pg_query($querySelect);
 
         return($resp);
     }
@@ -90,7 +90,7 @@ order by farm_medicinarecetada.IdMedicina";
                         order by farm_medicinarecetada.IdMedicina
                         ";
 
-        $resp = mysql_query($querySelect);
+        $resp = pg_query($querySelect);
 
         return($resp);
     }
@@ -134,7 +134,7 @@ order by farm_medicinarecetada.IdMedicina";
                         order by farm_medicinarecetada.IdMedicina,month(farm_medicinarecetada.FechaEntrega)
                         ";
 
-        $resp = mysql_query($querySelect);
+        $resp = pg_query($querySelect);
 
         return($resp);
     }
@@ -170,7 +170,7 @@ order by farm_medicinarecetada.IdMedicina";
                         order by farm_medicinarecetada.IdMedicina
                         ";
 
-        $resp = mysql_query($querySelect);
+        $resp = pg_query($querySelect);
 
         return($resp);
     }

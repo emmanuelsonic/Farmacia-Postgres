@@ -10,7 +10,7 @@ class ExistenciaVirtualProceso{
 						from farm_medicinaexistenciaxarea
 						where farm_medicinaexistenciaxarea.IdMedicina in(select mnt_areamedicina.IdMedicina from mnt_areamedicina where mnt_areamedicina.IdArea='$IdArea')
 						group by farm_medicinaexistenciaxarea.IdMedicina";
-		$resp=mysql_query($querySelect);
+		$resp=pg_query($querySelect);
 		return($resp);
 	}//ObtenerExistenciaTotal
 	
@@ -25,7 +25,7 @@ class ExistenciaVirtualProceso{
 					and farm_recetas.IdArea='$IdArea'
 					and farm_medicinarecetada.IdMedicina='$IdMedicina'
 					group by farm_medicinarecetada.IdMedicina";
-		$resp=mysql_fetch_array(mysql_query($querySelect));
+		$resp=pg_fetch_array(pg_query($querySelect));
 		return($resp[0]);	
 	}//OntenerRepetitivas
 	
@@ -35,7 +35,7 @@ class ExistenciaVirtualProceso{
 					from farm_existenciavirtual
 					where farm_existenciavirtual.IdArea='$IdArea'
 					and farm_existenciavirtual.IdMedicina='$IdMedicina'";
-		$resp=mysql_fetch_array(mysql_query($querySelect));
+		$resp=pg_fetch_array(pg_query($querySelect));
 		return($resp[0]);	
 	}//ExistenDatos($IdArea,$IdMedicina);
 	
@@ -44,7 +44,7 @@ class ExistenciaVirtualProceso{
 		$querySelect="select farm_existenciavirtual.Existencia,farm_existenciavirtual.IdMedicina
 					from farm_existenciavirtual
 					where farm_existenciavirtual.IdArea='$IdArea'";
-		$resp=mysql_query($querySelect);
+		$resp=pg_query($querySelect);
 		return($resp);
 	}//ObtenerExistenciavirtual
 	
@@ -65,33 +65,33 @@ and farm_recetas.Fecha not in(select farm_recetas.Fecha
 								and (farm_recetas.Fecha BETWEEN '$FechaAtras' and curdate())
 								and farm_recetas.IdArea='$IdArea')
 group by farm_medicinarecetada.IdMedicina";
-		$resp=mysql_fetch_array(mysql_query($querySelect));
+		$resp=pg_fetch_array(pg_query($querySelect));
 		return($resp);
 	}//ObtencionMedicamentoNoReclamado
 	
 	
 	
 		function ObtenerFechaAtras(){
-			$NombreFecha=mysql_fetch_array(mysql_query("select dayname(curdate()) as Nombre"));
+			$NombreFecha=pg_fetch_array(pg_query("select dayname(curdate()) as Nombre"));
 			switch($NombreFecha["Nombre"]){
 					case "Monday":
 					$querySelect="select adddate(curdate(), interval -5 day) as FechaAtras";
-					$dates = mysql_query($querySelect);
-					$rowFechaA=mysql_fetch_array($dates);
+					$dates = pg_query($querySelect);
+					$rowFechaA=pg_fetch_array($dates);
 					$FechaAtras=$rowFechaA["FechaAtras"];
 					break;
 					
 					case "Tuesday":
 					$querySelect="select adddate(curdate(), interval -4 day) as FechaAtras";
-					$dates = mysql_query($querySelect);
-					$rowFechaA=mysql_fetch_array($dates);
+					$dates = pg_query($querySelect);
+					$rowFechaA=pg_fetch_array($dates);
 					$FechaAtras=$rowFechaA["FechaAtras"];
 					break;
 					
 					default:
 					$querySelect="select adddate(curdate(), interval -3 day) as FechaAtras";
-					$dates = mysql_query($querySelect);
-					$rowFechaA=mysql_fetch_array($dates);
+					$dates = pg_query($querySelect);
+					$rowFechaA=pg_fetch_array($dates);
 					$FechaAtras=$rowFechaA["FechaAtras"];
 					break;
 					

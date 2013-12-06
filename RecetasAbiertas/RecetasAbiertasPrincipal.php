@@ -85,11 +85,11 @@ if (!isset($_SESSION["nivel"])) { ?>
 
         function generaSelect3() { //creacioon de combo para las Regiones
             conexion::conectar();
-            $consulta = mysql_query("select distinct year(Fecha)as anios from farm_recetas where year(Fecha) not in (select AnoCierre from farm_cierre where AnoCierre is not null)");
+            $consulta = pg_query("select distinct year(Fecha)as anios from farm_recetas where year(Fecha) not in (select AnoCierre from farm_cierre where AnoCierre is not null)");
             conexion::desconectar();
             // Voy imprimiendo el primer select compuesto por los paises
             echo "<select name='Anio' id='Anio'>";
-            while ($registro = mysql_fetch_row($consulta)) {
+            while ($registro = pg_fetch_row($consulta)) {
                 echo "<option value='" . $registro[0] . "'>" . $registro[0] . "</option>";
             }
             echo "</select>";

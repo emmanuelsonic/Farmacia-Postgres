@@ -70,11 +70,14 @@ while($Bandera){
                         
 		//Primera transferencia del lote agotado...
 		$queryInsert="insert into farm_transferencias(Cantidad,IdMedicina,IdLote,IdAreaOrigen,IdAreaDestino,Justificacion,FechaTransferencia,IdPersonal,IdEstado,IdEstablecimiento,IdModalidad) 
-                                                       values('$Cantidad1','$IdMedicina','$Lote','$IdAreaOrigen','$IdAreaDestino','$Justificacion','$FechaTransferencia','$IdPersonal','X',$IdEstablecimiento,$IdModalidad)";
-			pg_query($queryInsert);
-
-			$IdTransferenciasN=pg_insert_id();
-
+                                                       values('$Cantidad1','$IdMedicina','$Lote','$IdAreaOrigen','$IdAreaDestino','$Justificacion','$FechaTransferencia','$IdPersonal','X',$IdEstablecimiento,$IdModalidad) RETURNING id";
+			//pg_query($queryInsert);
+                        $result=pg_query($queryInsert);
+                        $insert_row = pg_fetch_row($result);
+                        $IdTransferenciasN= $insert_row[0];
+			//$IdTransferenciasN=pg_insert_id();
+                        var_dump($IdTransferenciasN);
+                        die("bananero");
 		//SIL A AREA ES DIFERENTE DE CERO ES DECIR SI ES UNA TRANFERENCIA ENTRE FARMACIAS
 		if($IdAreaDestino!=0 and $Cantidad1!=0){
 		   $ver=TransferenciaProceso::ObtenerExistencia2($Lote,1,$IdAreaDestino,$IdEstablecimiento,$IdModalidad);

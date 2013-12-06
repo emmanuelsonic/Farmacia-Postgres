@@ -24,7 +24,7 @@ require('../Clases/class.php');
 
 function generaSelect2(){ //creacioon de combo para las Regiones
 	conexion::conectar();
-	$consulta=mysql_query("select mnt_subservicio.IdSubServicio,NombreServicio,NombreSubServicio
+	$consulta=pg_query("select mnt_subservicio.IdSubServicio,NombreServicio,NombreSubServicio
 			from mnt_subservicio
 			inner join mnt_servicio
 			on mnt_servicio.IdServicio=mnt_subservicio.IdServicio
@@ -37,7 +37,7 @@ function generaSelect2(){ //creacioon de combo para las Regiones
 	// Voy imprimiendo el primer select compuesto por los paises
 	echo "<select name='IdSubEspecialidad' id='IdSubEspecialidad'>";
 	echo "<option value='0'>[General ...]</option>";
-	while($registro=mysql_fetch_row($consulta)){
+	while($registro=pg_fetch_row($consulta)){
 		echo "<option value='".$registro[0]."'>[".$registro[1]."]  ".$registro[2]."</option>";
 	}
 	echo "</select>";

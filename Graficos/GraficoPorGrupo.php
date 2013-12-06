@@ -64,13 +64,13 @@ if ($Gpastel == 1 AND $TipoInfo == 1) {
     $respT = Graficacion::QueryGraficaPorMedicamento($IdGrupo, $IdMedicina, $fechaInicio, $fechaFin, $IdEstablecimiento, $IdModalidad);
     $respu = Graficacion::QueryGraficaPorMedicamento2($IdGrupo, $IdMedicina, $fechaInicio, $fechaFin, $IdEstablecimiento, $IdModalidad);
 
-    if ($row = mysql_fetch_array($resp)) {
+    if ($row = pg_fetch_array($resp)) {
         $chart = new PieChart(700, 380);
-        $rowT = mysql_fetch_array($respT);
-        $rowPu = mysql_fetch_array($respu);
+        $rowT = pg_fetch_array($respT);
+        $rowPu = pg_fetch_array($respu);
 
         do {
-            $rowT = mysql_fetch_array($respT);
+            $rowT = pg_fetch_array($respT);
             $IdMedicinaTemp = $rowT["IdMedicina"];
             $IdMedicinaAct = $row["IdMedicina"];
             $IdMedicinaPu = $rowPu["IdMedicina"];
@@ -105,9 +105,9 @@ if ($Gpastel == 1 AND $TipoInfo == 1) {
             }
 
             if ($IdMedicinaTemp != $IdMedicinaAct) {
-                $rowPu = mysql_fetch_array($respu);
+                $rowPu = pg_fetch_array($respu);
             }
-        } while ($row = mysql_fetch_array($resp));
+        } while ($row = pg_fetch_array($resp));
     }
 }//IF Gpastel
 /////////GRAFICA POR NUMERO DE RECETAS
@@ -117,13 +117,13 @@ if ($Gpastel == 1 AND $TipoInfo == 2) {
     $respT = Graficacion::QueryGraficaPorMedicamentoRecetas($IdGrupo, $IdMedicina, $fechaInicio, $fechaFin, $IdEstablecimiento, $IdModalidad);
     $respu = Graficacion::QueryGraficaPorMedicamentoRecetas2($IdGrupo, $IdMedicina, $fechaInicio, $fechaFin, $IdEstablecimiento, $IdModalidad);
 
-    if ($row = mysql_fetch_array($resp)) {
+    if ($row = pg_fetch_array($resp)) {
         $chart = new PieChart(700, 380);
-        $rowT = mysql_fetch_array($respT);
-        $rowPu = mysql_fetch_array($respu);
+        $rowT = pg_fetch_array($respT);
+        $rowPu = pg_fetch_array($respu);
 
         do {
-            $rowT = mysql_fetch_array($respT);
+            $rowT = pg_fetch_array($respT);
             $IdMedicinaTemp = $rowT["IdMedicina"];
             $IdMedicinaAct = $row["IdMedicina"];
             $IdMedicinaPu = $rowPu["IdMedicina"];
@@ -158,9 +158,9 @@ if ($Gpastel == 1 AND $TipoInfo == 2) {
             }
 
             if ($IdMedicinaTemp != $IdMedicinaAct) {
-                $rowPu = mysql_fetch_array($respu);
+                $rowPu = pg_fetch_array($respu);
             }
-        } while ($row = mysql_fetch_array($resp));
+        } while ($row = pg_fetch_array($resp));
     }
 }//IF Gpastel
 ///////////////////////////////////////////////////////////
@@ -173,15 +173,15 @@ if ($Gbarras == 1 and $TipoInfo == 1) {
     $respu = Graficacion::QueryGraficaPorMedicamento2($IdGrupo, $IdMedicina, $fechaInicio, $fechaFin, $IdEstablecimiento, $IdModalidad);
 
 
-    if ($row = mysql_fetch_array($resp)) {
+    if ($row = pg_fetch_array($resp)) {
 
         $chart2 = new VerticalChart(760, 350);
 
-        $rowT = mysql_fetch_array($respT);
-        $rowPu = mysql_fetch_array($respu);
+        $rowT = pg_fetch_array($respT);
+        $rowPu = pg_fetch_array($respu);
 
         do {
-            $rowT = mysql_fetch_array($respT);
+            $rowT = pg_fetch_array($respT);
             $IdMedicinaTemp = $rowT["IdMedicina"];
             $IdMedicinaAct = $row["IdMedicina"];
             $IdMedicinaPu = $rowPu["IdMedicina"];
@@ -215,9 +215,9 @@ if ($Gbarras == 1 and $TipoInfo == 1) {
             }
 
             if ($IdMedicinaTemp != $IdMedicinaAct) {
-                $rowPu = mysql_fetch_array($respu);
+                $rowPu = pg_fetch_array($respu);
             }
-        } while ($row = mysql_fetch_array($resp));
+        } while ($row = pg_fetch_array($resp));
     }
 }//If GBarra
 ////////////////SI LA INFORMACION ES POR NUMERO DE RECETAS
@@ -229,15 +229,15 @@ if ($Gbarras == 1 and $TipoInfo == 2) {
     $respu = Graficacion::QueryGraficaPorMedicamentoRecetas2($IdGrupo, $IdMedicina, $fechaInicio, $fechaFin, $IdEstablecimiento, $IdModalidad);
 
 
-    if ($row = mysql_fetch_array($resp)) {
+    if ($row = pg_fetch_array($resp)) {
 
         $chart2 = new VerticalChart(760, 350);
 
-        $rowT = mysql_fetch_array($respT);
-        $rowPu = mysql_fetch_array($respu);
+        $rowT = pg_fetch_array($respT);
+        $rowPu = pg_fetch_array($respu);
 
         do {
-            $rowT = mysql_fetch_array($respT);
+            $rowT = pg_fetch_array($respT);
             $IdMedicinaTemp = $rowT["IdMedicina"];
             $IdMedicinaAct = $row["IdMedicina"];
             $IdMedicinaPu = $rowPu["IdMedicina"];
@@ -271,9 +271,9 @@ if ($Gbarras == 1 and $TipoInfo == 2) {
             }
 
             if ($IdMedicinaTemp != $IdMedicinaAct) {
-                $rowPu = mysql_fetch_array($respu);
+                $rowPu = pg_fetch_array($respu);
             }
-        } while ($row = mysql_fetch_array($resp));
+        } while ($row = pg_fetch_array($resp));
     }
 }//If GBarra
 /////////////////////////////////////////////////////////////
@@ -283,14 +283,14 @@ if ($Glineas == 1 and $TipoInfo == 1) {
     $respT = Graficacion::QueryGraficaPorMedicamento($IdGrupo, $IdMedicina, $fechaInicio, $fechaFin, $IdEstablecimiento, $IdModalidad);
     $respu = Graficacion::QueryGraficaPorMedicamento2($IdGrupo, $IdMedicina, $fechaInicio, $fechaFin, $IdEstablecimiento, $IdModalidad);
 
-    if ($row = mysql_fetch_array($resp)) {
+    if ($row = pg_fetch_array($resp)) {
 
         $chart2 = new LineChart(700, 350);
-        $rowT = mysql_fetch_array($respT);
-        $rowPu = mysql_fetch_array($respu);
+        $rowT = pg_fetch_array($respT);
+        $rowPu = pg_fetch_array($respu);
 
         do {
-            $rowT = mysql_fetch_array($respT);
+            $rowT = pg_fetch_array($respT);
             $IdMedicinaTemp = $rowT["IdMedicina"];
             $IdMedicinaAct = $row["IdMedicina"];
             $IdMedicinaPu = $rowPu["IdMedicina"];
@@ -323,9 +323,9 @@ if ($Glineas == 1 and $TipoInfo == 1) {
             }
 
             if ($IdMedicinaTemp != $IdMedicinaAct) {
-                $rowPu = mysql_fetch_array($respu);
+                $rowPu = pg_fetch_array($respu);
             }
-        } while ($row = mysql_fetch_array($resp));
+        } while ($row = pg_fetch_array($resp));
     }
 }//If lineas
 //
@@ -335,14 +335,14 @@ if ($Glineas == 1 and $TipoInfo == 2) {
     $respT = Graficacion::QueryGraficaPorMedicamentoRecetas($IdGrupo, $IdMedicina, $fechaInicio, $fechaFin, $IdEstablecimiento, $IdModalidad);
     $respu = Graficacion::QueryGraficaPorMedicamentoRecetas2($IdGrupo, $IdMedicina, $fechaInicio, $fechaFin, $IdEstablecimiento, $IdModalidad);
 
-    if ($row = mysql_fetch_array($resp)) {
+    if ($row = pg_fetch_array($resp)) {
 
         $chart2 = new LineChart(700, 350);
-        $rowT = mysql_fetch_array($respT);
-        $rowPu = mysql_fetch_array($respu);
+        $rowT = pg_fetch_array($respT);
+        $rowPu = pg_fetch_array($respu);
 
         do {
-            $rowT = mysql_fetch_array($respT);
+            $rowT = pg_fetch_array($respT);
             $IdMedicinaTemp = $rowT["IdMedicina"];
             $IdMedicinaAct = $row["IdMedicina"];
             $IdMedicinaPu = $rowPu["IdMedicina"];
@@ -375,9 +375,9 @@ if ($Glineas == 1 and $TipoInfo == 2) {
             }
 
             if ($IdMedicinaTemp != $IdMedicinaAct) {
-                $rowPu = mysql_fetch_array($respu);
+                $rowPu = pg_fetch_array($respu);
             }
-        } while ($row = mysql_fetch_array($resp));
+        } while ($row = pg_fetch_array($resp));
     }
 }//If lineas
 //////////////////////////////////////////
@@ -402,10 +402,10 @@ if (isset($_GET["Print"])) {
             if ($Gpastel == 1) {
                 $respuesta = Graficacion::QueryGraficaPorMedicamento2($IdGrupo, $IdMedicina, $fechaInicio, $fechaFin, $IdEstablecimiento, $IdModalidad);
 
-                if ($row2 = mysql_fetch_array($respuesta)) {
+                if ($row2 = pg_fetch_array($respuesta)) {
                     do {
                         echo '<img src="imagenesGraficos/Pastel' . $row2["IdMedicina"] . '.png" style="border: 1px solid gray;"/> <br><br>';
-                    } while ($row2 = mysql_fetch_array($respuesta));
+                    } while ($row2 = pg_fetch_array($respuesta));
                 } else {
                     echo "<div id='resp' align='center'><h3>No hay datos para ser graficados</h3></div>";
                 } //if array
@@ -422,10 +422,10 @@ if (isset($_GET["Print"])) {
             if ($Gbarras == 1) {
                 $respuesta = Graficacion::QueryGraficaPorMedicamento2($IdGrupo, $IdMedicina, $fechaInicio, $fechaFin, $IdEstablecimiento, $IdModalidad);
 
-                if ($row2 = mysql_fetch_array($respuesta)) {
+                if ($row2 = pg_fetch_array($respuesta)) {
                     do {
                         echo '<img src="imagenesGraficos/Barras' . $row2["IdMedicina"] . '.png" style="border: 1px solid gray;"/> <br><br>';
-                    } while ($row2 = mysql_fetch_array($respuesta));
+                    } while ($row2 = pg_fetch_array($respuesta));
                 } else {
                     echo "<div id='resp' align='center'><h3>No hay datos para ser graficados</h3></div>";
                 } //if array
@@ -444,10 +444,10 @@ if (isset($_GET["Print"])) {
             if ($Glineas == 1) {
                 $respuesta = Graficacion::QueryGraficaPorMedicamento2($IdGrupo, $IdMedicina, $fechaInicio, $fechaFin, $IdEstablecimiento, $IdModalidad);
 
-                if ($row2 = mysql_fetch_array($respuesta)) {
+                if ($row2 = pg_fetch_array($respuesta)) {
                     do {
                         echo '<img src="imagenesGraficos/Lineas' . $row2["IdMedicina"] . '.png" style="border: 1px solid gray;"/> <br><br>';
-                    } while ($row2 = mysql_fetch_array($respuesta));
+                    } while ($row2 = pg_fetch_array($respuesta));
                 } else {
                     echo "<div id='resp' align='center'><h3>No hay datos para ser graficados</h3></div>";
                 } //if array

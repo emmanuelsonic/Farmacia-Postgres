@@ -4,22 +4,22 @@ class ClassFechaAtras{
 			switch($NombreFecha){
 					case "Monday":
 					$querySelect="select adddate(curdate(), interval -5 day) as FechaAtras";
-					$dates = mysql_query($querySelect, $link);
-					$rowFechaA=mysql_fetch_array($dates);
+					$dates = pg_query($querySelect, $link);
+					$rowFechaA=pg_fetch_array($dates);
 					$FechaAtras=$rowFechaA["FechaAtras"];
 					break;
 					
 					case "Tuesday":
 					$querySelect="select adddate(curdate(), interval -4 day) as FechaAtras";
-					$dates = mysql_query($querySelect, $link);
-					$rowFechaA=mysql_fetch_array($dates);
+					$dates = pg_query($querySelect, $link);
+					$rowFechaA=pg_fetch_array($dates);
 					$FechaAtras=$rowFechaA["FechaAtras"];
 					break;
 					
 					default:
 					$querySelect="select adddate(curdate(), interval -3 day) as FechaAtras";
-					$dates = mysql_query($querySelect, $link);
-					$rowFechaA=mysql_fetch_array($dates);
+					$dates = pg_query($querySelect, $link);
+					$rowFechaA=pg_fetch_array($dates);
 					$FechaAtras=$rowFechaA["FechaAtras"];
 					break;
 					
@@ -31,22 +31,22 @@ class ClassFechaAtras{
 switch($NombreFecha){
 		case "Friday":
 		$querySelect="select adddate(curdate(), interval 4 day) as FechaAdelante";//Dia Lunes
-		$dates = mysql_query($querySelect,$link);
-		$rowFechaA=mysql_fetch_array($dates);
+		$dates = pg_query($querySelect,$link);
+		$rowFechaA=pg_fetch_array($dates);
 		$FechaAdelante=$rowFechaA["FechaAdelante"];
 		break;
 		
 		case "Thursday":
 		$querySelect="select adddate(curdate(), interval 4 day) as FechaAdelante";//Dia martes
-		$dates = mysql_query($querySelect,$link);
-		$rowFechaA=mysql_fetch_array($dates);
+		$dates = pg_query($querySelect,$link);
+		$rowFechaA=pg_fetch_array($dates);
 		$FechaAdelante=$rowFechaA["FechaAdelante"];
 		break;
 		
 		default:
 		$querySelect="select adddate(curdate(), interval 2 day) as FechaAdelante";//los demas dias de la semana
-		$dates = mysql_query($querySelect,$link);
-		$rowFechaA=mysql_fetch_array($dates);
+		$dates = pg_query($querySelect,$link);
+		$rowFechaA=pg_fetch_array($dates);
 		$FechaAdelante=$rowFechaA["FechaAdelante"];
 		break;
 }//fin switch
@@ -188,7 +188,7 @@ $querySelect="select farm_catalogoproductos.Nombre,farm_catalogoproductos.Concen
 			inner join farm_recetas
 			on farm_recetas.IdReceta=farm_medicinarecetada.IdReceta
 			where farm_medicinarecetada.IdEstado='I' and farm_recetas.IdReceta='$IdReceta'";
-$resp = mysql_query($querySelect,$link);
+$resp = pg_query($querySelect,$link);
 
 return($resp);
 

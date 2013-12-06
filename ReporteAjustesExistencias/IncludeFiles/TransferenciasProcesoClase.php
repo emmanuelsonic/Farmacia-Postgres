@@ -20,7 +20,7 @@ class TransferenciaProceso {
                 and farm_usuarios.IdEstablecimiento=$IdEstablecimiento
                 and farm_usuarios.IdModalidad=$IdModalidad
                 " . $a1;
-        $resp = mysql_query($query);
+        $resp = pg_query($query);
         return($resp);
     }
 
@@ -32,7 +32,7 @@ class TransferenciaProceso {
 					on farm_lotes.IdLote=farm_medicinaexistenciaxarea.IdLote
 					where farm_lotes.IdLote='$Lote'
 					and IdArea=" . $IdArea . " and Existencia <> 0";
-        $resp = mysql_fetch_array(mysql_query($querySelect));
+        $resp = pg_fetch_array(pg_query($querySelect));
         if ($Bandera == 1) {
             return($resp);
         } else {
@@ -50,7 +50,7 @@ class TransferenciaProceso {
 					on farm_lotes.IdLote=farm_medicinaexistenciaxarea.IdLote
 					where farm_lotes.IdLote='$Lote'
 					and IdArea=" . $IdArea . " ";
-        $resp = mysql_fetch_array(mysql_query($querySelect));
+        $resp = pg_fetch_array(pg_query($querySelect));
         return($resp);
     }
 
@@ -67,7 +67,7 @@ class TransferenciaProceso {
                                             and Existencia <> 0
 					order by FechaVencimiento asc";
 
-        $resp = mysql_fetch_array(mysql_query($querySelect));
+        $resp = pg_fetch_array(pg_query($querySelect));
         return($resp);
     }
 
@@ -76,25 +76,25 @@ class TransferenciaProceso {
         //Ingreso de datos generales del Lote a utilizarse
 
         $query = "insert into farm_lotes (Lote,PrecioLote,FechaVencimiento) values ('$Lote','$Precio','$FechaVencimiento')";
-        mysql_query($query);
+        pg_query($query);
 
-        $IdLote = mysql_insert_id();
+        $IdLote = pg_insert_id();
 
         if ($TipoFarmacia == 1) {
             $SQL = "insert into farm_entregamedicamento (IdMedicina,Existencia,IdLote) values('$IdMedicina','$Cantidad','$IdLote')";
-            mysql_query($SQL);
-            $IdIngresoExistencia = mysql_insert_id();
+            pg_query($SQL);
+            $IdIngresoExistencia = pg_insert_id();
         } else {
 
             $SQL = "insert into farm_medicinaexistenciaxarea (IdMedicina,IdArea,Existencia,IdLote ) values('$IdMedicina','$IdArea','$Cantidad','$IdLote')";
-            mysql_query($SQL);
-            $IdIngresoExistencia = mysql_insert_id();
+            pg_query($SQL);
+            $IdIngresoExistencia = pg_insert_id();
         }
 
         //INGRESO DE REGISTROS EN farm_ajustes
 
         $SQL2 = "insert into farm_ajustes (ActaNumero,IdMedicina,IdArea,Existencia,IdLote,FechaAjuste,Justificacion,IdPersonal,IdExistencia,FechaHoraIngreso) values('$Acta','$IdMedicina','$IdArea','$Cantidad','$IdLote','$FechaTransferencia','$Justificacion','$IdPersonal','$IdIngresoExistencia',now())";
-        mysql_query($SQL2);
+        pg_query($SQL2);
     }
 
 //Introducir Ajuste
@@ -128,7 +128,7 @@ class TransferenciaProceso {
                                         and farm_lotes.IdModalidad=$IdModalidad
                                         
                                         " . $personal;
-        $resp = mysql_query($querySelect);
+        $resp = pg_query($querySelect);
         return($resp);
     }
 
@@ -138,7 +138,7 @@ class TransferenciaProceso {
         $querySelect = "select mnt_areafarmacia.Area
 					from mnt_areafarmacia
 					where mnt_areafarmacia.IdArea='$IdArea'";
-        if ($resp = mysql_fetch_array(mysql_query($querySelect))) {
+        if ($resp = pg_fetch_array(pg_query($querySelect))) {
             return($resp[0]);
         } else {
             return("Otras Areas");
@@ -150,7 +150,7 @@ class TransferenciaProceso {
     function EliminarAjustes($IdAjuste, $TipoFarmacia) {
         //eliminar ajustes
         $query = "select IdExistencia,IdLote from farm_ajustes where IdAjuste=" . $IdAjuste;
-        $row = mysql_fetch_array(mysql_query($query));
+        $row = pg_fetch_array(pg_query($query));
         $IdExistencia = $row["IdExistencia"];
         $IdLote = $row["IdLote"];
 
@@ -160,13 +160,13 @@ class TransferenciaProceso {
             $SQL = "delete from farm_medicinaexistenciaxarea where IdExistencia=" . $IdExistencia;
         }
 
-        mysql_query($SQL);
+        pg_query($SQL);
 
         $SQL2 = "delete from farm_lotes where IdLote=" . $IdLote;
-        mysql_query($SQL2);
+        pg_query($SQL2);
 
         $SQL3 = "delete from farm_ajustes where IdAjuste=" . $IdAjuste;
-        mysql_query($SQL3);
+        pg_query($SQL3);
     }
 
 //eliminar ajustes
@@ -177,7 +177,7 @@ class TransferenciaProceso {
 
     function FinalizaAjustes($IdPersonal) {
         $queryUpdate = "update farm_ajustes set IdEstado='D' where IdPersonal='$IdPersonal' and IdEstado='X'";
-        mysql_query($queryUpdate);
+        pg_query($queryUpdate);
     }
 
 //Receta Lista
@@ -189,7 +189,7 @@ class TransferenciaProceso {
 				where farm_transferencias.FechaTransferencia=curdate()
 				and farm_transferencias.IdEstado='X'
 				and farm_transferencias.IdPersonal='$IdPersonal'";
-        $resp = mysql_query($querySelect);
+        $resp = pg_query($querySelect);
         return($resp);
     }
 
@@ -210,7 +210,7 @@ class TransferenciaProceso {
 					
 					group by farm_lotes.IdLote
 					order by farm_lotes.FechaVencimiento";
-        $resp = mysql_query($querySelect);
+        $resp = pg_query($querySelect);
         return($resp);
     }
 
@@ -227,7 +227,7 @@ class TransferenciaProceso {
                                 and fl.IdEstablecimiento=$IdEstablecimiento
                                 and fl.IdModalidad=$IdModalidad
                                 ";
-        $resp = mysql_fetch_array(mysql_query($querySelect));
+        $resp = pg_fetch_array(pg_query($querySelect));
         return($resp);
     }
 
@@ -240,7 +240,7 @@ class TransferenciaProceso {
                 and IdEstablecimiento=$IdEstablecimiento
                 and IdModalidad=$IdModalidad
                 ";
-        $resp = mysql_query($SQL);
+        $resp = pg_query($SQL);
         return($resp);
     }
 
@@ -255,7 +255,7 @@ class TransferenciaProceso {
                 and fcpe.IdEstablecimiento=$IdEstablecimiento
                 and fcpe.IdModalidad=$IdModalidad
                 ";
-        $resp = mysql_fetch_array(mysql_query($SQL));
+        $resp = pg_fetch_array(pg_query($SQL));
         return($resp[0]);
     }
 

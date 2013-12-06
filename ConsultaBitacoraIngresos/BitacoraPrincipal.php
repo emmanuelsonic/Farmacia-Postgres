@@ -24,11 +24,11 @@ if (!isset($_SESSION["nivel"])) {
 
         function ComboGrupoTerapeutico() {
             conexion::conectar();
-            $resp = mysql_query("select * from mnt_grupoterapeutico");
+            $resp = pg_query("select * from mnt_grupoterapeutico");
             conexion::desconectar();
             $combo = "<select id='IdTerapeutico' name='IdTerapeutico'>
 	  <option value='0'>[GENERAL...]</option>";
-            while ($row = mysql_fetch_array($resp)) {
+            while ($row = pg_fetch_array($resp)) {
                 $combo.="<option value='" . $row[0] . "'>" . $row[0] . " - " . $row[1] . "</option>";
             }
             $combo.="</select>";

@@ -18,10 +18,10 @@ $querySelect="select mnt_datospaciente.IdPaciente
 			from mnt_datospaciente
 			order by mnt_datospaciente.IdPaciente desc limit 1";
 
-mysql_query($queryInsert);
-$IdPaciente=mysql_fetch_array(mysql_query($querySelect));
+pg_query($queryInsert);
+$IdPaciente=pg_fetch_array(pg_query($querySelect));
 
-if(mysql_affected_rows()>0){
+if(pg_affected_rows()>0){
 $Respuesta[0]=true;
 $Respuesta[1]=$IdPaciente[0];
 return($Respuesta);
@@ -33,7 +33,7 @@ return($Respuesta);}
 
 function VerificaExpediente($NumeroExpediente){
 	$querySelect="select * from mnt_expediente where IdNumeroExp='$NumeroExpediente'";
-	if($resp=mysql_fetch_array(mysql_query($querySelect))){
+	if($resp=pg_fetch_array(pg_query($querySelect))){
 		return(true);
 	}else{
 		return(false);
@@ -42,7 +42,7 @@ function VerificaExpediente($NumeroExpediente){
 
 function IntroducirExpediente($NumeroExpediente,$IdPaciente){
 	$queryInsert="insert into mnt_expediente (IdNumeroExp,IdPaciente) value('$NumeroExpediente','$IdPaciente')";
-	mysql_query($queryInsert);
+	pg_query($queryInsert);
 }//introducir expediente
 	
 }//Clase PacientesProceso

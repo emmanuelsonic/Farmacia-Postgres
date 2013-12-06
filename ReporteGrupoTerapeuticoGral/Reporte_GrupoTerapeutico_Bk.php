@@ -137,8 +137,8 @@ if($_REQUEST["area"]!=0){
 
 		$IdArea=$_REQUEST["area"];
 		$IdAreaTemp=$_REQUEST["area"];
-		$resp=mysql_query("select Area from mnt_areafarmacia where IdArea='$IdArea'");
-		$RowArea=mysql_fetch_array($resp);
+		$resp=pg_query("select Area from mnt_areafarmacia where IdArea='$IdArea'");
+		$RowArea=pg_fetch_array($resp);
 		$area=$RowArea[0];
 
 }else{
@@ -201,7 +201,7 @@ if(isset($_REQUEST["select2"])){$Idmedicina=$_REQUEST["select2"];}else{$Idmedici
 <?php $reporte.='<table width="968" border="1">';
 //OBTENCION DE AREAS DE LA FARMACIA
 	$respAreas=ObtenerAreasFarmacia($IdFarmacia,$IdArea,$FechaInicio,$FechaFin);
-	while($rowAreas=mysql_fetch_array($respAreas)){
+	while($rowAreas=pg_fetch_array($respAreas)){
 		$IdArea=$rowAreas["IdArea"];
 		$NombreDeArea=$rowAreas["Area"];
 		
@@ -224,13 +224,13 @@ PERIODO DEL: '.$FechaInicio2.' AL '.$FechaFin2.'.-</td></tr>
 //*************************************
 //******************************* QUERIES Y RECORRIDOS
 $nombreTera=$query->NombreTera($grupoTerapeutico);
-while($grupos=mysql_fetch_array($nombreTera)){
+while($grupos=pg_fetch_array($nombreTera)){
 $NombreTerapeutico=$grupos["GrupoTerapeutico"];
 $IdTerapeutico=$grupos["IdTerapeutico"];
 if($NombreTerapeutico!="--"){
 
 $resp=QueryExterna($IdTerapeutico,$Idmedicina,$IdArea,$FechaInicio,$FechaFin);
-if($row=mysql_fetch_array($resp)){
+if($row=pg_fetch_array($resp)){
 	//Subtotal es el costo por grupo terapeutico
 	$SubTotal=0;
 
@@ -267,13 +267,13 @@ $consumo=0;
 
 
 $respuesta=ObtenerReporteGrupoTerapeutico($GrupoTerapeutico,$Medicina,$FechaInicio,$FechaFin,$IdArea);
-	$Nrecetas=mysql_num_rows($respuesta);
-		if($row2=mysql_fetch_array($respuesta)){ /* verificacion de datos */
+	$Nrecetas=pg_num_rows($respuesta);
+		if($row2=pg_fetch_array($respuesta)){ /* verificacion de datos */
 $precioActual=0;
 //$respuesta2=ObtenerReporteGrupoTerapeutico($GrupoTerapeutico,$Medicina,$FechaInicio,$FechaFin,$IdArea);  
-//		while($row3=mysql_fetch_array($respuesta2)){
+//		while($row3=pg_fetch_array($respuesta2)){
 //IdReceta
-//$row3=mysql_fetch_array($respuesta2);
+//$row3=pg_fetch_array($respuesta2);
 $IdReceta=$row2["IdReceta"];
 $Divisor=$row2["Divisor"];//Divisor de conversion
 $UnidadMedida=$row2["Descripcion"];//Tipo de unidad de Medida
@@ -311,7 +311,7 @@ $insatisfechas=0;
     </tr>';
 	
 		}//if row2
-	}while($row=mysql_fetch_array($resp));//while de la informacion del medicamento
+	}while($row=pg_fetch_array($resp));//while de la informacion del medicamento
 	$Total+=$SubTotal;
 
    $reporte.=' <tr class="FONDO2"  style="background:#999999;">

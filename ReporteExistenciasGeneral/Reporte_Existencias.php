@@ -24,8 +24,8 @@ $FechaFin=$FechaBase.'-31';
 // 
 // 		$IdArea=$_REQUEST["area"];
 // 		$IdAreaTemp=$_REQUEST["area"];
-// 		$resp=mysql_query("select Area from mnt_areafarmacia where IdArea='$IdArea'");
-// 		$RowArea=mysql_fetch_array($resp);
+// 		$resp=pg_query("select Area from mnt_areafarmacia where IdArea='$IdArea'");
+// 		$RowArea=pg_fetch_array($resp);
 // 		$area=$RowArea[0];
 // 
 // }else{
@@ -75,13 +75,13 @@ $reporte.='<table width="968" border="1">';
 //*************************************
 //******************************* QUERIES Y RECORRIDOS
 $nombreTera=$query->NombreTera($grupoTerapeutico);
-while($grupos=mysql_fetch_array($nombreTera)){
+while($grupos=pg_fetch_array($nombreTera)){
 $NombreTerapeutico=$grupos["GrupoTerapeutico"];
 $IdTerapeutico=$grupos["IdTerapeutico"];
 if($NombreTerapeutico!="--"){
 
 $resp=QueryExterna($IdTerapeutico,$Idmedicina);
-if($row=mysql_fetch_array($resp)){
+if($row=pg_fetch_array($resp)){
 	//Todos los medicamentos
 	$SubTotal=0;
 	$TotalRecetas=0;
@@ -124,13 +124,13 @@ $respuesta=ObtenerReporteGrupoTerapeutico($GrupoTerapeutico,$Medicina);
 $precioActual=0;
 $TotalExistencia=0;
 	
-	if($row2=mysql_fetch_array($respuesta)){ 
+	if($row2=pg_fetch_array($respuesta)){ 
 	/* verificacion de datos */
 		$UnidadMedida=$row2["Descripcion"];//Tipo de unidad de Medida
 		$IdMedicinaEstudio=$row2["IdMedicina"];
 		do{
 		   $TotalExistencia+=$row2["Total"];
-		}while($row2=mysql_fetch_array($respuesta));
+		}while($row2=pg_fetch_array($respuesta));
 
 	}//if row2
 	
@@ -139,7 +139,7 @@ $TotalExistencia=0;
 /****************************************************/
 	$resp2=SumatoriaMedicamento($Medicina,$FechaInicio,$FechaFin);
 	$CantidadReal=0;
-	if($row2=mysql_fetch_array($resp2)){
+	if($row2=pg_fetch_array($resp2)){
 		
 		$Costo=0;
 		$Lotes="";
@@ -148,7 +148,7 @@ $TotalExistencia=0;
 		$Costo+=$row2["Costo"];
 		//Informacion del o los lotes utilizados
 		
-	  }while($row=mysql_fetch_array($resp2));
+	  }while($row=pg_fetch_array($resp2));
 	
         }
 /*******************************************************/
@@ -158,7 +158,7 @@ $CoberturaEstimada=number_format($CoberturaEstimada,2,'.',',');
 
 $respLotes=LotesMedicamento($Medicina);
 $Lotes='';
-while($rowLote=mysql_fetch_array($respLotes)){
+while($rowLote=pg_fetch_array($respLotes)){
 $Lotes.="Lote: ".$rowLote["Lote"]."<br> Precio: $".$rowLote["PrecioLote"]."<br><br>";
 }
 
@@ -242,7 +242,7 @@ $meses=$decimal[0]+$mesExtra;
 
 	//}//nuevo IF test del medicamento
 
-}while($row=mysql_fetch_array($resp));//while de la informacion del medicamento
+}while($row=pg_fetch_array($resp));//while de la informacion del medicamento
 }
 
 }//IF NombreTerapeutico!=--

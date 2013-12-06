@@ -68,7 +68,7 @@ $reporte='<table width="968" border="1">';
 //*************************************
 //******************************* QUERIES Y RECORRIDOS
 $respServicios=Servicios($IdSubEspecialidad,$IdGrupoTerapeutico,$IdMedicina,$FechaInicio,$FechaFin,$IdFarmacia,$IdEstablecimiento,$IdModalidad);
-if($rowServicios=mysql_fetch_array($respServicios)){
+if($rowServicios=pg_fetch_array($respServicios)){
 do{
 	$TotalEspecialidad=0;
 			        $TotalRecetas=0;
@@ -96,7 +96,7 @@ PERIODO DEL: '.$FechaInicio2.' AL '.$FechaFin2.' .- </td></tr>
 
 	 
 	$nombreTera=NombreTera($IdGrupoTerapeutico,$IdSubEspecialidad,$FechaInicio,$FechaFin,$IdFarmacia,$IdEstablecimiento,$IdModalidad);
-	if($grupos=mysql_fetch_array($nombreTera)){
+	if($grupos=pg_fetch_array($nombreTera)){
 		do {$NombreTerapeutico=$grupos["GrupoTerapeutico"];
 		$IdTerapeutico=$grupos["IdTerapeutico"];
 			$SubTotal=0;
@@ -124,7 +124,7 @@ PERIODO DEL: '.$FechaInicio2.' AL '.$FechaFin2.' .- </td></tr>
 			</tr>';
 			
 		$resp1=QueryExterna($IdTerapeutico,$IdMedicina,$IdSubEspecialidad,$FechaInicio,$FechaFin,$IdFarmacia,$IdEstablecimiento,$IdModalidad);
-			while($row=mysql_fetch_array($resp1)){
+			while($row=pg_fetch_array($resp1)){
 		$GrupoTerapeutico=$IdTerapeutico;
 		$Medicina=$row["IdMedicina"];
 		$codigoMedicina=$row["Codigo"];
@@ -138,7 +138,7 @@ PERIODO DEL: '.$FechaInicio2.' AL '.$FechaFin2.' .- </td></tr>
 		
 		$respuesta=ObtenerReporteGrupoTerapeutico($IdTerapeutico,$Medicina,$FechaInicio,$FechaFin,$IdSubEspecialidad,$IdEstablecimiento,$IdModalidad);
 			
-		    if($row2=mysql_fetch_array($respuesta)){ /* verificacion de datos */
+		    if($row2=pg_fetch_array($respuesta)){ /* verificacion de datos */
 		        $precioActual=0;
 		        
 
@@ -162,14 +162,14 @@ PERIODO DEL: '.$FechaInicio2.' AL '.$FechaFin2.' .- </td></tr>
 
 		$respSum=SumatoriaMedicamento($Medicina,$IdSubEspecialidad,$FechaInicio,$FechaFin,$IdFarmacia,$IdEstablecimiento,$IdModalidad);
 			
-			if($rowSum=mysql_fetch_array($respSum)){
+			if($rowSum=pg_fetch_array($respSum)){
 			    $CantidadReal=0;
 			    $Monto=0;
 			    $Lotes="";
 			    do{
 				$CantidadReal+=$rowSum["TotalMedicamento"];
 
-	if($respDivisor=mysql_fetch_array(ValorDivisor($Medicina,$IdEstablecimiento,$IdModalidad))){
+	if($respDivisor=pg_fetch_array(ValorDivisor($Medicina,$IdEstablecimiento,$IdModalidad))){
 		$Divisor=$respDivisor[0];
 
 		if($CantidadReal < 1){
@@ -207,7 +207,7 @@ PERIODO DEL: '.$FechaInicio2.' AL '.$FechaFin2.' .- </td></tr>
 
 				$Monto+=$rowSum["Costo"];
 				$Lotes.=" Lote: ".$rowSum["Lote"]."<br> $".$rowSum["PrecioLote"]."<br><br>";
-			    }while($rowSum=mysql_fetch_array($respSum));
+			    }while($rowSum=pg_fetch_array($respSum));
 			}
 
 
@@ -219,7 +219,7 @@ PERIODO DEL: '.$FechaInicio2.' AL '.$FechaFin2.' .- </td></tr>
 					$SubTotalInsat+=$insat;
 					$SubTotalConsu+=$CantidadReal;
 		        
-	if($respDivisor=mysql_fetch_array(ValorDivisor($Medicina,$IdEstablecimiento,$IdModalidad))){
+	if($respDivisor=pg_fetch_array(ValorDivisor($Medicina,$IdEstablecimiento,$IdModalidad))){
 		$Divisor=$respDivisor[0];
 
                 $CantidadReal=number_format($CantidadReal,3,'.','');
@@ -293,7 +293,7 @@ PERIODO DEL: '.$FechaInicio2.' AL '.$FechaFin2.' .- </td></tr>
 		  
 
 		
-	}while($grupos=mysql_fetch_array($nombreTera));//Do-while de nombreTera
+	}while($grupos=pg_fetch_array($nombreTera));//Do-while de nombreTera
 	}else{
 	//SI NO HAY MEDICAMENTO DE ESA ESPECIALIDAD A MOSTRAR
 				/*$reporte.='<tr class="FONDO2" style="background:#CCCCCC;">
@@ -346,7 +346,7 @@ PERIODO DEL: '.$FechaInicio2.' AL '.$FechaFin2.' .- </td></tr>
 	$TotalInsatGlobal+=$TotalInsat;	
 	
 	
-	 }while($rowServicios=mysql_fetch_array($respServicios));//While Servicios
+	 }while($rowServicios=pg_fetch_array($respServicios));//While Servicios
 }//Comprueba Datos de Servicio
     $reporte.='<tr class="FONDO2" style="background:#CCCCCC;">
       <td colspan="4" align="right"><em><strong> Total Global:</strong></em></td>

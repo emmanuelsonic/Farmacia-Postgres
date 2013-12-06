@@ -23,17 +23,17 @@ switch($Bandera){
 	case 2:
 		//ultimo codigo ingresado
 		$SQL="select max(CodigoFarmacia) from mnt_subservicio";
-		$resp=mysql_fetch_array(mysql_query($SQL));
+		$resp=pg_fetch_array(pg_query($SQL));
 		echo $resp[0];
 	break;
 	
 	case 3:
 		//combo
 		$SQL="select IdServicio,NombreServicio from mnt_servicio";
-		$resp=mysql_query($SQL);
+		$resp=pg_query($SQL);
 		$combo="<select id='IdServicio'>
 			<option value='0'>[Seleccione...]</option>";
-		while($row=mysql_fetch_array($resp)){
+		while($row=pg_fetch_array($resp)){
 		   $combo.="<option value='".$row["IdServicio"]."'>".$row["NombreServicio"]."</option>";
 		}
 		$combo.="</select>";

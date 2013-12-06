@@ -9,7 +9,7 @@ case 1:
    $resp=$combos->Farmacias();
    $out="<table><tr><td>Farmacia: </td><td><select id='IdFarmacia' onchange='CargarAreas(this.value)'>
 		<option value='0'>[SELECCIONE]</option>";
-   while($row=mysql_fetch_array($resp)){
+   while($row=pg_fetch_array($resp)){
 	$out.="<option value='".$row[0]."'>".$row[1]."</option>";
    }
    $out.="</select></td></tr>
@@ -23,7 +23,7 @@ $IdFarmacia=$_GET["IdFarmacia"];
 $resp=$combos->Areas($IdFarmacia);
    $out="<select id='IdArea' onchange='LoadMedicamento();'>
 		<option value='0'>[SELECCIONE]</option>";
-   while($row=mysql_fetch_array($resp)){
+   while($row=pg_fetch_array($resp)){
 	$out.="<option value='".$row[0]."'>".$row[1]."</option>";
    }
    $out.="</select>";

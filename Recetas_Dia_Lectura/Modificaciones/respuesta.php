@@ -13,8 +13,8 @@ switch($_GET["Bandera"]){
 		and IdHospital=1 
 		and IdEstado<>'I'
 		and IdTerapeutico is not null";
-			$resp=mysql_query($querySelect);
-		while($row=mysql_fetch_array($resp)){
+			$resp=pg_query($querySelect);
+		while($row=pg_fetch_array($resp)){
 			$Nombre=$row["Nombre"]." - ".$row["Concentracion"]." - ".$row["FormaFarmaceutica"]." - ".$row["Presentacion"];
 			$IdMedicina=$row["IdMedicina"];
 		
@@ -40,13 +40,13 @@ switch($_GET["Bandera"]){
 		//echo "IdReceta=$IdReceta  ,   IdMedicina= $IdMedicina,    Nueva= $IdMedicinaNueva,   Cantidad= $Cantidad , CantidadNueva= $CantidadNueva";
 		
 		if(($Cantidad != $CantidadNueva) and $CantidadNueva!=''){
-			mysql_query("update farm_medicinarecetada set Cantidad='$CantidadNueva' where IdMedicina='$IdMedicina' and IdReceta='$IdReceta'");
+			pg_query("update farm_medicinarecetada set Cantidad='$CantidadNueva' where IdMedicina='$IdMedicina' and IdReceta='$IdReceta'");
 			echo $Cantidad.', '.$CantidadNueva;
 		}
 		
 		
 		if(($IdMedicinaNueva != $IdMedicina) and ($IdMedicinaNueva!='')){
-			mysql_query("update farm_medicinarecetada set IdMedicina='$IdMedicinaNueva' where IdMedicina='$IdMedicina' and IdReceta='$IdReceta'");
+			pg_query("update farm_medicinarecetada set IdMedicina='$IdMedicinaNueva' where IdMedicina='$IdMedicina' and IdReceta='$IdReceta'");
 			
 		}
 		

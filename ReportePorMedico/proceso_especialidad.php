@@ -9,21 +9,21 @@ case "mnt_areafarmacia":
 	$conexion=new conexion;	
 	$conexion->conectar();
 		
-	$consulta=mysql_query("SELECT distinct mnt_areafarmacia.IdArea,mnt_areafarmacia.Area
+	$consulta=pg_query("SELECT distinct mnt_areafarmacia.IdArea,mnt_areafarmacia.Area
 				FROM mnt_areafarmacia
 				inner join farm_recetas
 				on farm_recetas.IdAreaOrigen=mnt_areafarmacia.IdArea
 				WHERE farm_recetas.IdFarmacia='$opcionSeleccionada'
 				and mnt_areafarmacia.IdArea <> '7'
 				
-				and Habilitado='S'") or die(mysql_error());
+				and Habilitado='S'") or die(pg_error());
 	
 	$conexion->desconectar();
 	
 	// Comienzo a imprimir el select
 	echo "<select name='area' id='area'>";
 	echo "<option value='0'>SELECCIONE UNA AREA</option>";
-	while($registro=mysql_fetch_row($consulta))
+	while($registro=pg_fetch_row($consulta))
 	{
 		// Convierto los caracteres conflictivos a sus entidades HTML correspondientes para su correcta visualizacion
 		$registro[1]=htmlentities($registro[1]);
@@ -55,14 +55,14 @@ case "mnt_areafarmacia":
 	}
 
 
-	$consulta=mysql_query($query) or die(mysql_error());
+	$consulta=pg_query($query) or die(pg_error());
 	
 	$conexion->desconectar();
 	
 	// Comienzo a imprimir el select
 	echo "<select name='IdEmpleado' id='IdEmpleado'>";
 	echo "<option value='0'>TODOS LOS MEDICOS</option>";
-	while($registro=mysql_fetch_row($consulta))
+	while($registro=pg_fetch_row($consulta))
 	{
 		// Convierto los caracteres conflictivos a sus entidades HTML correspondientes para su correcta visualizacion
 		$registro[1]=htmlentities($registro[1]);

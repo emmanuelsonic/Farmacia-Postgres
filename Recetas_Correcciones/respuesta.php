@@ -14,11 +14,11 @@ case 1:
 		order by Ano
 		";
 
-	$resp=mysql_query($query);
+	$resp=pg_query($query);
 
 	$combo="<select id='Ano' name='Ano'>";
 
-	while($row=mysql_fetch_array($resp)){
+	while($row=pg_fetch_array($resp)){
 		$combo.="<option value='".$row[0]."'>".$row[0]."</option>";
 		
 	}

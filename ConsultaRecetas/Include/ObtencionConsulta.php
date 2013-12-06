@@ -4,7 +4,7 @@ include ('../../Clases/class.php');
 include('ClaseConsultaRecetas.php');
 conexion::conectar();
 $resp=ConsultaRecetas::ObtencionNombrePaciente($expediente);
-$RowNombre=mysql_fetch_array($resp);
+$RowNombre=pg_fetch_array($resp);
 $NombrePaciente=$RowNombre['NOMBRE'];
 ?>
 <table width="968" border="1">
@@ -21,9 +21,9 @@ $NombrePaciente=$RowNombre['NOMBRE'];
 <?php 
 $resp=ConsultaRecetas::ObtencionDatosRecetas($expediente);
 $resp2=ConsultaRecetas::ObtencionDatosRecetas($expediente);
-$row2=mysql_fetch_array($resp2);
-while($row=mysql_fetch_array($resp)){
-$row2=mysql_fetch_array($resp2);
+$row2=pg_fetch_array($resp2);
+while($row=pg_fetch_array($resp)){
+$row2=pg_fetch_array($resp2);
 $Fechatmp=$row2['Fecha'];
 
 $IdReceta= $row['IdReceta'];

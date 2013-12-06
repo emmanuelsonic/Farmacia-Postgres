@@ -45,7 +45,7 @@ case 2:
 	$Fecha=$_GET["Fecha"];
 $resp=$proceso->ObtenerDescargos($IdPersonal,$Fecha,$_SESSION["IdEstablecimiento"],$IdModalidad);
 /*TABLA DE TRANSFERENCIAS*/
-if($row=mysql_fetch_array($resp)){
+if($row=pg_fetch_array($resp)){
 $tabla='<table width="1018" border="1">
 		<tr><td colspan="8" align="center"><strong>DESCARGO(S) REALIZADO(S)</strong></td></tr>
 		<tr class="FONDO">
@@ -70,7 +70,7 @@ $tabla='<table width="1018" border="1">
 		$IdMedicina=$row["IdMedicina"];
 	$UnidadesContenidas=$_GET["UnidadesContenidas"];
 
-	if($respDivisor=mysql_fetch_array($proceso->ValorDivisor($IdMedicina,$_SESSION["IdEstablecimiento"],$IdModalidad))){
+	if($respDivisor=pg_fetch_array($proceso->ValorDivisor($IdMedicina,$_SESSION["IdEstablecimiento"],$IdModalidad))){
 		$Divisor=$respDivisor[0];
 
 		if($CantidadReal < 1){
@@ -116,7 +116,7 @@ $tabla='<table width="1018" border="1">
 	/****************************************************/
 	
 		$tabla=$tabla.'<tr class="FONDO"><td align="center">'.$row["IdEntrega"].'</td><td align="center">'.$CantidadIntro.'</td><td align="center">'.$row["Nombre"].', '.$row["Concentracion"].' - '.$row["Presentacion"].'</td><td align="center">'.$row["Descripcion"].'</td><td align="center">'.$DetalleLotes.'</td><td align="center">'.$row["Area"].'</td><td>'.htmlentities($justificacion).'</td><td align="center"><input type="button" id="borrar" name="borrar" value="Eliminar" onclick="javascript:BorrarDescarga('.$row["IdEntrega"].')"></td></tr>';
-	}while($row=mysql_fetch_array($resp));//while resp
+	}while($row=pg_fetch_array($resp));//while resp
 $tabla=$tabla.'</table>';
 }else{
 $tabla="";
@@ -141,14 +141,14 @@ $resp=$proceso->ObtenerLotesMedicamento($IdMedicina,$Motivo,$IdArea,$TipoFarmaci
 $combo="<select id='IdLote' name='IdLote'>";
 $combo.="<option value='0'>[Seleccione Lote...]</option>";
 	$ExistenciaTotal=0;
-while($row=mysql_fetch_array($resp)){
+while($row=pg_fetch_array($resp)){
 $fecha=explode('-',$row[2]);
 $fecha=$fecha[2]."-".$fecha[1]."-".$fecha[0];
 
 	/*$CantidadReal=$row[0];
 		$ExistenciaTotal+=$row[0];
 
-	if($respDivisor=mysql_fetch_array($proceso->ValorDivisor($IdMedicina))){
+	if($respDivisor=pg_fetch_array($proceso->ValorDivisor($IdMedicina))){
 		$Divisor=$respDivisor[0];
 
 		if($CantidadReal < 1){
@@ -198,7 +198,7 @@ break;
 case 6:
 /* CAMBIO DE ESTADO DE LAS TRANSFERENCIAS */
 $resp=$proceso->ObtenerCantidadMedicina($IdPersonal);
-while($row=mysql_fetch_array($resp)){
+while($row=pg_fetch_array($resp)){
 $IdMedicina=$row["IdMedicina"];$IdArea=$row["IdArea"];
 /*PARES DE INFORMACION*/
 $Cantidad=$row["Cantidad1"];$Lote=$row["IdLote"];

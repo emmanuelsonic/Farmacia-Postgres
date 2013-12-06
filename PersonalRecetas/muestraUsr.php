@@ -38,7 +38,7 @@
 include('../Clases/class.php');
 conexion::conectar();
 $querySelect="select * from farm_usuarios";
-$resp=mysql_query($querySelect);
+$resp=pg_query($querySelect);
 conexion::desconectar();
 ?>
 <div id="Layer1">
@@ -53,7 +53,7 @@ conexion::desconectar();
       <td align="center">Farmacia</td>
       <td align="center">AreFarmacia</td>
     </tr>
-    <?php while($row=mysql_fetch_array($resp)){
+    <?php while($row=pg_fetch_array($resp)){
 
 
 

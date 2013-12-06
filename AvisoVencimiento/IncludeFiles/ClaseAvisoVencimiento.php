@@ -35,7 +35,7 @@ and farm_catalogoproductos.IdMedicina=$IdMedicina
 
 				group by farm_catalogoproductos.IdMedicina";
 
-	$resp=mysql_query($SQL);
+	$resp=pg_query($SQL);
 	return($resp);
 
 }
@@ -77,7 +77,7 @@ $comp2
 
 
 				group by farm_catalogoproductos.IdMedicina";
-		$resp=mysql_query($querySelect);
+		$resp=pg_query($querySelect);
 		return($resp);
 	}//ObtenerVencimientoProximo
 
@@ -85,7 +85,7 @@ $comp2
 function GrupoTerapeutico($IdTerapeutico){
 	if($IdTerapeutico!=0){$comp="and IdTerapeutico=".$IdTerapeutico;}else{$comp="";}
    $SQL="select IdTerapeutico,GrupoTerapeutico from mnt_grupoterapeutico where GrupoTerapeutico <> '--' ".$comp;
-	$resp=mysql_query($SQL);
+	$resp=pg_query($SQL);
 	return($resp);
 }
 
@@ -97,14 +97,14 @@ function MedicinasGrupo($IdTerapeutico,$IdEstablecimiento){
 	where IdTerapeutico=".$IdTerapeutico."
 	and Condicion='H'
 	and IdEstablecimiento=".$IdEstablecimiento;
-   $resp=mysql_query($SQL);
+   $resp=pg_query($SQL);
    return($resp);
 }
 
 
 	function ValorDivisor($IdMedicina){
 	   $SQL="select DivisorMedicina from farm_divisores where IdMedicina=".$IdMedicina;
-	   $resp=mysql_query($SQL);
+	   $resp=pg_query($SQL);
 	   return($resp);
     	}
 
@@ -116,7 +116,7 @@ function MedicinasGrupo($IdTerapeutico,$IdEstablecimiento){
 		where left(l.FechaVencimiento,7) between left(adddate(curdate(),interval 1 month),7) and left(adddate(curdate(),interval 4 month),7)
 		and IdMedicina=".$IdMedicina."
                 ";
-	$resp=mysql_query($SQL);
+	$resp=pg_query($SQL);
 	return($resp);
 	}
 	

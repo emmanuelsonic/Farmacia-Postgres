@@ -16,7 +16,7 @@ $Datos=Obtencion::DetalleReceta($IdReceta);
       <td width="89"><div align="center"><strong>Satisfecho</strong></div></td>
     </tr>
     <?php 
-	while($row2=mysql_fetch_array($Datos)){
+	while($row2=pg_fetch_array($Datos)){
 		$cantidad=$row2["Cantidad"];
 		$NombreMedicina=$row2["medicina"];
 		$Concentracion=$row2["Concentracion"];

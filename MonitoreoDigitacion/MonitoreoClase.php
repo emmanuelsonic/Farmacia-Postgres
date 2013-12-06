@@ -9,14 +9,14 @@ class Monitoreo {
 				from farm_usuarios
 				where IdArea=7
 				order by IdPersonal";
-        $resp = mysql_query($query);
+        $resp = pg_query($query);
         return($resp);
     }
 
     function ObtenerFarmacia() {
         $query = "select IdFarmacia,Farmacia
 				from mnt_farmacia";
-        $resp = mysql_query($query);
+        $resp = pg_query($query);
         return($resp);
     }
 
@@ -26,7 +26,7 @@ class Monitoreo {
         $query = "select IdArea
 				from mnt_areafarmacia
 				order by IdFarmacia asc,IdArea";
-        $resp = mysql_query($query);
+        $resp = pg_query($query);
         return($resp);
     }
 

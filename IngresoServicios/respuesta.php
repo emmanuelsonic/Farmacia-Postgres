@@ -17,8 +17,8 @@ for($i=0;$i<$tamano;$i++){
 $querySelect="select CodigoFarmacia,NombreSubServicio
 			from mnt_subservicio
 where (NombreSubServicio like '%$Busqueda%' ".$OR." )";
-	$resp=mysql_query($querySelect);
-while($row=mysql_fetch_array($resp)){
+	$resp=pg_query($querySelect);
+while($row=pg_fetch_array($resp)){
 	$CodigoServicio=$row["CodigoFarmacia"];
 	$NombreServicio=strtoupper($row["NombreSubServicio"]);
 

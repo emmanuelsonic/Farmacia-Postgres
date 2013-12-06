@@ -28,11 +28,11 @@ if (!isset($_SESSION["nivel"])) {
 
         function ComboGrupoTerapeutico() {
             conexion::conectar();
-            $resp = mysql_query("select * from mnt_grupoterapeutico");
+            $resp = pg_query("select * from mnt_grupoterapeutico");
             conexion::desconectar();
             $combo = "<select id='IdTerapeutico' name='IdTerapeutico' onchange='CargarMedicina(this.value)'>
 	  <option value='0'>[GENERAL...]</option>";
-            while ($row = mysql_fetch_array($resp)) {
+            while ($row = pg_fetch_array($resp)) {
                 $combo.="<option value='" . $row[0] . "'>" . $row[0] . " - " . $row[1] . "</option>";
             }
             $combo.="</select>";
@@ -41,7 +41,7 @@ if (!isset($_SESSION["nivel"])) {
 
         function ComboFarmacia($IdEstablecimiento,$IdModalidad) {
             conexion::conectar();
-            $resp = mysql_query("select * 
+            $resp = pg_query("select * 
                                 from mnt_areafarmacia  maf
                                 inner join mnt_areafarmaciaxestablecimiento mafe
                                 on mafe.IdArea=maf.IdArea
@@ -53,7 +53,7 @@ if (!isset($_SESSION["nivel"])) {
             conexion::desconectar();
             $combo = "<select id='IdFarmacia' name='IdFarmacia'>
 	  <option value='0'>[GENERAL...]</option>";
-            while ($row = mysql_fetch_array($resp)) {
+            while ($row = pg_fetch_array($resp)) {
                 $combo.="<option value='" . $row[0] . "'>" . $row[1] . "</option>";
             }
             $combo.="</select>";

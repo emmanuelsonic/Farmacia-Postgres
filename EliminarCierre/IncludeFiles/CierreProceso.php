@@ -15,11 +15,11 @@ switch($Bandera){
 			<tr><td colspan='2' align='center'><h3>Cierres Mensuales Activos</h3></td></tr>
 			<tr><td align='center'><strong>Mes Correspondiente</strong></td><td align='center'><strong>Desactivar Cierre</strong></td></tr>";
 		
-		if($row=mysql_fetch_array($resp)){
+		if($row=pg_fetch_array($resp)){
 		    do{
 		    
 		    $tabla.="<tr><td>".$row["MesCierre"]."</td><td align='right'><input type='checkbox' id='".$row["IdCierre"]."' name='Cierres' value='".$row["IdCierre"]."'></td></tr>";
-		    }while($row=mysql_fetch_array($resp));
+		    }while($row=pg_fetch_array($resp));
 			
 		    
 		}else{

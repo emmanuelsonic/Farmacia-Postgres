@@ -26,7 +26,7 @@ class ReporteVencimiento {
                                         
 					group by farm_catalogoproductos.IdMedicina";
 
-        $resp = mysql_query($SQL);
+        $resp = pg_query($SQL);
         return($resp);
     }
 
@@ -59,7 +59,7 @@ class ReporteVencimiento {
 				$comp2
 					group by farm_catalogoproductos.IdMedicina
 			";
-        $resp = mysql_query($querySelect);
+        $resp = pg_query($querySelect);
         return($resp);
     }
 
@@ -72,7 +72,7 @@ class ReporteVencimiento {
             $comp = "";
         }
         $SQL = "select IdTerapeutico,GrupoTerapeutico from mnt_grupoterapeutico where GrupoTerapeutico <> '--' " . $comp;
-        $resp = mysql_query($SQL);
+        $resp = pg_query($SQL);
         return($resp);
     }
 
@@ -88,7 +88,7 @@ class ReporteVencimiento {
 	and fcpe.IdEstablecimiento=" . $IdEstablecimiento . "
         and fcpe.IdModalidad=$IdModalidad
 	order by fcp.Codigo";
-        $resp = mysql_query($SQL);
+        $resp = pg_query($SQL);
         return($resp);
     }
 
@@ -100,13 +100,13 @@ class ReporteVencimiento {
 		where Fecha between '$FechaInicio' and  '$FechaFin'
 		and IdMedicina=" . $IdMedicina . "
 		order by FechaVencimiento";
-        $resp = mysql_query($SQL);
+        $resp = pg_query($SQL);
         return($resp);
     }
 
     function ValorDivisor($IdMedicina) {
         $SQL = "select DivisorMedicina from farm_divisores where IdMedicina=" . $IdMedicina;
-        $resp = mysql_query($SQL);
+        $resp = pg_query($SQL);
         return($resp);
     }
 

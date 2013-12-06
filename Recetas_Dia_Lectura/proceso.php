@@ -14,13 +14,13 @@ if (isset($_SESSION["nivel"])) {
     $IdArea = $_SESSION["IdArea"];
     $IdReceta = $_REQUEST["IdReceta"];
 
-    mysql_query("update farm_recetas set IdEstado='P' where IdReceta='$IdReceta'");
-    mysql_query("update farm_recetas set IdPersonal='$IdPersonal' where IdReceta='$IdReceta'");
+    pg_query("update farm_recetas set IdEstado='P' where IdReceta='$IdReceta'");
+    pg_query("update farm_recetas set IdPersonal='$IdPersonal' where IdReceta='$IdReceta'");
 
 
     $respDatos = $query2->ObtenerDatosPacienteRecetaProceso($IdReceta);
 
-    while ($row = mysql_fetch_array($respDatos)) {
+    while ($row = pg_fetch_array($respDatos)) {
         //Datos Generales de todos los pacientes.-
         $paciente = $row["NOMBRE"];
         $paciente = htmlentities(strtoupper($paciente));
@@ -71,7 +71,7 @@ if (isset($_SESSION["nivel"])) {
                             <td height="26"><strong>Sexo:</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo"$sexo"; ?> </td>
                             <td colspan="3"><div align="right"><span class="FONDO">
                                         <?php
-                                        $RowName = mysql_fetch_array($query->NombreTecnico($IdReceta));
+                                        $RowName = pg_fetch_array($query->NombreTecnico($IdReceta));
                                         $Corr = $RowName["IdPersonal"];
                                         $NombreTecnico = $RowName["NombreTecnico"];
                                         if (!isset($Corr)) {
@@ -110,7 +110,7 @@ if (isset($_SESSION["nivel"])) {
                             <td width="138"><div align="center"><strong>Satisfecho</strong></div></td>
                         </tr>
                         <?php
-                        while ($row2 = mysql_fetch_array($respDetalles)) {
+                        while ($row2 = pg_fetch_array($respDetalles)) {
                             $cantidad = number_format($row2["Cantidad"], 0, '.', '');
                             $NombreMedicina = htmlentities($row2["medicina"]);
                             $Concentracion = $row2["Concentracion"];

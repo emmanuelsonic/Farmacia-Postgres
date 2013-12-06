@@ -22,7 +22,7 @@ class Digitacion{
                                 ".$comp."
                                 group by farm_recetas.IdPersonalIntro
                                 order by farm_recetas.IdPersonalIntro";
-		$resp=mysql_query($query);
+		$resp=pg_query($query);
 		return($resp);
 	}//Informacion
         
@@ -45,7 +45,7 @@ class Digitacion{
 
                                 group by date(FechaHoraReg)
                                 order by farm_recetas.IdPersonalIntro";
-            $resp=mysql_query($query);
+            $resp=pg_query($query);
             return $resp;
         }
     

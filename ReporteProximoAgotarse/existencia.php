@@ -18,7 +18,7 @@ if (!isset($_SESSION["nivel"])) {
     $querySelectArea = "select mnt_areafarmacia.Area 
                             from mnt_areafarmacia 
                             where mnt_areafarmacia.IdArea='$area'";
-    $Dfarmacia = mysql_query($querySelectFarmacia);
+    $Dfarmacia = pg_query($querySelectFarmacia);
     $Darea = mysql_query($querySelectArea);
     $dataFarmacia = mysql_fetch_array($Dfarmacia);
     $dataArea = mysql_fetch_array($Darea);

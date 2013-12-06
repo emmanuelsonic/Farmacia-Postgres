@@ -16,7 +16,7 @@ switch ($_GET["Combo"]) {
         $tabla = "farm_catalogoproductos";
         $conexion = new conexion;
         $conexion->conectar();
-        $consulta = mysql_query("SELECT $tabla.IdMedicina,$tabla.Nombre,Concentracion,$tabla.FormaFarmaceutica, Presentacion,Codigo
+        $consulta = pg_query("SELECT $tabla.IdMedicina,$tabla.Nombre,Concentracion,$tabla.FormaFarmaceutica, Presentacion,Codigo
 				FROM $tabla
 				inner join mnt_grupoterapeutico 
 				on mnt_grupoterapeutico.IdTerapeutico=$tabla.IdTerapeutico
@@ -25,14 +25,14 @@ switch ($_GET["Combo"]) {
 				WHERE mnt_grupoterapeutico.IdTerapeutico='$opcionSeleccionada' 
                                 and fcpe.IdEstablecimiento=$IdEstablecimiento
                                 and fcpe.IdModalidad=$IdModalidad
-				order by $tabla.Codigo") or die(mysql_error());
+				order by $tabla.Codigo") or die(pg_error());
 
         $conexion->desconectar();
 
         // Comienzo a imprimir el select
         echo "<select name='IdMedicina' id='IdMedicina'>";
         echo "<option value='0'>TODAS LAS MEDICINAS</option>";
-        while ($registro = mysql_fetch_row($consulta)) {
+        while ($registro = pg_fetch_row($consulta)) {
             // Convierto los caracteres conflictivos a sus entidades HTML correspondientes para su correcta visualizacion
             //$registro[1]=htmlentities($registro[1]);
             // Imprimo las opciones del select

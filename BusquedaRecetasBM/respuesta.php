@@ -20,8 +20,8 @@ $querySelect = "select distinct Codigo, Nombre, Concentracion, fcp.IdMedicina, F
                         and fmexa.IdModalidad=$IdModalidad
                         and IdTerapeutico is not null
                         order by fcp.IdMedicina";
-$resp = mysql_query($querySelect);
-while ($row = mysql_fetch_array($resp)) {
+$resp = pg_query($querySelect);
+while ($row = pg_fetch_array($resp)) {
     $Nombre = $row["Nombre"] . " - " . $row["Concentracion"] . " - " . $row["FormaFarmaceutica"] . " - " . $row["Presentacion"];
     $IdMedicina = $row["IdMedicina"];
     $Codigo = $row["Codigo"];

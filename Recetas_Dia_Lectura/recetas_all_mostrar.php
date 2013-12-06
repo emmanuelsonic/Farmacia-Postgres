@@ -48,7 +48,7 @@ conexion::conectar();
 
 $respDatos=$query->ObtenerDatosPacienteReceta(1,0,$IdArea,$NumExpediente);
 
-while($row=mysql_fetch_array($respDatos)){
+while($row=pg_fetch_array($respDatos)){
 	//Datos Generales de todos los pacientes.-
 	$paciente=$row["NOMBRE"];
 	$paciente=htmlentities(strtoupper($paciente));
@@ -100,7 +100,7 @@ while($row=mysql_fetch_array($respDatos)){
 <input type="button" name="<?php echo "verificar".$IdHistorialClinico;?>" value="VERIFICAR RECETA" onClick=""/>
 <?php }
 		  if($Estado=="P"){
-		  $RowName=mysql_fetch_array($query->NombreTecnico($IdReceta));
+		  $RowName=pg_fetch_array($query->NombreTecnico($IdReceta));
 		  $Corr=$RowName["IdPersonal"];
 		  $NombreTecnico=$RowName["NombreTecnico"];
 		  if(!isset($Corr)){$Corr=0;}
@@ -138,7 +138,7 @@ else{?>
       <td width="138"><div align="center"><strong>Satisfecho</strong></div></td>
     </tr>
     <?php 
-	while($row2=mysql_fetch_array($respDetalles)){
+	while($row2=pg_fetch_array($respDetalles)){
 		$cantidad=number_format($row2["Cantidad"],0,'.','');
 		$NombreMedicina=$row2["medicina"];
 		$Concentracion=$row2["Concentracion"];

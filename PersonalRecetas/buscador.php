@@ -62,8 +62,8 @@ else{
 }
 	}
 
-$aux = Mysql_Fetch_Assoc(mysql_query($sqlStrAux,$link));
-$query = mysql_query($sqlStr.$limit, $link);
+$aux = pg_Fetch_Assoc(pg_query($sqlStrAux,$link));
+$query = pg_query($sqlStr.$limit, $link);
 ?>
 <html>
 <head>
@@ -117,7 +117,7 @@ document.form.q.focus();
 			echo "\t<table class=\"registros\">\n";
 			echo "<tr class=\"titulos\"><td>Nick</td><td align=\"center\">Nombre</td><td>Nivel</td><td>Farmacia</td><td>Area</td><td align='center'>Editar Usuario</td></tr>\n";
 			$r=0;
-			while($row = mysql_fetch_assoc($query)){
+			while($row = pg_fetch_assoc($query)){
 $Nick=$row["nick"];
 $Nombre=$row["Nombre"];
 $Nivel=$row["Nivel"];

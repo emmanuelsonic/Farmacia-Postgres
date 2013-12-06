@@ -13,7 +13,7 @@ class ReporteGeneral {
 			on mnt_subservicio.IdSubServicio=mnt_subservicioxestablecimiento.IdSubServicio
 			where IdEstablecimiento=" . $_SESSION["IdEstablecimiento"] . " 
 			and IdSubServicio=" . $IdSubEspecialidad;
-        $resp = mysql_fetch_array(mysql_query($query));
+        $resp = pg_fetch_array(pg_query($query));
         return($resp[0] . '' . $resp[1]);
     }
 
@@ -42,7 +42,7 @@ class ReporteGeneral {
                 and mssxe.IdEstablecimiento =$IdEstablecimiento
                 and mssxe.IdModalidad =$IdModalidad
 		" . $comp;
-        $resp = mysql_query($query);
+        $resp = pg_query($query);
         return($resp);
     }
 
@@ -87,7 +87,7 @@ class ReporteGeneral {
 				group by sec_historial_clinico.IdSubServicio
 				order by CodigoFarmacia";
 
-        $resp = mysql_query($query);
+        $resp = pg_query($query);
         return($resp);
     }
 
@@ -105,7 +105,7 @@ class ReporteGeneral {
                 and mfxe.IdEstablecimiento=$IdEstablecimiento
                 and mfxe.IdModalidad=$IdModalidad                
                 " . $comp;
-        $resp = mysql_query($SQL);
+        $resp = pg_query($SQL);
         return($resp);
     }
 
@@ -159,7 +159,7 @@ class ReporteGeneral {
 				group by sec_historial_clinico.IdSubServicioxEstablecimiento, farm_recetas.IdFarmacia
 				order by mssxe.CodigoFarmacia";
 
-        $resp = mysql_query($query);
+        $resp = pg_query($query);
         return($resp);
     }
 
@@ -210,7 +210,7 @@ class ReporteGeneral {
 				group by sec_historial_clinico.IdSubServicioxEstablecimiento, farm_recetas.IdFarmacia
 				order by mssxe.CodigoFarmacia";
 
-        $resp = mysql_query($query);
+        $resp = pg_query($query);
         return($resp);
     }
 
@@ -239,7 +239,7 @@ class ReporteGeneral {
                 and shc.IdEstablecimiento=$IdEstablecimiento
                 and shc.IdModalidad=$IdModalidad
                 order by IdFarmacia,IdAreaOrigen";
-        $resp = mysql_query($SQL);
+        $resp = pg_query($SQL);
         return($resp);
     }
 
@@ -272,7 +272,7 @@ class ReporteGeneral {
                                 and sec_historial_clinico.IdModalidad=$IdModalidad
 				and sec_historial_clinico.IdSubServicioxEstablecimiento='$IdSubEspecialidad'
 				group by mnt_subservicio.IdSubServicio";
-        $resp = mysql_query($SQL);
+        $resp = pg_query($SQL);
         return($resp);
     }
 

@@ -30,8 +30,8 @@ case 1:
 /* Creacion de un IdHistorialClinico */	
  $Cierre=$proceso->Cierre($Fecha,$IdEstablecimiento,$IdModalidad);
  $CierreMes=$proceso->CierreMes($Fecha,$IdEstablecimiento,$IdModalidad);
-	 $respCierre=mysql_fetch_array($Cierre);
-	 $respCierreMes=mysql_fetch_array($CierreMes);
+	 $respCierre=pg_fetch_array($Cierre);
+	 $respCierreMes=pg_fetch_array($CierreMes);
  if(($respCierre[0]!=NULL and $respCierre[0]!='') || ($respCierreMes[0]!=NULL and $respCierreMes[0]!='')){
  		if($respCierre[0]!=NULL and $respCierre[0]!=''){ $c=$respCierre[0];	}else{ $c=$respCierreMes[0]; }
 		echo "NO~".$c;
@@ -76,7 +76,7 @@ $tabla='<table width="744">
 		<td width="275" align="center"><strong>Dosis</strong></td>
 		<td width="275" align="center"><strong>Eliminar</strong></td>
 		</tr>';
-	while($row=mysql_fetch_array($resp)){
+	while($row=pg_fetch_array($resp)){
 		$tabla=$tabla.'<tr class="FONDO"><td align="center"><a style="color:red;" onclick="javascript:VentanaBusqueda4(\'ModificaCantidad.php?IdMedicinaRecetada='.$row["IdMedicinaRecetada"].'\')">'.$row["Cantidad"].'</a></td><td align="center">'.$row["Nombre"].', '.$row["Concentracion"].'</td><td align="center"><a style="color:blue;" onclick="javascript:VentanaBusqueda4(\'ModificaDosis.php?IdMedicinaRecetada='.$row["IdMedicinaRecetada"].'\')">'.$row["Dosis"].'</a></td><td align="center"><input type="button" id="BorrarMedicamento" name="BorrarMedicamento" value="Eliminar Medicamento" onclick="javascript:EliminaMedicina('.$row["IdMedicinaRecetada"].')"></td></tr>';
 	}//while resp
 $tabla=$tabla.'</table>';
@@ -106,10 +106,10 @@ $tabla2='<table width="744">
 		<td width="275" align="center"><strong>Fecha</strong></td>
 		<td width="275" align="center"><strong>Eliminar</strong></td>
 		</tr>';
-		$row2=mysql_fetch_array($resp2);	
-	while($row=mysql_fetch_array($resp)){
+		$row2=pg_fetch_array($resp2);	
+	while($row=pg_fetch_array($resp)){
 		$tabla2=$tabla2.'<tr class="FONDO"><td align="center"><a style="color:red;" onclick="javascript:VentanaBusqueda4(\'ModificaCantidad.php?IdMedicinaRecetada='.$row["IdMedicinaRecetada"].'\')">'.$row["Cantidad"].'</a></td><td align="center">'.$row["Nombre"].', '.$row["Concentracion"].'</td><td align="center"><a style="color:blue;" onclick="javascript:VentanaBusqueda4(\'ModificaDosis.php?IdMedicinaRecetada='.$row["IdMedicinaRecetada"].'\')">'.$row["Dosis"].'</a></td><td align="center">'.$row["Fecha"].'</td><td align="center"><input type="button" id="BorrarMedicamento" name="BorrarMedicamento" value="Eliminar Medicamento" onclick="javascript:EliminaMedicina('.$row["IdMedicinaRecetada"].')"></td></tr>';
-		$row2=mysql_fetch_array($resp2);	
+		$row2=pg_fetch_array($resp2);	
 			if($row2["Fecha"]!=$row["Fecha"]){$tabla2=$tabla2.'<tr><td colspan="4"><hr></td>
 			</tr>';}	
 	}//while resp
@@ -151,7 +151,7 @@ case 5:
 //**********************************************************************************************
 //	INTRODUCCION DE MEDICAMENTO ENTREGADOS
 
-    if($row=mysql_fetch_array($proceso->ValorDivisor($IdMedicina,$IdEstablecimiento,$IdModalidad))){
+    if($row=pg_fetch_array($proceso->ValorDivisor($IdMedicina,$IdEstablecimiento,$IdModalidad))){
        $Cantidad=$Cantidad/$row[0];
     }
 
@@ -180,14 +180,14 @@ case 5:
 		<td width="275" align="center"><strong>Insatisfecha</strong></td>
 		<td width="275" align="center"><strong>Eliminar</strong></td>
 		</tr>';
-	while($row=mysql_fetch_array($resp)){
+	while($row=pg_fetch_array($resp)){
 	if($row["IdEstado"]=='I'){
 		$check='<input id="Insa'.$row["IdMedicinaRecetada"].'" name="Insa'.$row["IdMedicinaRecetada"].'" type="checkbox" value="I" onclick="javascript:CambioEstado('.$row["IdMedicinaRecetada"].','.$row["IdMedicina"].')" checked="checked">';
 	}else{
 		$check='<input id="Insa'.$row["IdMedicinaRecetada"].'" name="Insa'.$row["IdMedicinaRecetada"].'" type="checkbox" value="I" onclick="javascript:CambioEstado('.$row["IdMedicinaRecetada"].','.$row["IdMedicina"].')">';
 	}
 	
-	if($respDivisor=mysql_fetch_array($proceso->ValorDivisor($row["IdMedicina"],$IdEstablecimiento,$IdModalidad))){
+	if($respDivisor=pg_fetch_array($proceso->ValorDivisor($row["IdMedicina"],$IdEstablecimiento,$IdModalidad))){
 		$Divisor=$respDivisor[0];
 
 		if($row["Cantidad"] < 1){
@@ -258,7 +258,7 @@ $RecetasIngresadas=$proceso->RecetasIngresadasConteo($IdPersonal,$IdEstablecimie
 //*************************************************/
 
 $resp=$proceso->ObtenerMedicinaIntroducida($IdReceta,$IdEstablecimiento,$IdModalidad);
-if($row=mysql_fetch_array($resp)){
+if($row=pg_fetch_array($resp)){
 
 $tabla='<table width="744">
 		<tr><td colspan="6" align="center"><strong>DETALLE DE RECETA</strong></td></tr>
@@ -277,7 +277,7 @@ $tabla='<table width="744">
 		$check='<input id="Insa'.$row["IdMedicinaRecetada"].'" name="Insa'.$row["IdMedicinaRecetada"].'" type="checkbox" value="I" onclick="javascript:CambioEstado('.$row["IdMedicinaRecetada"].','.$row["IdMedicina"].')">';
 	}
 
-	if($respDivisor=mysql_fetch_array($proceso->ValorDivisor($row["IdMedicina"],$IdEstablecimiento,$IdModalidad))){
+	if($respDivisor=pg_fetch_array($proceso->ValorDivisor($row["IdMedicina"],$IdEstablecimiento,$IdModalidad))){
 		$Divisor=$respDivisor[0];
 
 		if($row["Cantidad"] < 1){
@@ -309,7 +309,7 @@ $tabla='<table width="744">
 
 	
 		$tabla=$tabla.'<tr class="FONDO"><td align="center"><a style="color:red;" onclick="">'.$CantidadIntro.'</a></td><td align="center">'.$row["Nombre"].', '.htmlentities($row["Concentracion"].' - '.$row["FormaFarmaceutica"].' - '.$row["Presentacion"]).'</td><td align="center">'.$row["Lotes"].'</td><td align="center"><a style="color:blue;" onclick="javascript:VentanaBusqueda4(\'ModificaDosis.php?IdMedicinaRecetada='.$row["IdMedicinaRecetada"].'\')">'.$row["Dosis"].'</a></td><td align="center">'.$check.'</td><td align="center"><input type="button" id="BorrarMedicamento" name="BorrarMedicamento" value="Eliminar Medicamento" onclick="javascript:EliminaMedicina('.$row["IdMedicinaRecetada"].')"></td></tr>';
-	}while($row=mysql_fetch_array($resp));//while resp
+	}while($row=pg_fetch_array($resp));//while resp
 $tabla=$tabla.'</table>';
 }else{
 $tabla=' ';
@@ -319,7 +319,7 @@ $tabla=' ';
 $tabla2="";
 /*
 $resp=$proceso->ObtenerRecetaRepetitiva($IdHistorialClinico,$IdPersonal);
-if($tmp2=mysql_fetch_array($resp)){
+if($tmp2=pg_fetch_array($resp)){
 $resp=$proceso->ObtenerRecetaRepetitiva($IdHistorialClinico,$IdPersonal);
 $resp2=$proceso->ObtenerRecetaRepetitiva($IdHistorialClinico,$IdPersonal);
 $tabla2='<table width="744">
@@ -330,10 +330,10 @@ $tabla2='<table width="744">
 		<td width="275" align="center"><strong>Fecha</strong></td>
 		<td width="275" align="center"><strong>Eliminar</strong></td>
 		</tr>';
-		$row2=mysql_fetch_array($resp2);	
-	while($row=mysql_fetch_array($resp)){
+		$row2=pg_fetch_array($resp2);	
+	while($row=pg_fetch_array($resp)){
 		$tabla2=$tabla2.'<tr class="FONDO"><td align="center"><a style="color:red;" onclick="javascript:VentanaBusqueda4(\'ModificaCantidad.php?IdMedicinaRecetada='.$row["IdMedicinaRecetada"].'\')">'.$row["Cantidad"].'</a></td><td align="center">'.$row["Nombre"]."<br>".$row["Concentracion"].' - '.$row["FormaFarmaceutica"].' - '.$row["Presentacion"].'</td><td align="center"><a style="color:blue;" onclick="javascript:VentanaBusqueda4(\'ModificaDosis.php?IdMedicinaRecetada='.$row["IdMedicinaRecetada"].'\')">'.$row["Dosis"].'</a></td><td align="center">'.$row["Fecha"].'</td><td align="center"><input type="button" id="BorrarMedicamento" name="BorrarMedicamento" value="Eliminar Medicamento" onclick="javascript:EliminaMedicina('.$row["IdMedicinaRecetada"].')"></td></tr>';
-		$row2=mysql_fetch_array($resp2);	
+		$row2=pg_fetch_array($resp2);	
 			if($row2["Fecha"]!=$row["Fecha"]){$tabla2=$tabla2.'<tr><td colspan="4"><hr></td>
 			</tr>';}	
 	}//while resp
@@ -355,7 +355,7 @@ $Dosis=$_GET["NuevaDosis"];
 $proceso->UpdateDosis($IdMedicinaRecetada,$Dosis);
 
 $resp=$proceso->ObtenerMedicinaIntroducida($IdReceta);
-if($tmp1=mysql_fetch_array($resp)){
+if($tmp1=pg_fetch_array($resp)){
 $resp=$proceso->ObtenerMedicinaIntroducida($IdReceta);
 $tabla='<table width="744">
 		<tr><td colspan="5" align="center"><strong>RECETA DEL DIA</strong></td></tr>
@@ -365,7 +365,7 @@ $tabla='<table width="744">
 		<td width="275" align="center"><strong>Insatisfecha</strong></td>
 		<td width="275" align="center"><strong>Eliminar</strong></td>
 		</tr>';
-	while($row=mysql_fetch_array($resp)){
+	while($row=pg_fetch_array($resp)){
 
 	if($row["IdEstado"]=='I'){
 		$check='<input id="Insa'.$row["IdMedicinaRecetada"].'" name="Insa'.$row["IdMedicinaRecetada"].'" type="checkbox" value="I" onclick="javascript:CambioEstado('.$row["IdMedicinaRecetada"].','.$row["IdMedicina"].')" checked="checked">';
@@ -374,7 +374,7 @@ $tabla='<table width="744">
 	}
 	
 
-	if($respDivisor=mysql_fetch_array($proceso->ValorDivisor($row["IdMedicina"]))){
+	if($respDivisor=pg_fetch_array($proceso->ValorDivisor($row["IdMedicina"]))){
 		$Divisor=$respDivisor[0];
 
 		if($row["Cantidad"] < 1){
@@ -417,7 +417,7 @@ $tabla=' ';
 $tabla2="";
 /*
 $resp=$proceso->ObtenerRecetaRepetitiva($IdHistorialClinico,$IdPersonal);
-if($tmp2=mysql_fetch_array($resp)){
+if($tmp2=pg_fetch_array($resp)){
 $resp=$proceso->ObtenerRecetaRepetitiva($IdHistorialClinico,$IdPersonal);
 $resp2=$proceso->ObtenerRecetaRepetitiva($IdHistorialClinico,$IdPersonal);
 $tabla2='<table width="744">
@@ -428,10 +428,10 @@ $tabla2='<table width="744">
 		<td width="275" align="center"><strong>Fecha</strong></td>
 		<td width="275" align="center"><strong>Eliminar</strong></td>
 		</tr>';
-		$row2=mysql_fetch_array($resp2);	
-	while($row=mysql_fetch_array($resp)){
+		$row2=pg_fetch_array($resp2);	
+	while($row=pg_fetch_array($resp)){
 		$tabla2=$tabla2.'<tr class="FONDO"><td align="center"><a style="color:red;" onclick="javascript:VentanaBusqueda4(\'ModificaCantidad.php?IdMedicinaRecetada='.$row["IdMedicinaRecetada"].'\')">'.$row["Cantidad"].'</a></td><td align="center">'.$row["Nombre"].', '.$row["Concentracion"].'</td><td align="center"><a style="color:blue;" onclick="javascript:VentanaBusqueda4(\'ModificaDosis.php?IdMedicinaRecetada='.$row["IdMedicinaRecetada"].'\')">'.$row["Dosis"].'</a></td><td align="center">'.$row["Fecha"].'</td><td align="center"><input type="button" id="BorrarMedicamento" name="BorrarMedicamento" value="Eliminar Medicamento" onclick="javascript:EliminaMedicina('.$row["IdMedicinaRecetada"].')"></td></tr>';
-		$row2=mysql_fetch_array($resp2);	
+		$row2=pg_fetch_array($resp2);	
 			if($row2["Fecha"]!=$row["Fecha"]){$tabla2=$tabla2.'<tr><td colspan="4"><hr></td>
 			</tr>';}	
 	}//while resp
@@ -459,7 +459,7 @@ $proceso->UpdateCantidad($IdMedicinaRecetada,$Cantidad,$IdEstablecimiento,$IdMod
 
 //**********************************************************************************
 $resp=$proceso->ObtenerMedicinaIntroducida($IdReceta);
-if($row=mysql_fetch_array($resp)){
+if($row=pg_fetch_array($resp)){
 
 $tabla='<table width="744">
 		<tr><td colspan="5" align="center"><strong>RECETA DEL DIA</strong></td></tr>
@@ -476,7 +476,7 @@ $tabla='<table width="744">
 		$check='<input id="Insa'.$row["IdMedicinaRecetada"].'" name="Insa'.$row["IdMedicinaRecetada"].'" type="checkbox" value="I" onclick="javascript:CambioEstado('.$row["IdMedicinaRecetada"].','.$row["IdMedicina"].')">';
 	}
 
-	if($respDivisor=mysql_fetch_array($proceso->ValorDivisor($row["IdMedicina"]))){
+	if($respDivisor=pg_fetch_array($proceso->ValorDivisor($row["IdMedicina"]))){
 		$Divisor=$respDivisor[0];
 
 		if($row["Cantidad"] < 1){
@@ -509,7 +509,7 @@ $tabla='<table width="744">
 
 
 		$tabla=$tabla.'<tr class="FONDO"><td align="center"><a style="color:red;" onclick="">'.$CantidadIntro.'</a></td><td align="center">'.$row["Nombre"].', '.htmlentities($row["Concentracion"].' - '.$row["Presentacion"]).'</td><td align="center"><a style="color:blue;" onclick="javascript:VentanaBusqueda4(\'ModificaDosis.php?IdMedicinaRecetada='.$row["IdMedicinaRecetada"].'\')">'.$row["Dosis"].'</a></td><td align="center">'.$check.'</td><td align="center"><input type="button" id="BorrarMedicamento" name="BorrarMedicamento" value="Eliminar Medicamento" onclick="javascript:EliminaMedicina('.$row["IdMedicinaRecetada"].')"></td></tr>';
-	}while($row=mysql_fetch_array($resp));//while resp
+	}while($row=pg_fetch_array($resp));//while resp
 $tabla=$tabla.'</table>';
 }else{
 $tabla=' ';
@@ -519,7 +519,7 @@ $tabla=' ';
 $tabla2="";
 /*
 $resp=$proceso->ObtenerRecetaRepetitiva($IdHistorialClinico,$IdPersonal);
-if($tmp2=mysql_fetch_array($resp)){
+if($tmp2=pg_fetch_array($resp)){
 $resp=$proceso->ObtenerRecetaRepetitiva($IdHistorialClinico,$IdPersonal);
 $resp2=$proceso->ObtenerRecetaRepetitiva($IdHistorialClinico,$IdPersonal);
 $tabla2='<table width="744">
@@ -530,10 +530,10 @@ $tabla2='<table width="744">
 		<td width="275" align="center"><strong>Fecha</strong></td>
 		<td width="275" align="center"><strong>Eliminar</strong></td>
 		</tr>';
-		$row2=mysql_fetch_array($resp2);	
-	while($row=mysql_fetch_array($resp)){
+		$row2=pg_fetch_array($resp2);	
+	while($row=pg_fetch_array($resp)){
 		$tabla2=$tabla2.'<tr class="FONDO"><td align="center"><a style="color:red;" onclick="javascript:VentanaBusqueda4(\'ModificaCantidad.php?IdMedicinaRecetada='.$row["IdMedicinaRecetada"].'\')">'.$row["Cantidad"].'</a></td><td align="center">'.$row["Nombre"].', '.$row["Concentracion"].'</td><td align="center"><a style="color:blue;" onclick="javascript:VentanaBusqueda4(\'ModificaDosis.php?IdMedicinaRecetada='.$row["IdMedicinaRecetada"].'\')">'.$row["Dosis"].'</a></td><td align="center">'.$row["Fecha"].'</td><td align="center"><input type="button" id="BorrarMedicamento" name="BorrarMedicamento" value="Eliminar Medicamento" onclick="javascript:EliminaMedicina('.$row["IdMedicinaRecetada"].')"></td></tr>';
-		$row2=mysql_fetch_array($resp2);	
+		$row2=pg_fetch_array($resp2);	
 			if($row2["Fecha"]!=$row["Fecha"]){$tabla2=$tabla2.'<tr><td colspan="4"><hr></td>
 			</tr>';}	
 	}//while resp
@@ -582,7 +582,7 @@ case 13:
                         and msse.IdEstablecimiento=$IdEstablecimiento
                         and msse.IdModalidad=$IdModalidad";
 
-		$resp=mysql_fetch_array(mysql_query($query));
+		$resp=pg_fetch_array(pg_query($query));
 		if($resp["Ubicacion"]!=NULL and $resp["Ubicacion"]!=""){$Ubicacion=$resp["Ubicacion"]." -> ";}else{$Ubicacion="";}
 			$NombreSubServicio=$Ubicacion."".$resp["NombreSubServicio"];
 		

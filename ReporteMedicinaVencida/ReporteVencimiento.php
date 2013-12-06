@@ -21,7 +21,7 @@ if (!isset($_SESSION["Administracion"])) {
             $resp = $puntero->MedicinasGrupo($IdTerapeutico, 0, $IdEstablecimiento,$IdModalidad);
             $combo = "<select id='IdMedicina' name='IdMedicina'>
 		<option value=''>[GENERAL...]</option>";
-            while ($row = mysql_fetch_array($resp)) {
+            while ($row = pg_fetch_array($resp)) {
                 $combo.="<option value='" . $row["IdMedicina"] . "'>" . $row["Codigo"] . ' ' . htmlentities($row["Nombre"]) . " - " . $row["Concentracion"] . " - " . htmlentities($row["Presentacion"]) . "</option>";
             }
             $combo.="</select>";
@@ -70,7 +70,7 @@ if (!isset($_SESSION["Administracion"])) {
 			</tr>';
             $Total = 0;
             $respGrupos = $puntero->GrupoTerapeutico($IdTerapeutico);
-            if ($rowGrupo = mysql_fetch_array($respGrupos)) {
+            if ($rowGrupo = pg_fetch_array($respGrupos)) {
 
                 do {
 
@@ -80,7 +80,7 @@ if (!isset($_SESSION["Administracion"])) {
                     $contador = 0;
                     $SubTotal = 0;
                     $SubTotalB = 0;
-                    if ($rowMedicina = mysql_fetch_array($respMedicina)) {
+                    if ($rowMedicina = pg_fetch_array($respMedicina)) {
 
 
 
@@ -90,7 +90,7 @@ if (!isset($_SESSION["Administracion"])) {
                             $resp = $puntero->ObtenerInformacionVencimientoProximo(0, $IdArea, $rowMedicina["IdMedicina"], $FechaInicio, $FechaFin, 
                                                                                    $IdEstablecimiento, $IdModalidad);
 
-                            while ($row = mysql_fetch_array($resp)) {
+                            while ($row = pg_fetch_array($resp)) {
                                 $SubTotalB = 1;
                                 if ($contador == 0) {
                                     $reporte.='<tr class="MYTABLE">
@@ -119,7 +119,7 @@ if (!isset($_SESSION["Administracion"])) {
                                 $CodigoLote = '';
                                 $Vencimiento = '';
                                 $Costo = 0;
-                                while ($rowDetalle = mysql_fetch_array($respDetalleMedicina)) {
+                                while ($rowDetalle = pg_fetch_array($respDetalleMedicina)) {
                                     $Existencias+=$rowDetalle["Existencia"];
 
                                     $CodigoLote.=strtoupper($rowDetalle["Lote"]) . "<br>";
@@ -131,7 +131,7 @@ if (!isset($_SESSION["Administracion"])) {
                                 }
 
                                 $TotalExistencia = $Existencias;
-                                if ($respDivisor = mysql_fetch_array($puntero->ValorDivisor($rowMedicina["IdMedicina"]))) {
+                                if ($respDivisor = pg_fetch_array($puntero->ValorDivisor($rowMedicina["IdMedicina"]))) {
 
                                     $Divisor = $respDivisor[0];
 
@@ -175,7 +175,7 @@ if (!isset($_SESSION["Administracion"])) {
                                 $respLotes = $puntero->ObtenerLotes($rowMedicina["IdMedicina"], $FechaInicio, $FechaFin);
                                 $CodigoLote = "<hr>";
                                 $Vencimiento = "<hr>";
-                                while ($rowLotes = mysql_fetch_array($respLotes)) {
+                                while ($rowLotes = pg_fetch_array($respLotes)) {
                                     $CodigoLote.=$rowLotes[0] . "<br><hr>";
                                     $VencimientoT = $rowLotes[1];
                                     $tmp = explode('-', $VencimientoT);
@@ -193,7 +193,7 @@ if (!isset($_SESSION["Administracion"])) {
 </tr>';
                                 $SubTotal+=$Costo;
                             }//fin de while
-                        } while ($rowMedicina = mysql_fetch_array($respMedicina));
+                        } while ($rowMedicina = pg_fetch_array($respMedicina));
                     }
 
                     if ($SubTotalB != 0) {
@@ -201,7 +201,7 @@ if (!isset($_SESSION["Administracion"])) {
                     }
 
                     $Total+=$SubTotal;
-                } while ($rowGrupo = mysql_fetch_array($respGrupos)); //Grupo terapeutico
+                } while ($rowGrupo = pg_fetch_array($respGrupos)); //Grupo terapeutico
             } else {
 
                 $reporte.="NO EXISTEN DATOS!";

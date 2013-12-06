@@ -82,7 +82,7 @@ switch($_GET["Bandera"]){
 			$verDivisor=$farmacia->Divisor($row["idmedicina"]);
 			if($respDivisor=pg_fetch_array($verDivisor,null,PGSQL_ASSOC)){
 			  $valorDivisor=$farmacia->ValorDivisor($row["idmedicina"],$_SESSION["IdEstablecimiento"],$_SESSION["IdModalidad"]);
-			  if($valorRow=mysql_fetch_array($valorDivisor)){
+			  if($valorRow=pg_fetch_array($valorDivisor)){
 			   $divisor="<input type='text' id='Divisor".$row["idmedicina"]."' name='Divisor".$row["idmedicina"]."' value='".$valorRow[0]."' size='5' onblur='NoCero(this.id); AsginarDivisor(this.id,this.value)' onKeyPress='return acceptNum(event);' style='border:solid;'>";
 			  }else{
 			   $divisor="<input type='text' id='Divisor".$row["idmedicina"]."' name='Divisor".$row["idmedicina"]."' size='5' onblur='NoCero(this.id); AsginarDivisor(this.id,this.value)' onKeyPress='return acceptNum(event);' style='border-color:red;'>";

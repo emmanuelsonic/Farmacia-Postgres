@@ -32,13 +32,13 @@ $selectDestino=$_REQUEST["select"]; $opcionSeleccionada=$_REQUEST["opcion"];
 	if ($tabla == "mnt_farmacia"){
 	$conexion=new conexion;
 	$conexion->conectar();
-	$consulta=mysql_query("SELECT * FROM $tabla'") or die(mysql_error());
+	$consulta=pg_query("SELECT * FROM $tabla'") or die(pg_error());
 	$conexion->desconectar();
 	
 	// Comienzo a imprimir el select
 	echo "<select name='".$selectDestino."' id='".$selectDestino."' onChange='cargaContenido8(this.id)'>";
 	echo "<option value='0'>TODOS LOS GRUPOS</option>";
-	while($registro=mysql_fetch_row($consulta))
+	while($registro=pg_fetch_row($consulta))
 	{
 		// Convierto los caracteres conflictivos a sus entidades HTML correspondientes para su correcta visualizacion
 		$registro[1]=htmlentities($registro[1]);
@@ -52,18 +52,18 @@ $selectDestino=$_REQUEST["select"]; $opcionSeleccionada=$_REQUEST["opcion"];
 	if($tabla=="mnt_areafarmacia"){
 	$conexion=new conexion;	
 	$conexion->conectar();
-	$consulta=mysql_query("SELECT $tabla.IdArea,$tabla.Area
+	$consulta=pg_query("SELECT $tabla.IdArea,$tabla.Area
 						   FROM $tabla
 						   inner join mnt_farmacia 
 						   on mnt_farmacia.IdFarmacia=$tabla.IdFarmacia
-						   WHERE mnt_farmacia.IdFarmacia='$opcionSeleccionada'") or die(mysql_error());
+						   WHERE mnt_farmacia.IdFarmacia='$opcionSeleccionada'") or die(pg_error());
 	
 	$conexion->desconectar();
 	
 	// Comienzo a imprimir el select
 	echo "&nbsp;<select name='".$selectDestino."' id='".$selectDestino."' onChange='cargaContenido8(this.id)' tabindex='4'>";
 	echo "<option value='0'>Seleccione una area</option>";
-	while($registro=mysql_fetch_row($consulta))
+	while($registro=pg_fetch_row($consulta))
 	{
 		// Convierto los caracteres conflictivos a sus entidades HTML correspondientes para su correcta visualizacion
 		$registro[1]=htmlentities($registro[1]);
@@ -82,17 +82,17 @@ else{
 $esta2=$_SESSION["estaCod"]; }
       $conexion=new conexion;
 	$conexion->conectar();
-	//$consulta2=mysql_query("SELECT NOMBRE FROM $tabla WHERE sib='$opcionSeleccionada' ORDER BY nombre") or die(mysql_error());
+	//$consulta2=pg_query("SELECT NOMBRE FROM $tabla WHERE sib='$opcionSeleccionada' ORDER BY nombre") or die(pg_error());
 	if($esta2!='' && $esta2!='0' && $seguridad!='1'){
-	$consulta2=mysql_query("SELECT estasib.NOMBRE, tipo_establecimiento.tipo FROM estasib, tipo_establecimiento WHERE estasib.idest='$esta2' and estasib.id_tipo=tipo_establecimiento.id_tipo ORDER BY tipo, NOMBRE") or die(mysql_error());
+	$consulta2=pg_query("SELECT estasib.NOMBRE, tipo_establecimiento.tipo FROM estasib, tipo_establecimiento WHERE estasib.idest='$esta2' and estasib.id_tipo=tipo_establecimiento.id_tipo ORDER BY tipo, NOMBRE") or die(pg_error());
 	}else{
-	$consulta2=mysql_query("SELECT estasib.NOMBRE, tipo_establecimiento.tipo FROM estasib, tipo_establecimiento WHERE estasib.sib='$opcionSeleccionada' and estasib.id_tipo=tipo_establecimiento.id_tipo ORDER BY tipo, NOMBRE") or die(mysql_error());}
+	$consulta2=pg_query("SELECT estasib.NOMBRE, tipo_establecimiento.tipo FROM estasib, tipo_establecimiento WHERE estasib.sib='$opcionSeleccionada' and estasib.id_tipo=tipo_establecimiento.id_tipo ORDER BY tipo, NOMBRE") or die(pg_error());}
 	$conexion->desconectar();
 	
 	// Comienzo a imprimir el select
 	echo "<select name='".$selectDestino."' id='".$selectDestino."' onChange='cargaContenido8(this.id)'>";
 	echo "<option value='0'>Elige</option>";
-	while($registro2=mysql_fetch_row($consulta2))
+	while($registro2=pg_fetch_row($consulta2))
 	{
 		// Convierto los caracteres conflictivos a sus entidades HTML correspondientes para su correcta visualizacion
 		//$registro2[1]=htmlentities($registro2[0]);

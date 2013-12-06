@@ -10,7 +10,7 @@ class ReporteFarmacias{
 				from mnt_grupoterapeutico
 				where GrupoTerapeutico <> '--'
 				".$Complemento;
-		$resp=mysql_query($query);
+		$resp=pg_query($query);
 		return($resp);				
 	}//GruposTerapeutics
 	
@@ -24,7 +24,7 @@ class ReporteFarmacias{
                                 and fcpe.IdEstablecimiento=$IdEstablecimiento
                                 and fcpe.IdModalidad=$IdModalidad
 				order by Codigo";
-		$resp=mysql_query($query);
+		$resp=pg_query($query);
 		return($resp);
 	}
 	
@@ -51,7 +51,7 @@ class ReporteFarmacias{
 				".$Complemento."
 				order by Codigo
 				";
-		$resp=mysql_query($query);
+		$resp=pg_query($query);
 		return($resp);
 	}
 
@@ -101,7 +101,7 @@ class ReporteFarmacias{
 		".$ConsumoReal."
 		group by farm_medicinarecetada.IdMedicina,farm_lotes.IdLote";
 		
-		$resp=mysql_query($SQL);
+		$resp=pg_query($SQL);
 		return($resp);
 	}
 	
@@ -136,7 +136,7 @@ class ReporteFarmacias{
 				".$ConsumoReal."				
 				and IdMedicina='$IdMedicina'
 				group by IdMedicina";
-		$resp=mysql_fetch_array(mysql_query($query));
+		$resp=pg_fetch_array(pg_query($query));
 		return($resp[0]);		
 	}
 	
@@ -145,7 +145,7 @@ class ReporteFarmacias{
 				from farm_preciosxano
 				where IdMedicina='$IdMedicina'
 				and Ano	='$Ano'";
-		$resp=mysql_fetch_array(mysql_query($query));
+		$resp=pg_fetch_array(pg_query($query));
 		if($resp[0]!=NULL){$Respuesta=$resp[0];}else{$Respuesta=0;}
 		return($Respuesta);
 	}
@@ -184,7 +184,7 @@ class ReporteFarmacias{
                                 and farm_recetas.IdEstablecimiento=$IdEstablecimiento
                                 and farm_recetas.IdModalidad=$IdModalidad
 				".$Complemento;
-		$resp=mysql_fetch_array(mysql_query($query));
+		$resp=pg_fetch_array(pg_query($query));
 		return($resp[0]);
 	}
 	
@@ -220,7 +220,7 @@ class ReporteFarmacias{
                                 and farm_recetas.IdEstablecimiento=$IdEstablecimiento
                                 and farm_recetas.IdModalidad=$IdModalidad
 				".$Complemento;
-		$resp=mysql_fetch_array(mysql_query($query));
+		$resp=pg_fetch_array(pg_query($query));
 		return($resp[0]);
 	}
 	
@@ -256,7 +256,7 @@ class ReporteFarmacias{
                                 and farm_recetas.IdEstablecimiento=$IdEstablecimiento
                                 and farm_recetas.IdModalidad=$IdModalidad
 				".$Complemento;
-		$resp=mysql_fetch_array(mysql_query($query));
+		$resp=pg_fetch_array(pg_query($query));
 		return($resp[0]);
 		
 	}
@@ -302,7 +302,7 @@ class ReporteFarmacias{
                                 and fcpe.IdEstablecimiento=$IdEstablecimiento
                                 and fcpe.IdModalidad=$IdModalidad
 				".$Complemento;
-		$resp=mysql_query($query);
+		$resp=pg_query($query);
 		return($resp);
 	}//Ingreso por Grupo
 	
@@ -313,7 +313,7 @@ class ReporteFarmacias{
                 and IdEstablecimiento=$IdEstablecimiento
                 and IdModalidad=$IdModalidad
 		and IdMedicina=".$IdMedicina;
-	   $resp=mysql_query($SQL);
+	   $resp=pg_query($SQL);
 	   return ($resp);
 	}
 	
@@ -323,7 +323,7 @@ class ReporteFarmacias{
                     where IdMedicina=$IdMedicina
                     and IdEstablecimiento=$IdEstablecimiento
                     and IdModalidad=$IdModalidad";
-	   $resp=mysql_query($SQL);
+	   $resp=pg_query($SQL);
 	   return($resp);
     	}
 /*************************************/

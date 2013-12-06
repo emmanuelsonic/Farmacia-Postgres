@@ -18,7 +18,7 @@ function NombreTera($grupoTerapeutico, $IdEstablecimiento, $IdModalidad) {
         $querySelect = "select * from mnt_grupoterapeutico where IdTerapeutico='$grupoTerapeutico'";
     }//else
 //
-    $resp = mysql_query($querySelect);
+    $resp = pg_query($querySelect);
 //
     return($resp);
 }
@@ -133,7 +133,7 @@ function QueryExterna($IdFarmacia, $IdArea, $grupoTerapeutico, $medicina, $IdEst
     }
 
 
-    $resp = mysql_query($querySelect);
+    $resp = pg_query($querySelect);
     return($resp);
 }
 
@@ -268,7 +268,7 @@ function ObtenerReporteGrupoTerapeutico($IdFarmacia, $IdArea, $GrupoTerapeutico,
 			group by fem.IdMedicina";
     }
 
-    $resp = mysql_query($selectQuery);
+    $resp = pg_query($selectQuery);
     return($resp);
 }
 
@@ -276,7 +276,7 @@ function ObtenerReporteGrupoTerapeutico($IdFarmacia, $IdArea, $GrupoTerapeutico,
 
 function FechaBase() {
     $SQL = "select left(adddate(current_date,interval -1 month),7)";
-    $resp = mysql_fetch_array(mysql_query($SQL));
+    $resp = pg_fetch_array(pg_query($SQL));
     return($resp[0]);
 }
 
@@ -353,7 +353,7 @@ function LotesMedicamento($IdFarmacia, $IdArea, $Medicina, $IdEstablecimiento, $
 		order by FechaVencimiento asc";
     }
 
-    $resp = mysql_query($SQL);
+    $resp = pg_query($SQL);
     return($resp);
 }
 
@@ -419,7 +419,7 @@ function ObtenerRecetasSatisfechas($IdReceta, $IdMedicina, $FechaInicio, $FechaF
 		  ";
         }
     }
-    $resp = mysql_fetch_array(mysql_query($querySelect));
+    $resp = pg_fetch_array(pg_query($querySelect));
 
     return($resp[0]);
 }
@@ -488,7 +488,7 @@ function ObtenerRecetasInsatisfechas($IdReceta, $IdMedicina, $FechaInicio, $Fech
         }//else IF medico
     }
 
-    $resp = mysql_fetch_array(mysql_query($querySelect));
+    $resp = pg_fetch_array(pg_query($querySelect));
 
     return($resp[0]);
 }
@@ -501,7 +501,7 @@ function verificaSatisfecha($IdMedicina, $IdReceta) {
     } else {
         $querySelect = "select * from farm_medicinarecetada where IdReceta='$IdReceta' and IdMedicina='$IdMedicina' and (IdEstado='S' or IdEstado='')";
     }
-    $resp = mysql_query($querySelect);
+    $resp = pg_query($querySelect);
     return($resp);
 }
 
@@ -516,7 +516,7 @@ function NumeroRecetasTotal($IdMedicina, $IdArea, $FechaInicio, $FechaFin) {
 				and farm_medicinarecetada.IdMedicina='$IdMedicina'
 				and (farm_recetas.IdEstado='E' or farm_recetas.IdEstado='ER')
 				and Fecha between '$FechaInicio' and '$FechaFin'";
-    $resp = mysql_fetch_array(mysql_query($querySelect));
+    $resp = pg_fetch_array(pg_query($querySelect));
     return($resp[0]);
 }
 
@@ -548,7 +548,7 @@ function SumatoriaMedicamento($IdMedicina, $FechaInicio, $FechaFin, $IdEstableci
                         and l.IdModalidad=$IdModalidad
                         
 			group by md.IdLote";
-    $resp = mysql_query($querySelect);
+    $resp = pg_query($querySelect);
     return($resp);
 }
 
@@ -557,7 +557,7 @@ function ObtenerPrecioMedicina($IdMedicina, $Ano) {
 				from farm_preciosxano
 				where IdMedicina='$IdMedicina'
 				and Ano	='$Ano'";
-    $resp = mysql_fetch_array(mysql_query($query));
+    $resp = pg_fetch_array(pg_query($query));
     if ($resp[0] != NULL) {
         $Respuesta = $resp[0];
     } else {
@@ -590,7 +590,7 @@ function ObtenerAreasFarmacia($IdFarmacia, $IdArea, $FechaInicio, $FechaFin) {
         $query = "select IdArea,Area from mnt_areafarmacia where IdArea=" . $IdArea;
     }
 
-    $resp = mysql_query($query);
+    $resp = pg_query($query);
     return($resp);
 }
 
@@ -600,7 +600,7 @@ function ValorDivisor($IdMedicina, $IdEstablecimiento, $IdModalidad) {
             where IdMedicina= $IdMedicina
             and IdEstablecimiento=$IdEstablecimiento
             and IdModalidad=$IdModalidad";
-    $resp = mysql_query($SQL);
+    $resp = pg_query($SQL);
     return($resp);
 }
 

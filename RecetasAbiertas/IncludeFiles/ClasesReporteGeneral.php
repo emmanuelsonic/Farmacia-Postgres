@@ -5,7 +5,7 @@ class RecetasAbiertas{
         $query="select MesCierre from farm_cierre 
                 where MesCierre='".$Periodo."'
                 and IdEstablecimiento=$IdEstablecimiento and IdModalidad=$IdModalidad";
-        $resp=mysql_fetch_array(mysql_query($query));
+        $resp=pg_fetch_array(pg_query($query));
         return($resp[0]);
     }
     
@@ -19,7 +19,7 @@ class RecetasAbiertas{
                 where left(Fecha,7)='".$Periodo."' and IdEstado <> 'E'
                 and fr.IdEstablecimiento=$IdEstablecimiento
                 and fr.IdModalidad=$IdModalidad";
-        $resp=mysql_query($query);
+        $resp=pg_query($query);
         return($resp);
     }
     
@@ -28,7 +28,7 @@ class RecetasAbiertas{
                 where IdReceta=".$IdReceta."
                 and IdEstablecimiento=$IdEstablecimiento
                 and IdModalidad=$IdModalidad";
-        mysql_query($query);
+        pg_query($query);
     }
 }//Clase Reporte Farmacias
 ?>

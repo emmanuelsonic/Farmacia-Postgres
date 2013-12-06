@@ -24,13 +24,13 @@ require('../../Clases/class.php');
 
 function generaSelect2(){ //creacioon de combo para las Regiones
 	conexion::conectar();
-	$consulta=mysql_query("select IdFarmacia,Farmacia
+	$consulta=pg_query("select IdFarmacia,Farmacia
 							from mnt_farmacia");
 	conexion::desconectar();
 	// Voy imprimiendo el primer select compuesto por los paises
 	echo "<select name='IdFarmacia' id='IdFarmacia'>";
 	echo "<option value='0'>[Consumo General ...]</option>";
-	while($registro=mysql_fetch_row($consulta)){
+	while($registro=pg_fetch_row($consulta)){
 		echo "<option value='".$registro[0]."'>".$registro[1]."</option>";
 	}
 	echo "</select>";
@@ -128,7 +128,7 @@ encabezado::top($IdFarmacia,$tipoUsuario,$nick,$nombre);
         <option value="0">[Seleccione ...]</option>
 		<?php conexion::conectar();
 		$resp=queries::ComboGrupoTerapeutico();
-		while($row=mysql_fetch_array($resp)){
+		while($row=pg_fetch_array($resp)){
 		?>
 		<option value="<?php echo $row[0];?>"><?php echo $row[1];?></option>
 		<?php }?>

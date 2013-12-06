@@ -61,7 +61,7 @@ $reporte='<table width="665" border="1">
 
 	$respSubEspecialidad=$general->SubEspecialidad($IdSubEspecialidad,$FechaInicial,$FechaFinal);
 
-	while($rowEspecialidad=mysql_fetch_array($respSubEspecialidad)){
+	while($rowEspecialidad=pg_fetch_array($respSubEspecialidad)){
 		$NumeroRecetasSubTotal=0;
 		$CostoFarmacias=0;
 	$reporte.='<tr class="MYTABLE">
@@ -75,12 +75,12 @@ $reporte='<table width="665" border="1">
 		</tr>';
 	
 	$respFarmacias=$general->Farmacias($_SESSION["TipoFarmacia"]);
-	while($rowFarma=mysql_fetch_array($respFarmacias)){
+	while($rowFarma=pg_fetch_array($respFarmacias)){
 	 $respDetalle=$general->ObtenerRecetasFarmacia($rowFarma["IdFarmacia"],$rowEspecialidad["IdSubServicio"],$FechaInicial,$FechaFinal);
 
 	$TotalRecetasFarmacia=$general->ObtenerNumeroRecetasFarmacia($rowFarma["IdFarmacia"],$rowEspecialidad["IdSubServicio"],$FechaInicial,$FechaFinal);
 	
-	    $rowDetalle=mysql_fetch_array($respDetalle);
+	    $rowDetalle=pg_fetch_array($respDetalle);
 		$reporte.='<tr class="FONDO2">
 			<td style="vertical-align:middle;">&nbsp;'.$rowFarma["Farmacia"].'</a></td>
 			<td align="right" style="vertical-align:middle">'.$TotalRecetasFarmacia.'</td>

@@ -23,7 +23,7 @@ switch ($_GET["Bandera"]) {
 	<tr class='MYTABLE'><td colspan=2 align='center'><strong>REPORTE MEDICAMENTO PROXIMO A AGOTARSE</strong></td></tr>
 	<tr class='FONDO'><td align='right'><strong>Farmacia: </strong></td><td><select id='IdFarmacia' onchange='CargarAreas(this.value)'>
 		<option value='0'>[SELECCIONE]</option>";
-            while ($row = mysql_fetch_array($resp)) {
+            while ($row = pg_fetch_array($resp)) {
                 $out.="<option value='" . $row[0] . "'>" . $row[1] . "</option>";
             }
             $out.="</select></td></tr>
@@ -64,7 +64,7 @@ switch ($_GET["Bandera"]) {
         $resp = $combos->Areas($IdFarmacia,$IdEstablecimiento, $IdModalidad);
         $out = "<select id='IdArea' onchange=''>
 		<option value='0'>[SELECCIONE]</option>";
-        while ($row = mysql_fetch_array($resp)) {
+        while ($row = pg_fetch_array($resp)) {
             $out.="<option value='" . $row[0] . "'>" . $row[1] . "</option>";
         }
         $out.="</select>";

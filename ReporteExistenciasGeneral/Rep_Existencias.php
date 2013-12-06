@@ -22,12 +22,12 @@ require('../Clases/class.php');
 
 function generaSelect2(){//creacioon de combo para las Regiones
 	conexion::conectar();
-	$consulta=mysql_query("select * from mnt_farmacia");
+	$consulta=pg_query("select * from mnt_farmacia");
 	conexion::desconectar();
 	// Voy imprimiendo el primer select compuesto por los paises
 	$out= "<select name='farmacia' id='farmacia' onChange='cargaContenido(this.value,this.id)'>";
 	$out.= "<option value='0'>SELECCIONE UNA FARMACIA</option>";
-	while($registro=mysql_fetch_row($consulta)){
+	while($registro=pg_fetch_row($consulta)){
 		if($registro[1]!="--"){
 		$out.= "<option value='".$registro[0]."'>".$registro[1]."</option>";
 		}
@@ -92,9 +92,9 @@ if(Ok==true){
           <option value="0">TODOS LOS GRUPOS</option>
 	  <?php 
 	  	conexion::conectar();
-			$consulta=mysql_query("SELECT * FROM mnt_grupoterapeutico") or die(mysql_error());
+			$consulta=pg_query("SELECT * FROM mnt_grupoterapeutico") or die(pg_error());
 		conexion::desconectar();
-		  	while($registro=mysql_fetch_row($consulta))
+		  	while($registro=pg_fetch_row($consulta))
 	{
 		// Convierto los caracteres conflictivos a sus entidades HTML correspondientes para su correcta visualizacion
 		$registro[1]=htmlentities($registro[1]);

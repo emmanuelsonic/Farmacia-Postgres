@@ -14,8 +14,8 @@ $querySelect="select *
 		inner join farm_unidadmedidas fum
 		on fum.IdUnidadMedida = fcp.IdUnidadMedida
 		where (Nombre like '%$Busqueda%' or Codigo='$Busqueda') and IdEstablecimiento=".$_SESSION["IdEstablecimiento"];
-	$resp=mysql_query($querySelect);
-while($row=mysql_fetch_array($resp)){
+	$resp=pg_query($querySelect);
+while($row=pg_fetch_array($resp)){
 	$Nombre=htmlentities($row["Nombre"])." - ".$row["Concentracion"]." - ".$row["FormaFarmaceutica"];
 	$IdMedicina=$row["IdMedicina"];
 	
@@ -41,8 +41,8 @@ $querySelect="select distinct maf.IdArea,Area
 		and Habilitado='S'
 		and Existencia <> 0
 		$comp";
-	$resp=mysql_query($querySelect);
-while($row=mysql_fetch_array($resp)){
+	$resp=pg_query($querySelect);
+while($row=pg_fetch_array($resp)){
 	$Nombre=htmlentities($row["Area"]);
 	$IdMedicina=$row["IdArea"];
 

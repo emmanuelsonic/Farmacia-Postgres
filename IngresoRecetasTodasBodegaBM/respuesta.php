@@ -15,8 +15,8 @@ $querySelect="select Codigo, Nombre, Concentracion, fcp.IdMedicina, FormaFarmace
                 and fcpe.IdEstablecimiento=$IdEstablecimiento
                 and fcpe.IdModalidad=$IdModalidad
                 and IdTerapeutico is not null";
-	$resp=mysql_query($querySelect);
-while($row=mysql_fetch_array($resp)){
+	$resp=pg_query($querySelect);
+while($row=pg_fetch_array($resp)){
 	$Nombre=$row["Nombre"]." - ".$row["Concentracion"]." - ".$row["FormaFarmaceutica"]." - ".$row["Presentacion"];
 	$IdMedicina=$row["IdMedicina"];
 	$Codigo=$row["Codigo"];

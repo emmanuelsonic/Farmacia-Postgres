@@ -71,12 +71,12 @@ $reporte='<table width="990" border="1">
     <td colspan="11" align="center" style="vertical-align:middle;"><strong>Periodo: '.$F1[2]."-".$F1[1]."-".$F1[0].' al '.$F2[2]."-".$F2[1]."-".$F2[0].'</strong></td></tr>';
   //<!--  INICIO DE REPORTE  -->
   
-  	while($rowGrupos=mysql_fetch_array($RespGrupos)){
+  	while($rowGrupos=pg_fetch_array($RespGrupos)){
 		$IdTerapeutico=$rowGrupos[0];
 		$GrupoTerapeutico=$rowGrupos[1];
 		//**************VERIFICACION DE MEDICAMENTO DEL GRUPO CONTRA INGRESO
 		$resp=ReporteFarmacias::IngresoPorGrupo($IdTerapeutico,$IdFarmacia,$FechaInicial,$FechaFinal);
-		if($rowTmp=mysql_fetch_array($resp)){
+		if($rowTmp=pg_fetch_array($resp)){
   
   $reporte.='<tr class="MYTABLE">
 	<td colspan="11" align="center" style="background:#999999;"><strong>'.$GrupoTerapeutico.'</strong></td>
@@ -105,7 +105,7 @@ $reporte='<table width="990" border="1">
             }
   		$RespMedicina=ReporteFarmacias::DatosMedicamentosPorGrupo($IdTerapeutico,$IdFarmacia,$IdMedicina);
 		$MontoSubTotal=0;
-  		while($rowMedicina=mysql_fetch_array($RespMedicina)){
+  		while($rowMedicina=pg_fetch_array($RespMedicina)){
 
             $IdMedicina=$rowMedicina["IdMedicina"];
 			

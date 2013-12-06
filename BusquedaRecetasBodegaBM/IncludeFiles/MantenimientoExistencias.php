@@ -16,7 +16,7 @@ $Fecha=$_GET["Fecha"];
 /* SI LA RECETA HA SIDO ENTREGADA == 1 */
 $Ancla='TT';
 $resp=$query->datosRecetaListasTotal($IdReceta,$Ancla,$IdArea);//obtencion de detalle de la receta
-		$row=mysql_fetch_array($resp);
+		$row=pg_fetch_array($resp);
 		//$IdReceta=$row["IdReceta"];
 	if($entregada==1){
 	do{
@@ -32,7 +32,7 @@ $resp=$query->datosRecetaListasTotal($IdReceta,$Ancla,$IdArea);//obtencion de de
 			//verificamos si es satisfecha o no		
 			$respuesta=$query->verificaSatisfecha($idmedicina,$IdReceta);
 			//*************
-			if($datos=mysql_fetch_array($respuesta)){
+			if($datos=pg_fetch_array($respuesta)){
 				$Entregada="SI";
 			}else{
 				$Entregada="NO";
@@ -40,7 +40,7 @@ $resp=$query->datosRecetaListasTotal($IdReceta,$Ancla,$IdArea);//obtencion de de
 
 //Aqui tengo q ver que lotes mando para hacer la descarga de existencia en ese o esos lotes
 		$respLotes=$query->ObtenerLotes($idmedicina,$IdReceta,$IdArea,8,0,0,'','');
-		$rowLote=mysql_fetch_array($respLotes);
+		$rowLote=pg_fetch_array($respLotes);
 			$cantidad1=$rowLote["CantidadLote1"];
 			$Lote1=$rowLote["Lote1"];
 			$cantidad2=$rowLote["CantidadLote2"];
@@ -52,7 +52,7 @@ $resp=$query->datosRecetaListasTotal($IdReceta,$Ancla,$IdArea);//obtencion de de
 		$query->MedicinaExistencias($idmedicina,$cantidad2,$Entregada,$IdArea,$Lote2);
 		}       
 	//Lotes *************************************	
-	}while($row=mysql_fetch_array($resp));//fin de while
+	}while($row=pg_fetch_array($resp));//fin de while
 $Bandera=3;//E
 $query->ActualizarEstadoRecetas($IdReceta, $Bandera,$IdArea);//Estado de Receta a Entregada (E)	
 

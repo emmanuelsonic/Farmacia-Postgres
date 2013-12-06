@@ -52,7 +52,7 @@ $tabla='<table border="1" WIDTH="600" class="borders">
 			<td align="center"><strong>Recetas Digitadas</strong></td>
 		</tr>';
             $respPersonal = $mon->ObtenerInformacion($IdPersonal, $FechaInicial, $FechaFinal);
-            while ($rowPersonal = mysql_fetch_array($respPersonal)) {
+            while ($rowPersonal = pg_fetch_array($respPersonal)) {
                 $IdPersonalDetalle=$rowPersonal["IdPersonal"];
                 $Nombre = $rowPersonal[0];
                 $NumeroRecetas = $rowPersonal[1];
@@ -138,7 +138,7 @@ $tabla='<table border="1" WIDTH="600" class="borders">
 
 
             $respPersonal = $mon->detalleDigitacion($IdPersonal, $FechaInicial, $FechaFinal);
-            if($rowPersonal = mysql_fetch_array($respPersonal)){
+            if($rowPersonal = pg_fetch_array($respPersonal)){
                 
                 
                             $tabla.= '
@@ -163,7 +163,7 @@ $tabla='<table border="1" WIDTH="600" class="borders">
                 $tabla.='<td align="right">' . $NumeroRecetas . '</td>';
                 $tabla.=' </tr>';
                 $Total+=$NumeroRecetas;
-            }while ($rowPersonal = mysql_fetch_array($respPersonal));//while
+            }while ($rowPersonal = pg_fetch_array($respPersonal));//while
     }
             $tabla.='<tr class="FONDO"><td align="right"><strong>Total </strong></td><td align="right"><strong>' .$Total . '</strong></td></tr>';
             $tabla.='</table>';
