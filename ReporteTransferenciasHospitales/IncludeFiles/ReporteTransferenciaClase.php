@@ -19,7 +19,7 @@ class ReporteVencimiento {
         and fth.IdModalidad=$IdModalidad
         
 	order by IdEstablecimiento";
-        $resp = mysql_query($SQL);
+        $resp = pg_query($SQL);
         return($resp);
     }
 
@@ -48,7 +48,7 @@ class ReporteVencimiento {
 		group by fth.IdMedicina
 		order by fcp.Codigo";
 
-        $resp = mysql_query($SQL);
+        $resp = pg_query($SQL);
         return($resp);
     }
 
@@ -92,7 +92,7 @@ $comp2
 
 
 				group by farm_catalogoproductos.IdMedicina";
-        $resp = mysql_query($querySelect);
+        $resp = pg_query($querySelect);
         return($resp);
     }
 
@@ -105,7 +105,7 @@ $comp2
             $comp = "";
         }
         $SQL = "select IdTerapeutico,GrupoTerapeutico from mnt_grupoterapeutico where GrupoTerapeutico <> '--' " . $comp;
-        $resp = mysql_query($SQL);
+        $resp = pg_query($SQL);
         return($resp);
     }
 
@@ -133,7 +133,7 @@ $comp2
         and fcpe.IdEstablecimiento=$IdEstablecimiento
         and fcpe.IdModalidad=$IdModalidad
 	order by Codigo";
-        $resp = mysql_query($SQL);
+        $resp = pg_query($SQL);
         return($resp);
     }
 
@@ -141,14 +141,14 @@ $comp2
         $SQL = "select distinct fcp.*
 	from farm_catalogoproductos fcp
 	inner join farm_catalogoproductosxestablecimiento fcpe
-	on fcpe.IdMedicina=fcp.IdMedicina
+	on fcpe.IdMedicina=fcp.Id
 
-	where IdTerapeutico=" . $IdTerapeutico . "
+	where fcpe.Id=" . $IdTerapeutico . "
 	and fcpe.Condicion='H'
 	and fcpe.IdEstablecimiento=" . $IdEstablecimiento . "
         and fcpe.IdModalidad=$IdModalidad
 	order by Codigo";
-        $resp = mysql_query($SQL);
+        $resp = pg_query($SQL);
         return($resp);
     }
 
@@ -160,7 +160,7 @@ $comp2
 		where FechaVencimiento between '$FechaInicio' and  '$FechaFin'
 		and IdMedicina=" . $IdMedicina . "
 		order by FechaVencimiento";
-        $resp = mysql_query($SQL);
+        $resp = pg_query($SQL);
         return($resp);
     }
 
@@ -171,7 +171,7 @@ $comp2
                 and IdEstablecimiento=$IdEstablecimiento
                 and IdModalidad=$IdModalidad
                 ";
-        $resp = mysql_query($SQL);
+        $resp = pg_query($SQL);
         return($resp);
     }
 

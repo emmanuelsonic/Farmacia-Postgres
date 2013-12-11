@@ -1,0 +1,14 @@
+<table width="915">
+	<tr><td colspan="6" align="right"></td></tr>
+	  <tr class="MYTABLE">
+			<td colspan="7" align="center"><strong>DIGITADOR</strong></td>
+	  </tr>
+		<tr class="FONDO">
+			<th width="74">Cantidad</th>
+			<th width="189">Medicamento</th>
+			<th width="189">Unidad de Medida</th>
+			<th width="130">Origen de Transferencia</th>
+			<th width="137">Destino de Transferencia</th>
+			<th width="244">Justificacion</th>
+			<th width="113">Fecha de Transferencia</th>
+		</tr><tr class='MYTABLE'><td colspan='7'>&nbsp;</td></tr></table>

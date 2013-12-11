@@ -6,19 +6,19 @@ class TransferenciaProceso {
 
     function Personal($IdPersonal, $FechaInicial, $FechaFinal, $IdEstablecimiento, $IdModalidad) {
         if ($IdPersonal != 0) {
-            $a1 = "and farm_usuarios.IdPersonal=" . $IdPersonal;
+            $a1 = "and fos_user_user.Id=" . $IdPersonal;
         } else {
             $a1 = "";
         }
-        $query = "select distinct farm_usuarios.IdPersonal,Nombre 
-                from farm_usuarios
+        $query = "select distinct fos_user_user.Id,firstname
+                from fos_user_user
                 inner join farm_ajustes
-                on farm_ajustes.IdPersonal = farm_usuarios.IdPersonal
+                on farm_ajustes.IdPersonal = fos_user_user.Id
                 where FechaAjuste between '$FechaInicial' and '$FechaFinal' 
                 and farm_ajustes.IdEstablecimiento=$IdEstablecimiento
                 and farm_ajustes.IdModalidad=$IdModalidad
-                and farm_usuarios.IdEstablecimiento=$IdEstablecimiento
-                and farm_usuarios.IdModalidad=$IdModalidad
+                and fos_user_user.Id_Establecimiento=$IdEstablecimiento
+                and fos_user_user.IdModalidad=$IdModalidad
                 " . $a1;
         $resp = pg_query($query);
         return($resp);

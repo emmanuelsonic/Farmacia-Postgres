@@ -11,10 +11,8 @@ if (!isset($_SESSION["Administracion"])) {
     $FechaFin = $_GET["FechaFin"];
     $Usuarios = $_GET["Usuario"];
     $nick = $_SESSION["nick"];
-
     $IdEstablecimiento = $_SESSION["IdEstablecimiento"];
     $IdModalidad = $_SESSION["IdModalidad"];
-    
     $proceso = new ReporteTransferencias;
 
     /* DIFERENCIAS ENTRE TODOS LOS USUARIOS O UNO PUNTUAL */
@@ -36,9 +34,10 @@ if (!isset($_SESSION["Administracion"])) {
             /* PARA TODOS LOS USUARIOS QUE HAN INTRODUCIDO TRANSFERENIAS [SOLO SON DE NIVEL ADMINISTRATIVO, NO TECNICOS] */
 
             $respUsuario = $proceso->ObtenerUsuarios($Usuarios,$IdEstablecimiento,$IdModalidad);
+            
             $tbl = '<table width="915">
 	<tr><td colspan="6" align="right"></td></tr>';
-            while ($row = mysql_fetch_array($respUsuario)) {
+            while ($row = pg_fetch_array($respUsuario)) {
                 $IdPersonal = $row[0];
                 $Nombre = $row[1];
                 $tbl.='
@@ -55,7 +54,7 @@ if (!isset($_SESSION["Administracion"])) {
 			<th width="113">Fecha de Transferencia</th>
 		</tr>';
                 $respTrans = $proceso->ObtenerTransferencias($IdPersonal, $FechaInicio, $FechaFin, $IdEstablecimiento, $IdModalidad);
-                while ($row2 = mysql_fetch_array($respTrans)) {
+                while ($row2 = pg_fetch_array($respTrans)) {
                     $Cantidad = $row2["Cantidad"];
                     $Medicamento = htmlentities($row2["Nombre"]);
                     $Concentracion = $row2["Concentracion"];
@@ -69,7 +68,7 @@ if (!isset($_SESSION["Administracion"])) {
                     $Divisor = $proceso->UnidadesContenidas($row2["IdMedicina"],$IdEstablecimiento,$IdModalidad);
 
                     $TotalExistencia = $row2["Cantidad"];
-                    if ($respDivisor = mysql_fetch_array($proceso->ValorDivisor($row2["IdMedicina"],$IdEstablecimiento,$IdModalidad))) {
+                    if ($respDivisor = pg_fetch_array($proceso->ValorDivisor($row2["IdMedicina"],$IdEstablecimiento,$IdModalidad))) {
                         $Divisor = $respDivisor[0];
 
                         $TotalExistencia = number_format($TotalExistencia, 3, '.', '');
@@ -156,9 +155,8 @@ if (!isset($_SESSION["Administracion"])) {
 
             $tbl = '<table width="915">
 	<tr><td colspan="6" align="right"></td></tr>';
-
-            $Nombre = $proceso->ObtenerUsuarios($Usuarios);
-
+            $Nombre = $proceso->ObtenerUsuarios($Usuarios, $IdEstablecimiento, $IdModalidad);//no incluia idestablecimiento ni idmodalidad en la llamada ala funcion
+            
             $tbl.='
 	  <tr class="MYTABLE">
 			<td colspan="7" align="center"><strong>' . strtoupper($Nombre) . '</strong></td>
@@ -173,8 +171,8 @@ if (!isset($_SESSION["Administracion"])) {
 			<th width="113">Fecha de Transferencia</th>
 		</tr>';
 
-            $respTrans = $proceso->ObtenerTransferencias($Usuarios, $FechaInicio, $FechaFin);
-            while ($row2 = mysql_fetch_array($respTrans)) {
+            $respTrans = $proceso->ObtenerTransferencias($Usuarios, $FechaInicio, $FechaFin,$IdEstablecimiento, $IdModalidad);//se agrego idestab y idmodal a la llamada de la funcion
+            while ($row2 = pg_fetch_array($respTrans)) {
                 $Cantidad = $row2["Cantidad"];
                 $Medicamento = htmlentities($row2["Nombre"]);
                 $Concentracion = $row2["Concentracion"];
@@ -187,7 +185,7 @@ if (!isset($_SESSION["Administracion"])) {
                 $Divisor = $proceso->UnidadesContenidas($row2["IdMedicina"]);
 
                 $TotalExistencia = $row2["Cantidad"];
-                if ($respDivisor = mysql_fetch_array($proceso->ValorDivisor($row2["IdMedicina"]))) {
+                if ($respDivisor = pg_fetch_array($proceso->ValorDivisor($row2["IdMedicina"]))) {
                     $Divisor = $respDivisor[0];
 
                     $TotalExistencia = number_format($TotalExistencia, 3, '.', '');
