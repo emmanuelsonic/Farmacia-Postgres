@@ -136,7 +136,11 @@ case 4:
 $IdMedicina=$_GET["IdMedicina"];
 $Motivo=$_GET["Motivo"];//1:Vencimiento  2: Averiado
 $IdArea=$_GET["IdAreaOrigen"];
-
+echo "medicina".$IdMedicina;
+echo "area".$IdArea;
+echo "farmacia".$TipoFarmacia;
+echo "establecimiento".$_SESSION["IdEstablecimiento"];
+echo "modalidad".$IdModalidad;
 $resp=$proceso->ObtenerLotesMedicamento($IdMedicina,$Motivo,$IdArea,$TipoFarmacia,$_SESSION["IdEstablecimiento"],$IdModalidad);
 $combo="<select id='IdLote' name='IdLote'>";
 $combo.="<option value='0'>[Seleccione Lote...]</option>";

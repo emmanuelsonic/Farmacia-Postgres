@@ -42,7 +42,7 @@ switch($Bandera){
 			$Combo='<select name="IdMedicina" id="IdMedicina">';
 			$Combo.='<option value="0">[Seleccione ...]</option>';
 			while($row=pg_fetch_array($resp)){	
-				$Combo.='<option value="'.$row[0].'">'.$row["Codigo"].' '.htmlentities($row[1]).' - '.$row[2].' - '.htmlentities($row[3]).'</option>';			
+				$Combo.='<option value="'.$row[0].'">'.$row["codigo"].' '.htmlentities($row[1]).' - '.$row[2].' - '.htmlentities($row[3]).'</option>';			
 			}
 			$Combo.='</select>';
 			

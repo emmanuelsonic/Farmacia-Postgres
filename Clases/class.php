@@ -61,8 +61,8 @@ class queries{
 //FECHAS ATRAS (3 DIAS HABILES)
 
     function ComboGrupoTerapeutico() {
-        $query = "select IdTerapeutico, GrupoTerapeutico from mnt_grupoterapeutico where GrupoTerapeutico <>'--'";
-        $resp = $db->consulta($query);
+        $query = "select Id, GrupoTerapeutico from mnt_grupoterapeutico where GrupoTerapeutico <>'--'";
+        $resp = pg_query($query);
         return($resp);
     }
 

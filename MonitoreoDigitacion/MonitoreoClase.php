@@ -5,16 +5,16 @@ include('../Clases/class.php');
 class Monitoreo {
 
     function ObtenerPersonal() {
-        $query = "select IdPersonal,Nombre
-				from farm_usuarios
+        $query = "select id as IdPersonal,Nombre
+				from fos_user_user
 				where IdArea=7
-				order by IdPersonal";
+				order by Id";
         $resp = pg_query($query);
         return($resp);
     }
 
     function ObtenerFarmacia() {
-        $query = "select IdFarmacia,Farmacia
+        $query = "select id as IdFarmacia,Farmacia
 				from mnt_farmacia";
         $resp = pg_query($query);
         return($resp);
@@ -23,23 +23,23 @@ class Monitoreo {
 //Farmacias
 
     function ObtenerIdArea() {
-        $query = "select IdArea
+        $query = "select id as IdArea
 				from mnt_areafarmacia
-				order by IdFarmacia asc,IdArea";
+				order by IdFarmacia asc,Id";
         $resp = pg_query($query);
         return($resp);
     }
 
     function ObtenerInformacion($IdEstablecimiento,$IdModalidad) {
-        $query = "select farm_usuarios.Nombre,count(farm_usuarios.Id)
-				from farm_usuarios
+        $query = "select fos_user_user.firstname,count(fos_user_user.Id)
+				from fos_user_user
 				inner join farm_recetas
-				on farm_recetas.IdPersonal=farm_usuarios.Id
+				on farm_recetas.IdPersonal=fos_user_user.Id
 					
 				inner join farm_medicinarecetada
 				on farm_recetas.Id=farm_medicinarecetada.Id
 				inner join sec_historial_clinico
-				on sec_historial_clinico.IdHistorialClinico=farm_recetas.IdHistorialClinico
+				on sec_historial_clinico.Idhistorialclinico=farm_recetas.IdHistorialClinico
 				
 				where FechaHoraReg is not null
 				and date(FechaHoraReg)=current_date
@@ -49,9 +49,9 @@ class Monitoreo {
                                
                                 and farm_medicinarecetada.IdEstablecimiento=$IdEstablecimiento
                                 and farm_medicinarecetada.IdModalidad=$IdModalidad
-                                and farm_usuarios.IdEstablecimiento=$IdEstablecimiento
-                                and farm_usuarios.IdModalidad=$IdModalidad
-                                group by farm_usuarios.Nombre,farm_recetas.IdPersonal
+                                and fos_user_user.Id_Establecimiento=$IdEstablecimiento
+                                and fos_user_user.IdModalidad=$IdModalidad
+                                group by fos_user_user.firstname,farm_recetas.IdPersonal
                                 order by farm_recetas.IdPersonal";
         $resp = pg_query($query);
         return($resp);
@@ -60,16 +60,16 @@ class Monitoreo {
 //Informacion
 
     function ObtenerInformacionEnLinea($IdPersonal,$IdEstablecimiento,$IdModalidad) {
-        $query = "select fos_user_user.id,farm_usuarios.nombre,
-				case farm_usuarios.conectado 
+        $query = "select fos_user_user.id,fos_user_user.firstname,
+				case fos_user_user.conectado 
 				when 'S' then 'En Linea' 
 				when 'N' then '-' 
 				end as Estado
-				from farm_usuarios, fos_user_user
-				where farm_usuarios.conectado='S'
+				from fos_user_user
+				where fos_user_user.conectado='S'
 				and fos_user_user.id<> '$IdPersonal'
 				
-				and IdEstablecimiento=$IdEstablecimiento       /*Aqui hace  falata ver de donde se va a sacar  el establacimiento*/ 
+				and Id_Establecimiento=$IdEstablecimiento       /*Aqui hace  falata ver de donde se va a sacar  el establacimiento*/ 
                 and IdModalidad=$IdModalidad";
         $resp = pg_query($query);
         return($resp);

@@ -97,7 +97,7 @@ function LotesDeEntrega($IdMedicina){
 	$querySelect="select Cantidad, Lote, DATE_FORMAT(FechaVencimiento,'%d/%m/%Y') as FechaVencimiento
 			from alm_entregamedicamento
 			inner join farm_lotes
-			on farm_lotes.IdLote=alm_entregamedicamento.IdLote
+			on farm_lotes.id=alm_entregamedicamento.IdLote
 			where alm_entregamedicamento.IdMedicina=$IdMedicina
 			and IdEstado=1";
 	$resp=pg_query($querySelect);
@@ -107,10 +107,10 @@ function LotesDeEntrega($IdMedicina){
 
 
 function ObtenerLotesPorExistencia($IdMedicina){
-	$querySelect="select farm_entregamedicamento.Existencia,farm_lotes.IdLote, Lote, DATE_FORMAT(FechaVencimiento,'%d-%m-%Y') as FechaVencimiento
+	$querySelect="select farm_entregamedicamento.Existencia,farm_lotes.id, Lote, DATE_FORMAT(FechaVencimiento,'%d-%m-%Y') as FechaVencimiento
 				from farm_lotes
 				inner join farm_entregamedicamento
-				on farm_entregamedicamento.IdLote=farm_lotes.IdLote
+				on farm_entregamedicamento.IdLote=farm_lotes.id
 				where farm_entregamedicamento.IdMedicina='$IdMedicina'
 				and Existencia <> '0'
 				order by FechaVencimiento";
@@ -166,7 +166,7 @@ if($Existencia_new < 0){
 		$querySelect="select Existencia,alm_existencias.IdLote, FechaVencimiento
 					from alm_existencias
 					inner join farm_lotes
-					on farm_lotes.IdLote=alm_existencias.IdLote
+					on farm_lotes.id=alm_existencias.IdLote
 					
 					where IdMedicina='$IdMedicina'
 					and alm_existencias.IdLote != '$IdLote'
@@ -257,7 +257,7 @@ function RealizarTransferenciaDoble($IdMedicina,$Cantidad,$IdLote,$IdUsuarioReg)
 		$querySelect="select Existencia,alm_existencias.IdLote, FechaVencimiento
 					from alm_existencias
 					inner join farm_lotes
-					on farm_lotes.IdLote=alm_existencias.IdLote
+					on farm_lotes.id=alm_existencias.IdLote
 					
 					where IdMedicina='$IdMedicina'
 					and alm_existencias.IdLote != '$IdLote'
@@ -304,12 +304,12 @@ function RealizarTransferenciaDoble($IdMedicina,$Cantidad,$IdLote,$IdUsuarioReg)
 function DesplegarTransferencias($IdUsuarioReg,$Externo){
 	if($Externo==0){
 	$querySelect2="select alm_entregamedicamento.IdMedicina,alm_entregamedicamento.IdEntrega,farm_catalogoproductos.Nombre, farm_catalogoproductos.Concentracion,
-				alm_entregamedicamento.Cantidad,farm_lotes.Lote,farm_lotes.IdLote,FechaVencimiento
+				alm_entregamedicamento.Cantidad,farm_lotes.Lote,farm_lotes.id as idlote,FechaVencimiento
 				from farm_catalogoproductos
 				inner join alm_entregamedicamento
-				on alm_entregamedicamento.IdMedicina=farm_catalogoproductos.IdMedicina
+				on alm_entregamedicamento.IdMedicina=farm_catalogoproductos.Id
 				inner join farm_lotes
-				on farm_lotes.IdLote=alm_entregamedicamento.IdLote
+				on farm_lotes.id=alm_entregamedicamento.IdLote
 				where alm_entregamedicamento.IdUsuarioReg=$IdUsuarioReg
 				and alm_entregamedicamento.IdEstado=1
 				and Fecha=curdate()";	
@@ -318,9 +318,9 @@ function DesplegarTransferencias($IdUsuarioReg,$Externo){
 				sum(alm_entregamedicamento.Cantidad)as Cantidad,farm_lotes.IdLote
 				from farm_catalogoproductos
 				inner join alm_entregamedicamento
-				on alm_entregamedicamento.IdMedicina=farm_catalogoproductos.IdMedicina
+				on alm_entregamedicamento.IdMedicina=farm_catalogoproductos.Id
 				inner join farm_lotes
-				on farm_lotes.IdLote=alm_entregamedicamento.IdLote
+				on farm_lotes.id=alm_entregamedicamento.IdLote
 				where alm_entregamedicamento.IdUsuarioReg=$IdUsuarioReg
 				and alm_entregamedicamento.IdEstado=1
 				and Fecha=curdate()
@@ -365,7 +365,7 @@ function DesplegarTransferencias($IdUsuarioReg,$Externo){
 			$querySelect1="select Descripcion,UnidadesContenidas
 			from farm_unidadmedidas
 			inner join farm_catalogoproductos
-			on farm_catalogoproductos.IdUnidadMedida=farm_unidadmedidas.IdUnidadMedida
+			on farm_catalogoproductos.IdUnidadMedida=farm_unidadmedidas.id
 			where IdMedicina=".$row["IdMedicina"];
 			$unidades=pg_fetch_array(pg_query($querySelect1));
 			/*********************************************/
@@ -497,8 +497,8 @@ function ObtenerUnidadMedida($IdMedicina){
 	$querySelect="select farm_unidadmedidas.UnidadesContenidas
 				from farm_unidadmedidas
 				inner join farm_catalogoproductos
-				on farm_catalogoproductos.IdUnidadMedida=farm_unidadmedidas.IdUnidadMedida
-				where farm_catalogoproductos.IdMedicina='$IdMedicina'";
+				on farm_catalogoproductos.IdUnidadMedida=farm_unidadmedidas.id
+				where farm_catalogoproductos.Id='$IdMedicina'";
 	$resp=pg_fetch_array(pg_query($querySelect));
 	return($resp[0]);
 }//ObtenerUnidadMedida
@@ -509,16 +509,16 @@ function ObtenerUnidadMedida($IdMedicina){
 
 function ConfirmaExistencia($IdMedicina,$Lote,$IdEstablecimiento,$IdModalidad){
 if($Lote!='Lote.'){
-$querySelect="select farm_entregamedicamento.Existencia,farm_lotes.IdLote
+$querySelect="select farm_entregamedicamento.Existencia,farm_lotes.id as IdLote
 			from farm_entregamedicamento
 			inner join farm_lotes
-			on farm_lotes.IdLote=farm_entregamedicamento.IdLote 
+			on farm_lotes.Id=farm_entregamedicamento.IdLote 
 			where farm_entregamedicamento.IdMedicina='$IdMedicina' 
 			and farm_lotes.Lote='$Lote'
                         and farm_entregamedicamento.IdEstablecimiento=$IdEstablecimiento
                         and farm_entregamedicamento.IdModalidad=$IdModalidad
 			and Existencia <> 0 
-			and left(curdate(),7) <= left(FechaVencimiento,7)";
+			and left(to_char(current_date,'YYYY-MM-DD'),7) <= left(to_char(FechaVencimiento,'YYYY-MM-DD'),7)";
 }else{
 //$querySelect="select * from farm_medicinaexistenciaxarea where IdMedicina='$IdMedicina' and IdArea='$IdArea'";
 }
@@ -599,7 +599,7 @@ function IntroducirExistencias($IdMedicina,$cantidad,$fecha,$Lote,$Precio,$IdEst
 function ObtenerPrecioLote($Lote){
 	$querySelect="select farm_lotes.PrecioLote
 					from farm_lotes
-					where farm_lotes.IdLote='$Lote'";
+					where farm_lotes.Id='$Lote'";
 	$resp=pg_fetch_array(pg_query($querySelect));
 	return($resp[0]);
 }//ObtenerPrecioLote
@@ -610,13 +610,13 @@ function ObtenerPrecioLote($Lote){
 
 /**********	DATOS MEDICINA	***************/
 function ObtenerDatosMedicina($IdMedicina){
-$queryMedicina="select IdMedicina, Nombre, Concentracion, Descripcion, UnidadesContenidas,GrupoTerapeutico
+$queryMedicina="select id as IdMedicina, Nombre, Concentracion, Descripcion, UnidadesContenidas,GrupoTerapeutico
 				from farm_catalogoproductos 
 				inner join mnt_grupoterapeutico
 				on mnt_grupoterapeutico.IdTerapeutico=farm_catalogoproductos.IdTerapeutico
 				inner join farm_unidadmedidas
-				on farm_unidadmedidas.IdUnidadMedida=farm_catalogoproductos.IdUnidadMedida
-				where farm_catalogoproductos.IdMedicina='$IdMedicina'";
+				on farm_unidadmedidas.id=farm_catalogoproductos.IdUnidadMedida
+				where farm_catalogoproductos.Id='$IdMedicina'";
 
 $info=pg_query($queryMedicina);
 
@@ -695,7 +695,7 @@ function LotesPorMedicina($IdMedicina){
 	$querySelect="select Existencia, Lote, FechaVencimiento
 				from farm_Lotes
 				inner join farm_entregamedicamento
-				on farm_entregamedicamento.IdLote = farm_lotes.IdLote
+				on farm_entregamedicamento.IdLote = farm_lotes.Id
 				where farm_entregamedicamento.IdMedicina='$IdMedicina'
 				and farm_entregamedicamento.Existencia <> '0'
 				order by FechaVencimiento";
@@ -762,19 +762,19 @@ function ReporteExistencia($IdTerapeutico,$IdMedicina,$Bandera,$Externo){
 	}
 	
 	if($IdTerapeutico != 0 and $IdMedicina != 0){
-		$var2="and farm_catalogoproductos.IdTerapeutico='$IdTerapeutico' and farm_catalogoproductos.IdMedicina='$IdMedicina'";
+		$var2="and farm_catalogoproductos.IdTerapeutico='$IdTerapeutico' and farm_catalogoproductos.Id='$IdMedicina'";
 	}
 	
-	$querySelect="select farm_catalogoproductos.IdMedicina, GrupoTerapeutico, Nombre, Concentracion, sum(Existencia)as ExistenciaTotal, UnidadesContenidas,Descripcion
+	$querySelect="select farm_catalogoproductos.id as IdMedicina, GrupoTerapeutico, Nombre, Concentracion, sum(Existencia)as ExistenciaTotal, UnidadesContenidas,Descripcion
 				from mnt_grupoterapeutico
 				inner join farm_catalogoproductos
 				on farm_catalogoproductos.IdTerapeutico=mnt_grupoterapeutico.IdTerapeutico
 				inner join farm_entregamedicamento
-				on farm_entregamedicamento.IdMedicina=farm_catalogoproductos.IdMedicina
+				on farm_entregamedicamento.IdMedicina=farm_catalogoproductos.Id
 				inner join farm_lotes
-				on farm_lotes.IdLote=farm_entregamedicamento.IdLote
+				on farm_lotes.id=farm_entregamedicamento.IdLote
 				inner join farm_unidadmedidas
-				on farm_unidadmedidas.IdUnidadMedida=farm_catalogoproductos.IdUnidadMedida
+				on farm_unidadmedidas.id=farm_catalogoproductos.IdUnidadMedida
 				where farm_catalogoproductos.IdEstado = 'H'
 				and mnt_grupoterapeutico.GrupoTerapeutico <> '--'
 				and mnt_grupoterapeutico.IdTerapeutico=1
@@ -851,9 +851,9 @@ function ReporteEntregasGral($IdTerapeutico,$IdMedicina,$IdEmpleado,$FechaInicio
 	$querySelect="select distinct Fecha, DATE_FORMAT(Fecha,'%d/%m/%Y') as Entrega
 				from farm_catalogoproductos
 				inner join alm_entregamedicamento
-				on farm_catalogoproductos.IdMedicina=alm_entregamedicamento.IdMedicina
+				on farm_catalogoproductos.Id=alm_entregamedicamento.IdMedicina
 				inner join farm_lotes
-				on farm_lotes.IdLote=alm_entregamedicamento.IdLote
+				on farm_lotes.id=alm_entregamedicamento.IdLote
 				
 				where alm_entregamedicamento.IdEstado=2
 				and Fecha between '$FechaInicio' and '$FechaFin'
@@ -898,9 +898,9 @@ function ReporteEntregasGral($IdTerapeutico,$IdMedicina,$IdEmpleado,$FechaInicio
 	$querySelectEntregas="select alm_entregamedicamento.IdMedicina,Nombre,Concentracion,sum(Cantidad)as Cantidad,Fecha
 				from farm_catalogoproductos
 				inner join alm_entregamedicamento
-				on farm_catalogoproductos.IdMedicina=alm_entregamedicamento.IdMedicina
+				on farm_catalogoproductos.Id=alm_entregamedicamento.IdMedicina
 				inner join farm_lotes
-				on farm_lotes.IdLote=alm_entregamedicamento.IdLote
+				on farm_lotes.id=alm_entregamedicamento.IdLote
 				
 				where alm_entregamedicamento.IdEstado=2
 				and Fecha = '".$rowFechas["Fecha"]."'
@@ -924,7 +924,7 @@ function ReporteEntregasGral($IdTerapeutico,$IdMedicina,$IdEmpleado,$FechaInicio
 						$queryLotes="select Cantidad, Lote, FechaVencimiento
 						from alm_entregamedicamento
 						inner join farm_lotes
-						on farm_lotes.IdLote=alm_entregamedicamento.IdLote
+						on farm_lotes.id=alm_entregamedicamento.IdLote
 						where IdMedicina=".$rowMedicina["IdMedicina"]."
 						and alm_entregamedicamento.Fecha='".$rowFechas["Fecha"]."'";
 						

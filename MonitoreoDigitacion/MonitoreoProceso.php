@@ -56,7 +56,7 @@ if (!isset($_SESSION["nivel"])) {
                 $sonido = "NO";
                 do {
                     $IdPersonal = $rowPersonal["id"];
-                    $Nombre = $rowPersonal["nombre"];
+                    $Nombre = $rowPersonal["firstname"];
                     $Estado = $rowPersonal["estado"];
 /* el chat no esta disponible en la version postgres
                     $chat = $mon->Chat($_SESSION["IdPersonal"], $IdPersonal,$IdEstablecimiento,$IdModalidad);

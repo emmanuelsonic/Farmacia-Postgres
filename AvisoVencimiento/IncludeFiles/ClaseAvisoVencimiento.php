@@ -10,30 +10,30 @@ $SQL="select Codigo,farm_catalogoproductos.Nombre,Concentracion,FormaFarmaceutic
 					farm_unidadmedidas.UnidadesContenidas as Divisor
 					from farm_lotes
 					inner join farm_medicinaexistenciaxarea
-					on farm_medicinaexistenciaxarea.IdLote=farm_lotes.IdLote
+					on farm_medicinaexistenciaxarea.IdLote=farm_lotes.Id
 					inner join farm_catalogoproductos
-					on farm_catalogoproductos.IdMedicina=farm_medicinaexistenciaxarea.IdMedicina
+					on farm_catalogoproductos.Id=farm_medicinaexistenciaxarea.IdMedicina
 					inner join farm_unidadmedidas
-					on farm_unidadmedidas.IdUnidadMedida=farm_catalogoproductos.IdUnidadMedida
+					on farm_unidadmedidas.Id=farm_catalogoproductos.IdUnidadMedida
 					where left(farm_lotes.FechaVencimiento,7) between left(adddate(curdate(),interval 1 month),7) and left(adddate(curdate(),interval 4 month),7)
-and farm_catalogoproductos.IdMedicina=$IdMedicina
-					group by farm_catalogoproductos.IdMedicina
+and farm_catalogoproductos.Id=$IdMedicina
+					group by farm_catalogoproductos.Id
 			union
 
 	select Codigo,farm_catalogoproductos.Nombre,Concentracion,FormaFarmaceutica,Presentacion, farm_unidadmedidas.Descripcion,
 					farm_unidadmedidas.UnidadesContenidas as Divisor
 					from farm_lotes
 					inner join farm_entregamedicamento
-					on farm_entregamedicamento.IdLote=farm_lotes.IdLote
+					on farm_entregamedicamento.IdLote=farm_lotes.Id
 					inner join farm_catalogoproductos
-					on farm_catalogoproductos.IdMedicina=farm_entregamedicamento.IdMedicina
+					on farm_catalogoproductos.Id=farm_entregamedicamento.IdMedicina
 					inner join farm_unidadmedidas
-					on farm_unidadmedidas.IdUnidadMedida=farm_catalogoproductos.IdUnidadMedida
+					on farm_unidadmedidas.Id=farm_catalogoproductos.IdUnidadMedida
 
 					where left(farm_lotes.FechaVencimiento,7) between left(adddate(curdate(),interval 1 month),7) and left(adddate(curdate(),interval 4 month),7)
-and farm_catalogoproductos.IdMedicina=$IdMedicina
+and farm_catalogoproductos.Id=$IdMedicina
 
-				group by farm_catalogoproductos.IdMedicina";
+				group by farm_catalogoproductos.Id";
 
 	$resp=pg_query($SQL);
 	return($resp);
@@ -43,7 +43,7 @@ and farm_catalogoproductos.IdMedicina=$IdMedicina
 
 	function ObtenerVencimientoProximo($IdTerapeutico,$IdMedicina){
 
-if($IdMedicina!=0){$comp2="and farm_catalogoproductos.IdMedicina=".$IdMedicina;}else{$comp2="";}
+if($IdMedicina!=0){$comp2="and farm_catalogoproductos.Id=".$IdMedicina;}else{$comp2="";}
 
 
 
@@ -52,14 +52,14 @@ if($IdMedicina!=0){$comp2="and farm_catalogoproductos.IdMedicina=".$IdMedicina;}
 					farm_unidadmedidas.UnidadesContenidas as Divisor
 					from farm_lotes
 					inner join farm_medicinaexistenciaxarea
-					on farm_medicinaexistenciaxarea.IdLote=farm_lotes.IdLote
+					on farm_medicinaexistenciaxarea.IdLote=farm_lotes.Id
 					inner join farm_catalogoproductos
-					on farm_catalogoproductos.IdMedicina=farm_medicinaexistenciaxarea.IdMedicina
+					on farm_catalogoproductos.Id=farm_medicinaexistenciaxarea.IdMedicina
 					inner join farm_unidadmedidas
 					on farm_unidadmedidas.IdUnidadMedida=farm_catalogoproductos.IdUnidadMedida
 					where left(farm_lotes.FechaVencimiento,7) between left(adddate(curdate(),interval 1 month),7) and left(adddate(curdate(),interval 4 month),7)
 $comp2
-					group by farm_catalogoproductos.IdMedicina
+					group by farm_catalogoproductos.Id
 			union
 
 			select Nombre,Concentracion,FormaFarmaceutica,Presentacion,sum(farm_entregamedicamento.Existencia) as Existencia, PrecioLote,
@@ -67,16 +67,16 @@ $comp2
 					farm_unidadmedidas.UnidadesContenidas as Divisor
 					from farm_lotes
 					inner join farm_entregamedicamento
-					on farm_entregamedicamento.IdLote=farm_lotes.IdLote
+					on farm_entregamedicamento.IdLote=farm_lotes.Id
 					inner join farm_catalogoproductos
-					on farm_catalogoproductos.IdMedicina=farm_entregamedicamento.IdMedicina
+					on farm_catalogoproductos.Id=farm_entregamedicamento.IdMedicina
 					inner join farm_unidadmedidas
 					on farm_unidadmedidas.IdUnidadMedida=farm_catalogoproductos.IdUnidadMedida
 $comp2
 					where left(farm_lotes.FechaVencimiento,7) between left(adddate(curdate(),interval 1 month),7) and left(adddate(curdate(),interval 4 month),7)
 
 
-				group by farm_catalogoproductos.IdMedicina";
+				group by farm_catalogoproductos.Id";
 		$resp=pg_query($querySelect);
 		return($resp);
 	}//ObtenerVencimientoProximo
@@ -84,7 +84,7 @@ $comp2
 
 function GrupoTerapeutico($IdTerapeutico){
 	if($IdTerapeutico!=0){$comp="and IdTerapeutico=".$IdTerapeutico;}else{$comp="";}
-   $SQL="select IdTerapeutico,GrupoTerapeutico from mnt_grupoterapeutico where GrupoTerapeutico <> '--' ".$comp;
+   $SQL="select id as IdTerapeutico,GrupoTerapeutico from mnt_grupoterapeutico where GrupoTerapeutico <> '--' ".$comp;
 	$resp=pg_query($SQL);
 	return($resp);
 }
@@ -93,10 +93,10 @@ function MedicinasGrupo($IdTerapeutico,$IdEstablecimiento){
    $SQL="select fcp.*
 	from farm_catalogoproductos fcp
 	inner join farm_catalogoproductosxestablecimiento fcpe
-	on fcpe.IdMedicina=fcp.IdMedicina
-	where IdTerapeutico=".$IdTerapeutico."
+	on fcpe.IdMedicina=fcp.Id
+	where fcpe.Id=".$IdTerapeutico."
 	and Condicion='H'
-	and IdEstablecimiento=".$IdEstablecimiento;
+	and fcp.IdEstablecimiento=".$IdEstablecimiento;
    $resp=pg_query($SQL);
    return($resp);
 }

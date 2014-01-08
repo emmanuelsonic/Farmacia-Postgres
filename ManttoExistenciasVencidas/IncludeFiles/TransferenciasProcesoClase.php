@@ -264,7 +264,7 @@ return($Cantidad."~".$Existencia_new);
 
 
 	function ObtenerLotesMedicamento($IdMedicina,$Motivo,$IdArea,$TipoFarmacia,$IdEstablecimiento,$IdModalidad){
-	   if($Motivo==1){$comp="and left(farm_lotes.FechaVencimiento,7) < left(curdate(),7)";}else{$comp="and left(farm_lotes.FechaVencimiento,7) >= left(curdate(),7)";}
+	   if($Motivo==1){$comp="and left(to_char(farm_lotes.FechaVencimiento,'YYYY-MM-DD'),7) < left(to_char(curent_date,'YYYY-MM-DD'),7)";}else{$comp="and left(to_char(farm_lotes.FechaVencimiento,'YYYY-MM-DD'),7) >= left(to_char(current_date,'YYYY-MM-DD'),7)";}
 
 		if($IdArea!=12 and $TipoFarmacia==2){
 
@@ -281,21 +281,21 @@ return($Cantidad."~".$Existencia_new);
 					order by farm_lotes.FechaVencimiento";
 		}
 		if($IdArea==12 or $TipoFarmacia==1){
-		$querySelect="select farm_lotes.IdLote,farm_lotes.Lote, farm_lotes.FechaVencimiento
+		$querySelect="select farm_lotes.Id as IdLote,farm_lotes.Lote, farm_lotes.FechaVencimiento
 					from farm_lotes
 					inner join farm_entregamedicamento
-					on farm_entregamedicamento.IdLote=farm_lotes.IdLote
+					on farm_entregamedicamento.IdLote=farm_lotes.Id
 					where farm_entregamedicamento.IdMedicina='$IdMedicina'
 					and farm_entregamedicamento.Existencia <> 0
                                         and farm_entregamedicamento.IdEstablecimiento=$IdEstablecimiento
                                         and farm_entregamedicamento.IdModalidad=$IdModalidad
 					".$comp."
-					group by farm_lotes.IdLote
+					group by farm_lotes.Id
 					order by farm_lotes.FechaVencimiento";
 
 		}
 
-
+                var_dump($querySelect);
 		$resp=pg_query($querySelect);
 		return($resp);
 	}//ObtenerLotesMedicamento

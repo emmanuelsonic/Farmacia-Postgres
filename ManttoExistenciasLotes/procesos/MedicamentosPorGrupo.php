@@ -23,7 +23,7 @@ if (!isset($_SESSION["IdPersonal"])) {
 	
 	where farm_entregamedicamento.IdMedicina=" . $IdMedicina . "
 	and Existencia <> 0
-	and left(FechaVencimiento,7) >= left(curdate(),7)
+	and left(to_char(FechaVencimiento,'YYYY-MM.DD'),7) >= left(to_char(current_date,'YYYY-MM-DD'),7)
         and farm_entregamedicamento.IdEstablecimiento=$IdEstablecimiento
         and farm_entregamedicamento.IdModalidad=$IdModalidad
 	order by FechaVencimiento asc";
