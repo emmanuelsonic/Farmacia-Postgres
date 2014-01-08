@@ -46,8 +46,8 @@ class Actualizacion{
 				from farm_preciosxano
 				where IdMedicina='$IdMedicina'
 				and Ano='$Ano'";
-		$resp=mysql_query($query);
-		if($resp=mysql_fetch_array($resp)){
+		$resp=pg_query($query);
+		if($resp=pg_fetch_array($resp)){
 			$respuesta=true;
 		}else{
 			$respuesta=false;
@@ -59,13 +59,13 @@ class Actualizacion{
 	
 	function IntroducirPrecio($IdMedicina,$Precio,$Ano,$IdUsuarioReg){
 		$query="insert into farm_preciosxano(IdMedicina,Precio,Ano,IdUsuarioReg,FechaHoraReg,IdUsuarioMod,FechaHoraMod) values('$IdMedicina','$Precio','$Ano','$IdUsuarioReg',current_timestamp,'$IdUsuarioReg',current_timestamp)";
-		mysql_query($query);
+		pg_query($query);
 	}//Introducir PRecio
 	
 	
 	function ActualizarPrecio($IdMedicina,$Precio,$Ano,$IdUsuarioReg){
 		$query="update farm_preciosxano set Precio='$Precio',IdUsuarioMod='$IdUsuarioReg',FechaHoraMod=current_timestamp where IdMedicina='$IdMedicina' and Ano='$Ano'";
-		mysql_query($query);
+		pg_query($query);
 		
 	}//Actualizar el precio
 	
@@ -75,7 +75,7 @@ class Actualizacion{
 				inner join farm_unidadmedidas
 				on farm_catalogoproductos.IdUnidadMedida=farm_unidadmedidas.IdUnidadMedida
 				where IdMedicina=".$IdMedicina;
-		$resp=mysql_fetch_array(mysql_query($query));
+		$resp=pg_fetch_array(pg_query($query));
 		return($resp[0]);
 	}
 	

@@ -24,14 +24,14 @@ require('../../Clases/class.php');
 
 function generaSelect2(){ //creacioon de combo para las Regiones
 	conexion::conectar();
-	$consulta=mysql_query("select IdPersonal,Nombre 
+	$consulta=pg_query("select IdPersonal,Nombre 
 						from farm_usuarios
 						where nivel=4");
 	conexion::desconectar();
 	// Voy imprimiendo el primer select compuesto por los paises
 	echo "<select name='IdPersonal' id='IdPersonal'>";
 	echo "<option value='0'>[Seleccione ...]</option>";
-	while($registro=mysql_fetch_row($consulta)){
+	while($registro=pg_fetch_row($consulta)){
 		
 		echo "<option value='".$registro[0]."'>".$registro[1]."</option>";
 

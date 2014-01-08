@@ -13,7 +13,7 @@ case 1:
 	$i=0;
 
 $respTotales=$proceso->ObtenerExistenciaVirtual($IdArea);//Comprobar si ya hay datos en existenciavirtual
-if($r=mysql_fetch_array($respTotales)){	
+if($r=pg_fetch_array($respTotales)){	
 $respTotales=$proceso->ObtenerExistenciaVirtual($IdArea);
 }else{
 $respTotales=$proceso->ObtenerExistenciaTotal($IdArea);//PrimeraVez
@@ -23,7 +23,7 @@ $tbl='<table border="1">
 <tr><td colspan="5" align="center">PROCESO DE OBTENCION DE EXISTENCIAS</td></tr>
 <tr><td>IdMedicina</td><td>Total Existencia</td><td>Total Repetitiva</td><td>Total a Mostrar</td><td>Query</td></tr>';
 
-while($row=mysql_fetch_array($respTotales)){
+while($row=pg_fetch_array($respTotales)){
 $IdMedicina=$row["IdMedicina"];
 $SumaTotal=$row["Existencia"];
 $Repetitiva=$proceso->ObtenerRepetitivas($IdArea,$IdMedicina);//MedicamentoComprometido por recetas repetitivas
@@ -40,7 +40,7 @@ $tbl.="</td><td>".$query."</td></tr>";
 $query="update farm_existenciavirtual set Existencia='$TotalMostrar' where IdMedicina='$IdMedicina' and IdArea='$IdArea'";
 $tbl.="</td><td>".$query."</td></tr>";
 }
-mysql_query($query);
+pg_query($query);
 
 }//while 
 
@@ -60,7 +60,7 @@ $tbl='<table border="1">
 /*OBTENER EXISTENCIA VIRTUAL ACTUAL*/
 $respuesta=$proceso->ObtenerExistenciaVirtual($IdArea);
 
-while($row=mysql_fetch_array($respuesta)){
+while($row=pg_fetch_array($respuesta)){
 	$ExistenciaVirtual=$row["Existencia"];
 	$IdMedicina=$row["IdMedicina"];
  $MedicinaNoReclamada=$proceso->ObtencionMedicamentoNoReclamado($IdArea,$IdMedicina);
@@ -70,7 +70,7 @@ while($row=mysql_fetch_array($respuesta)){
  $query="update farm_existenciavirtual set Existencia='$NuevaExistencia' where IdMedicina='$IdMedicina' and IdArea='$IdArea'";
  
  $query2[$i]="update farm_recetas set IdEstado='Z' where IdReceta='".$MedicinaNoReclamada[2]."'";
- mysql_query($query);//aumenta la existencia con las no recalamadas
+ pg_query($query);//aumenta la existencia con las no recalamadas
  $i++;
  }else{
  $NuevaExistencia=$ExistenciaVirtual+0;
@@ -86,7 +86,7 @@ $tbl.='</table>';
 $cambios=count($query2);
 for($i=0;$i<$cambios;$i++){
 	echo $query2[$i];
-	mysql_query($query2[$i]);//actualiza la bandera de la no entregada con Z para no ser tomada en cuenta a la proxima vez
+	pg_query($query2[$i]);//actualiza la bandera de la no entregada con Z para no ser tomada en cuenta a la proxima vez
 }
 
 echo $tbl;

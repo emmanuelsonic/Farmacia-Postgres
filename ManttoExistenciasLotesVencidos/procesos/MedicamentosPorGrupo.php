@@ -21,7 +21,7 @@ function VerificaExitenciaLotes($IdMedicina,$IdArea){
 	and IdArea=$IdArea
 	order by FechaVencimiento asc";
 
-	$resp=mysql_query($SQL);
+	$resp=pg_query($SQL);
 	return($resp);
 }
 
@@ -29,7 +29,7 @@ function ObtenerArea($IdArea){
    $SQL="select Area
 	from mnt_areafarmacia
 	where IdArea=".$IdArea;
-	$resp=mysql_fetch_array(mysql_query($SQL));
+	$resp=pg_fetch_array(pg_query($SQL));
 	return($resp[0]);
 }
 
@@ -37,7 +37,7 @@ function ObtenerArea($IdArea){
 
 	function ValorDivisor($IdMedicina){
 	   $SQL="select DivisorMedicina from farm_divisores where IdMedicina=".$IdMedicina;
-	   $resp=mysql_query($SQL);
+	   $resp=pg_query($SQL);
 	   return($resp);
     	}
 
@@ -48,11 +48,11 @@ function ObtenerArea($IdArea){
 $IdTerapeutico=$_GET["IdTerapeutico"];
 $IdArea=$_GET["IdArea"];
 $selectGrupo="select * from mnt_grupoterapeutico where IdTerapeutico=".$IdTerapeutico;
-$Grupo=mysql_query($selectGrupo);
+$Grupo=pg_query($selectGrupo);
 
 $count=0;
 
-while($DataGrupo=mysql_fetch_array($Grupo)){
+while($DataGrupo=pg_fetch_array($Grupo)){
 	$NombreGrupo=$DataGrupo["GrupoTerapeutico"];
 	$IdTerapeutico=$DataGrupo["IdTerapeutico"];
 	
@@ -65,9 +65,9 @@ while($DataGrupo=mysql_fetch_array($Grupo)){
 	where farm_catalogoproductos.IdTerapeutico='".$IdTerapeutico."'
 	and cpe.Condicion='H'
 	and cpe.IdEstablecimiento=".$_SESSION["IdEstablecimiento"];
-	 $resp=mysql_query($querySelect);
+	 $resp=pg_query($querySelect);
 
-		if($Datos=mysql_fetch_array($resp)){
+		if($Datos=pg_fetch_array($resp)){
 ?>
  
 <tr class="MYTABLE"><td align="center" colspan="7">&nbsp;<strong><?php echo $NombreGrupo;?></strong></td></tr>
@@ -90,7 +90,7 @@ while($DataGrupo=mysql_fetch_array($Grupo)){
 			 $IdMedicina=$Datos["IdMedicina"];
 			 
 			 /*Unidad de Medida*/
-			$data2=mysql_fetch_array(mysql_query("select farm_unidadmedidas.Descripcion,
+			$data2=pg_fetch_array(pg_query("select farm_unidadmedidas.Descripcion,
 			farm_unidadmedidas.UnidadesContenidas as Divisor
 			from farm_unidadmedidas
 			inner join farm_catalogoproductos
@@ -100,7 +100,7 @@ while($DataGrupo=mysql_fetch_array($Grupo)){
 			$Divisor=$data2["Divisor"];
 			/**************************/
 	
-			$RespEx=mysql_query("select farm_medicinavencida.*,farm_lotes.*
+			$RespEx=pg_query("select farm_medicinavencida.*,farm_lotes.*
 			from farm_medicinavencida
 			inner join farm_catalogoproductos
 			on farm_catalogoproductos.IdMedicina=farm_medicinavencida.IdMedicina
@@ -111,7 +111,7 @@ while($DataGrupo=mysql_fetch_array($Grupo)){
 			order by farm_lotes.FechaVencimiento");
 			$i=0;
 			$Lote="";$existencia_="";$FechaVencimiento="";$Area="";
-					while($data=mysql_fetch_array($RespEx)){	
+					while($data=pg_fetch_array($RespEx)){	
 									
 						$existencia=$data["Existencia"];
 						$Area[$i]=ComboLotes::ObtenerArea($data["IdArea"]);
@@ -143,7 +143,7 @@ while($DataGrupo=mysql_fetch_array($Grupo)){
 	}else{$Fecha="";}
 	
 		$CantidadReal=$existencia_[$i];
-		if($respDivisor=mysql_fetch_array(ValorDivisor($IdMedicina))){
+		if($respDivisor=pg_fetch_array(ValorDivisor($IdMedicina))){
 		$Divisor=$respDivisor[0];
 
 		if($CantidadReal < 1){
@@ -193,14 +193,14 @@ while($DataGrupo=mysql_fetch_array($Grupo)){
 	Lote:</td><td>
 		<div id="<?php echo "ComboLotesMedicina".$IdMedicina;?>">
 		<?php $respLotesExiste=ComboLotes::VerificaExitenciaLotes($IdMedicina,$IdArea);
-		if($rowLotesExiste=mysql_fetch_array($respLotesExiste)){
+		if($rowLotesExiste=pg_fetch_array($respLotesExiste)){
 		   $disabled='disabled="true"';
 			echo "<select id='Lote".$IdMedicina."' name='Lote".$IdMedicina."' onchange='MostrarOpcionLote(this.value,this.id);'>";
 			
 			do{
 
 			echo "<option value='".$rowLotesExiste["Lote"]."'>Lote: ".$rowLotesExiste["Lote"]."</option>";
-			}while($rowLotesExiste=mysql_fetch_array($respLotesExiste));
+			}while($rowLotesExiste=pg_fetch_array($respLotesExiste));
 			echo "<option value='N'>NUEVO LOTE</option>
 				</select>";
 		}else{
@@ -253,10 +253,10 @@ $ano=$i;
   </tr>
  <?php 
 			
-		}while($Datos=mysql_fetch_array($resp));//while
+		}while($Datos=pg_fetch_array($resp));//while
 echo "<tr class='MYTABLE'><td colspan=\"7\" align=\"right\"><input type=\"submit\" name=\"guardar".$IdTerapeutico."\" value=\"Guardar\" style=\"border-bottom-color:#000099; border-left-color:#000099; border-top-color:#000099; border-right-color:#000099\"></tr></td>";
 
-	}//If mysql_fetch_array
+	}//If pg_fetch_array
 }//while Teraputico
  
 conexion::desconectar();

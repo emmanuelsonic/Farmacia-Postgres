@@ -141,9 +141,9 @@ $querySelect=" select distinct farm_catalogoproductos.IdMedicina,farm_catalogopr
                         and farm_medicinaexistenciaxarea.IdEstablecimiento=".$_SESSION["IdEstablecimiento"]."
                         and farm_medicinaexistenciaxarea.IdModalidad=$IdModalidad
 			order by farm_lotes.FechaVencimiento";
-$resp=mysql_query($querySelect);
+$resp=pg_query($querySelect);
 $Info='';
-while($Datos=mysql_fetch_array($resp)){
+while($Datos=pg_fetch_array($resp)){
 $Existencia=$Datos["Existencia"];
 	if($Existencia!= '' and $Existencia!='0' and $Existencia!=NULL){
 	
@@ -158,7 +158,7 @@ $Existencia=$Datos["Existencia"];
 $EliminarExistencia="<u><a style='cursor:hand;' onclick='EliminarMedicamentoExistencia(".$Datos["IdMedicina"].",".$Datos["IdExistencia"].",".$Datos["IdLote"].",".$area.")'>X</a></u>";
 
 
-if($respDivisor=mysql_fetch_array(ValorDivisor($Datos["IdMedicina"],$_SESSION["IdEstablecimiento"],$IdModalidad))){
+if($respDivisor=pg_fetch_array(ValorDivisor($Datos["IdMedicina"],$_SESSION["IdEstablecimiento"],$IdModalidad))){
 		$Divisor=$respDivisor[0];
 
 		if($Datos["Existencia"] < 1){
@@ -217,12 +217,12 @@ conexion::conectar();
 				where farm_lotes.IdLote=".$IdLote."
                                 and farm_entregamedicamento.IdEstablecimiento=".$_SESSION["IdEstablecimiento"]." 
                                 and farm_entregamedicamento.IdModalidad=$IdModalidad";
-	$Datos=mysql_fetch_array(mysql_query($querySelect));
+	$Datos=pg_fetch_array(pg_query($querySelect));
 	if($Datos["Existencia"]!='' and $Datos["Existencia"]!=NULL){
 		$Divisor=$Datos["UnidadesContenidas"];
 		$Descripcion=$Datos["Descripcion"];
 
-	if($respDivisor=mysql_fetch_array(ValorDivisor($Datos["IdMedicina"],$_SESSION["IdEstablecimiento"],$IdModalidad))){
+	if($respDivisor=pg_fetch_array(ValorDivisor($Datos["IdMedicina"],$_SESSION["IdEstablecimiento"],$IdModalidad))){
 		$Divisor=$respDivisor[0];
 
 		if($Datos["Existencia"] < 1){

@@ -13,7 +13,7 @@ $IdArea = $_GET["IdArea"];
 $Fecha = $_GET["Fecha"];
 $IdPersonal = $_SESSION["IdPersonal"];
 
-//mysql_query("update farm_recetas set IdEstado='TT' where IdReceta='$IdReceta' and IdPersonalIntro='$IdPersonal'");
+//pg_query("update farm_recetas set IdEstado='TT' where IdReceta='$IdReceta' and IdPersonalIntro='$IdPersonal'");
 /** VALORES PARA AJAX* */
 //**********************************************************************
 if ($Lista == 1) {
@@ -21,7 +21,7 @@ if ($Lista == 1) {
       y la bandera de la receta pasa a Lista (L) */
     $resp = $query2->MedicinaReceta($IdReceta);
 
-    while ($row = mysql_fetch_array($resp)) {
+    while ($row = pg_fetch_array($resp)) {
         $IdMedicina = $row["IdMedicina"];
         $IdReceta = $row["IdReceta"];
         $satisfecha = $row["IdEstado"];
@@ -41,14 +41,14 @@ if ($Lista == 1) {
 							and farm_medicinaexistenciaxarea.IdArea='$IdArea'
 							order by farm_lotes.FechaVencimiento asc
 							LIMIT 1";
-            $resp1 = mysql_fetch_array(mysql_query($querySelect));
+            $resp1 = pg_fetch_array(pg_query($querySelect));
             $Lote = $resp1["Lote"];    //Lote
             $Existencia = $resp1["Existencia"];  // Existencia en Lote
 
             $querySelectCantidad = "select farm_medicinarecetada.Cantidad
 									from farm_medicinarecetada
 									where farm_medicinarecetada.IdReceta='$IdReceta' and farm_medicinarecetada.IdMedicina='$IdMedicina'";
-            $resp2 = mysql_fetch_array(mysql_query($querySelectCantidad));
+            $resp2 = pg_fetch_array(pg_query($querySelectCantidad));
             $Cantidad = $resp2["Cantidad"]; //Cantidad medicada
 
             $Resta = $Existencia - $Cantidad; //Verificacion si hay o no existencias para la dosiss
@@ -58,8 +58,8 @@ if ($Lista == 1) {
                 /* En dado caso el lote supla correctamente la cantidad */
                 $queryUpdate = "update farm_medicinarecetada set CantidadLote1='$Cantidad',Lote1='$Lote' where IdReceta='$IdReceta' and IdMedicina='$IdMedicina'";
                 $queryUpdate2 = "update farm_medicinarecetada set CantidadLote2='0',Lote2='0' where IdReceta='$IdReceta' and IdMedicina='$IdMedicina'";
-                mysql_query($queryUpdate);
-                mysql_query($queryUpdate2);
+                pg_query($queryUpdate);
+                pg_query($queryUpdate2);
             } elseif ($Resta < 0) {
                 /* En dado caso el lote suple un parte del tratamiento */
                 $querySelect = "select farm_medicinaexistenciaxarea.Existencia,farm_lotes.IdLote as Lote, farm_lotes.FechaVencimiento
@@ -71,7 +71,7 @@ if ($Lista == 1) {
 			and farm_medicinaexistenciaxarea.IdArea='$IdArea'
 			order by farm_lotes.FechaVencimiento desc
 			LIMIT 1";
-                if ($resp3 = mysql_fetch_array(mysql_query($querySelect))) {
+                if ($resp3 = pg_fetch_array(pg_query($querySelect))) {
                     $Lote2 = $resp3["Lote"]; // segundo lote en farmacia
 
                     if ($Lote2 != $Lote) {
@@ -80,17 +80,17 @@ if ($Lista == 1) {
                         $queryUpdate = "update farm_medicinarecetada set CantidadLote1='$Cantidad_',Lote1='$Lote' where IdReceta='$IdReceta' and IdMedicina='$IdMedicina'";
 
                         $queryUpdate2 = "update farm_medicinarecetada set CantidadLote2='$Faltante',Lote2='$Lote2' where IdReceta='$IdReceta' and IdMedicina='$IdMedicina'";
-                        mysql_query($queryUpdate);
-                        mysql_query($queryUpdate2);
+                        pg_query($queryUpdate);
+                        pg_query($queryUpdate2);
                     } else {//Diferencia de lotes
                         /* Si no existe otro lote en dado casa farmacia no fue abastecida */
                         $queryUpdate = "update farm_medicinarecetada set CantidadLote1='$Cantidad',Lote1='$Lote' where IdReceta='$IdReceta' and IdMedicina='$IdMedicina'";
-                        mysql_query($queryUpdate);
+                        pg_query($queryUpdate);
                     }//else
                 } else {
                     /* SI NO EXITE LOTE ALGUNO */
                     $queryUpdate = "update farm_medicinarecetada set CantidadLote1='$Cantidad',Lote1='0' where IdReceta='$IdReceta' and IdMedicina='$IdMedicina'";
-                    mysql_query($queryUpdate);
+                    pg_query($queryUpdate);
                 }
             }//ElseIf
 

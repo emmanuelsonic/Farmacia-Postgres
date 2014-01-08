@@ -126,7 +126,7 @@ case 2:
 	<td width="158" align="center"><strong>Estado de Entrega</strong></td>
 	<td width="158" align="center"><strong>Eliminar</strong></td>
 	</tr>';
-	while($row=mysql_fetch_array($resp)){
+	while($row=pg_fetch_array($resp)){
 		$disabled='';
 	   if($row['IdMedicina']!=$IdMedicinaOrigen and $IdMedicinaOrigen!=0){$disabled='disabled="disabled"';}
 		
@@ -136,7 +136,7 @@ case 2:
 		   $comboEstado="<input type='checkbox' id='Estado' name='Estado' onclick='CambioEstadoDetalle(".$row["IdMedicinaRecetada"].",\"S\",".$row["IdReceta"].",".$IdMedicinaOrigen.");' ".$disabled."><div id='".$row["IdMedicinaRecetada"]."'></div>";
 		}
 		
-	if($respDivisor=mysql_fetch_array($proceso->ValorDivisor($row["IdMedicina"],$IdEstablecimiento,$IdModalidad))){
+	if($respDivisor=pg_fetch_array($proceso->ValorDivisor($row["IdMedicina"],$IdEstablecimiento,$IdModalidad))){
 		$Divisor=$respDivisor[0];
 
 		if($row["Cantidad"] < 1){
@@ -214,14 +214,14 @@ $tabla='<table width="744">
 		<td width="275" align="center"><strong>Insatisfecha</strong></td>
 		<td width="275" align="center"><strong>Eliminar</strong></td>
 		</tr>';
-	while($row=mysql_fetch_array($resp)){
+	while($row=pg_fetch_array($resp)){
 	if($row["IdEstado"]=='I'){
 		$check='<input id="Insa'.$row["IdMedicinaRecetada"].'" name="Insa'.$row["IdMedicinaRecetada"].'" type="checkbox" value="I" onclick="javascript:CambioEstado('.$row["IdMedicinaRecetada"].','.$row["IdMedicina"].')" checked="checked">';
 	}else{
 		$check='<input id="Insa'.$row["IdMedicinaRecetada"].'" name="Insa'.$row["IdMedicinaRecetada"].'" type="checkbox" value="I" onclick="javascript:CambioEstado('.$row["IdMedicinaRecetada"].','.$row["IdMedicina"].')">';
 	}
 	
-if($respDivisor=mysql_fetch_array($proceso->ValorDivisor($row["IdMedicina"])) and $_SESSION["TipoFarmacia"]==1){
+if($respDivisor=pg_fetch_array($proceso->ValorDivisor($row["IdMedicina"])) and $_SESSION["TipoFarmacia"]==1){
 		$Divisor=$respDivisor[0];
 
 		if($row["Cantidad"] < 1){
@@ -277,7 +277,7 @@ case 8:
 	$IdReceta=$_GET["IdReceta"];
 	$Cantidad=$_GET["Cantidad"];
 
-		if($row=mysql_fetch_array($proceso->ValorDivisor($IdMedicina,$IdEstablecimiento,$IdModalidad))){
+		if($row=pg_fetch_array($proceso->ValorDivisor($IdMedicina,$IdEstablecimiento,$IdModalidad))){
 		   $Cantidad=$Cantidad/$row[0];
 		}	
 
@@ -328,7 +328,7 @@ case 13:
 			on s.IdServicio=msxe.IdServicio
 			where mssxe.CodigoFarmacia='$Codigo'";
 
-		$resp=mysql_fetch_array(mysql_query($query));
+		$resp=pg_fetch_array(pg_query($query));
 		if($resp["Ubicacion"]!=NULL and $resp["Ubicacion"]!=""){$Ubicacion=$resp["Ubicacion"]." -> ";}else{$Ubicacion="";}
 			$NombreSubEspecialidad=$Ubicacion."".$resp["NombreSubServicio"];
 		
@@ -387,7 +387,7 @@ case 15:
 			<select id='IdArea2' name='IdArea2' onChange='PegarIdArea(this.value);'>
 			<option value='0'>[Seleccione ...]</option>";
 			$resp=$proceso->ObtenerArea();
-			while($row=mysql_fetch_array($resp)){
+			while($row=pg_fetch_array($resp)){
 				$Tools.="<option value='".$row[0]."'>".$row[1]."</option>";
 			}			
 			$Tools.="</select>

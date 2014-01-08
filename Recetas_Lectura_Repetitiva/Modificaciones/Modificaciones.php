@@ -16,7 +16,7 @@ conexion::conectar();
 			and farm_medicinarecetada.IdMedicina=$IdMedicina";
 
 
-	$resp=mysql_fetch_array(mysql_query($query));
+	$resp=pg_fetch_array(pg_query($query));
 conexion::desconectar();
 	$Cantidad=$resp["Cantidad"];
 	$Nombre=$resp["Nombre"];

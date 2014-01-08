@@ -36,7 +36,7 @@ if (!isset($_SESSION["nivel"])) {
         $IdFarmacia = $_GET["IdFarmacia"];
 
         if ($IdFarmacia != '0') {
-            $t = mysql_fetch_array(mysql_query("select Farmacia from mnt_farmacia where IdFarmacia=" . $IdFarmacia));
+            $t = pg_fetch_array(pg_query("select Farmacia from mnt_farmacia where IdFarmacia=" . $IdFarmacia));
             $Farmacia = "Farmacia: <strong>" . $t[0] . "</strong><br>";
         } else {
             $Farmacia = "Farmacia: <strong>GENERAL</strong> <br>";
@@ -96,7 +96,7 @@ if (!isset($_SESSION["nivel"])) {
 
 
         $nombreTera = NombreTera($IdGrupoTerapeutico, $FechaInicio, $FechaFin, $IdFarmacia, $IdEstablecimiento, $IdModalidad);
-        if ($grupos = mysql_fetch_array($nombreTera)) {
+        if ($grupos = pg_fetch_array($nombreTera)) {
             do {
                 $NombreTerapeutico = $grupos["GrupoTerapeutico"];
                 $IdTerapeutico = $grupos["IdTerapeutico"];
@@ -125,7 +125,7 @@ if (!isset($_SESSION["nivel"])) {
 			</tr>';
 
                 $resp1 = QueryExterna($IdTerapeutico, $IdMedicina, $FechaInicio, $FechaFin, $IdFarmacia, $IdEstablecimiento, $IdModalidad);
-                while ($row = mysql_fetch_array($resp1)) {
+                while ($row = pg_fetch_array($resp1)) {
                     $GrupoTerapeutico = $IdTerapeutico;
                     $Medicina = $row["IdMedicina"];
                     $codigoMedicina = $row["Codigo"];
@@ -139,7 +139,7 @@ if (!isset($_SESSION["nivel"])) {
 
                     $respuesta = ObtenerReporteGrupoTerapeutico($IdTerapeutico, $Medicina, $FechaInicio, $FechaFin, $IdEstablecimiento, $IdModalidad);
 
-                    if ($row2 = mysql_fetch_array($respuesta)) { /* verificacion de datos */
+                    if ($row2 = pg_fetch_array($respuesta)) { /* verificacion de datos */
                         $precioActual = 0;
 
                         //$IdReceta=$row2["IdReceta"];
@@ -167,14 +167,14 @@ if (!isset($_SESSION["nivel"])) {
 
                         $respSum = SumatoriaMedicamento($Medicina, $FechaInicio, $FechaFin, $IdFarmacia, $IdEstablecimiento, $IdModalidad);
 
-                        if ($rowSum = mysql_fetch_array($respSum)) {
+                        if ($rowSum = pg_fetch_array($respSum)) {
                             $CantidadReal = 0;
                             $Monto = 0;
                             $Lotes = "";
                             do {
                                 $CantidadReal+=$rowSum["TotalMedicamento"];
 
-                                if ($respDivisor = mysql_fetch_array(ValorDivisor($Medicina, $IdEstablecimiento, $IdModalidad))) {
+                                if ($respDivisor = pg_fetch_array(ValorDivisor($Medicina, $IdEstablecimiento, $IdModalidad))) {
                                     $Divisor = $respDivisor[0];
 
                                     if ($CantidadReal < 1) {
@@ -213,7 +213,7 @@ if (!isset($_SESSION["nivel"])) {
 
                                 $Monto+=$rowSum["Costo"];
                                 $Lotes.=" Lote: " . $rowSum["Lote"] . "<br> $" . $rowSum["PrecioLote"] . "<br><br>";
-                            } while ($rowSum = mysql_fetch_array($respSum));
+                            } while ($rowSum = pg_fetch_array($respSum));
                         }
 
 
@@ -227,7 +227,7 @@ if (!isset($_SESSION["nivel"])) {
                         $SubTotalInsat+=$insat;
                         $SubTotalConsu+=$CantidadReal;
 
-                        if ($respDivisor = mysql_fetch_array(ValorDivisor($Medicina, $IdEstablecimiento, $IdModalidad))) {
+                        if ($respDivisor = pg_fetch_array(ValorDivisor($Medicina, $IdEstablecimiento, $IdModalidad))) {
                             $Divisor = $respDivisor[0];
 
                             $CantidadReal = number_format($CantidadReal, 3, '.', '');
@@ -298,7 +298,7 @@ if (!isset($_SESSION["nivel"])) {
                 $TotalInsat+=$SubTotalInsat;
                 $TotalConsumo+=$SubTotalConsu;
                 $SubTotalServicio+=$SubTotal;
-            } while ($grupos = mysql_fetch_array($nombreTera)); //while de nombreTera
+            } while ($grupos = pg_fetch_array($nombreTera)); //while de nombreTera
 
 
 

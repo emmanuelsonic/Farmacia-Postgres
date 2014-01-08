@@ -28,10 +28,10 @@ if($IdFarmacia2!=0){?>
 
 function ComboTerapeutico(){
     $SQL="select * from mnt_grupoterapeutico where GrupoTerapeutico <>'--'";
-    $resp=mysql_query($SQL);
+    $resp=pg_query($SQL);
 	$combo="<select Id='Terapeutico' name='Terapeutico' onchange='MedicamentoPorGrupo(this.value);'>
 		<option value='0'>[SELECCIONE UN GRUPO TERAPEUTICO]</option>";
-	while($row=mysql_fetch_array($resp)){
+	while($row=pg_fetch_array($resp)){
 	   $combo.="<option value='".$row["IdTerapeutico"]."'>".$row["IdTerapeutico"].' - '.$row["GrupoTerapeutico"]."</option>";
 	}
 	$combo.="</select>";
@@ -41,10 +41,10 @@ function ComboTerapeutico(){
 }
 function ComboAreas(){
     $SQL="select * from mnt_areafarmacia where Habilitado='S' and IdArea <> 7";
-    $resp=mysql_query($SQL);
+    $resp=pg_query($SQL);
 	$combo="<select Id='IdArea' name='IdArea' onchange='ActualizarLista(this.value);'>
 		<option value='0'>[SELECCIONE UNA AREA]</option>";
-	while($row=mysql_fetch_array($resp)){
+	while($row=pg_fetch_array($resp)){
 	   $combo.="<option value='".$row["IdArea"]."'>".$row["Area"]."</option>";
 	}
 	$combo.="</select>";

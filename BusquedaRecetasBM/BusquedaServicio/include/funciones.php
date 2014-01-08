@@ -6,9 +6,9 @@ function sql_quote( $value )
           $value = stripslashes( $value );
     }
     //check if this function exists 
-    if( function_exists( "mysql_real_escape_string" ) )
+    if( function_exists( "pg_real_escape_string" ) )
     {
-          $value = mysql_real_escape_string( $value );
+          $value = pg_real_escape_string( $value );
     }
     //for PHP version < 4.3.0 use addslashes 
     else

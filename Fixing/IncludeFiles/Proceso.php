@@ -15,7 +15,7 @@ switch ($_GET["Bandera"]) {
 
         $result = $puntero->ErroresDespacho($IdFarmacia, $FechaInicial);
 
-        if ($row = mysql_fetch_array($result)) {
+        if ($row = pg_fetch_array($result)) {
             if ($row["Valido"] == 'NO') {
 
                 $tabla = "<table>
@@ -51,7 +51,7 @@ switch ($_GET["Bandera"]) {
                     </tr>
                     <tr><td colspan='8' align='center'><span id='detalles" . $row["IdMedicinaRecetada"] . "'></span></td></tr>";
                     }
-                } while ($row = mysql_fetch_array($result));
+                } while ($row = pg_fetch_array($result));
 
                 $tabla.="</table>";
             } else {

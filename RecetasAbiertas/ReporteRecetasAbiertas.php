@@ -56,7 +56,7 @@ if (!isset($_SESSION["nivel"])) {
 
                 $resp = $puntero->ListadoRecetasAbiertas($Periodo,$IdEstablecimiento,$IdModalidad);
 
-                if ($row = mysql_fetch_array($resp)) {
+                if ($row = pg_fetch_array($resp)) {
                     do {
                         $reporte.="<tr>
                         <td align=center>" . $row["CorrelativoAnual"] . "</td>
@@ -68,7 +68,7 @@ if (!isset($_SESSION["nivel"])) {
                             <input type='button' id='Fin" . $row["IdReceta"] . "' name='Fin' value='Finalizar' onclick='Finalizar(" . $row["IdReceta"] . ",\"" . $row["CorrelativoAnual"] . "\");'/> 
                         </td>
                         </tr>";
-                    } while ($row = mysql_fetch_array($resp));
+                    } while ($row = pg_fetch_array($resp));
                 }else{
                     $reporte.="<tr><td colspan=5 align=center>NO HAY RECETAS ABIERTAS EN ESTE PERIODO</td></tr>";
                 }

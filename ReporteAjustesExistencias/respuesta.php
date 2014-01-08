@@ -25,8 +25,8 @@ and Condicion='H'
 and IdEstablecimiento=".$_SESSION["IdEstablecimiento"]."
 and IdArea = ".$IdArea."
 and IdTerapeutico is not null";
-	$resp=mysql_query($querySelect);
-while($row=mysql_fetch_array($resp)){
+	$resp=pg_query($querySelect);
+while($row=pg_fetch_array($resp)){
 	$Nombre=$row["Nombre"]." - ".$row["Concentracion"]." - ".$row["FormaFarmaceutica"]." - ".$row["Presentacion"];
 	$IdMedicina=$row["IdMedicina"];
 	$Descripcion="[".$row["Descripcion"]."]";

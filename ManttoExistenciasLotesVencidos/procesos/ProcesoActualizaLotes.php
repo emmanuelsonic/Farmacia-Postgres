@@ -6,16 +6,16 @@ function ActualizaDatosLotes($Lote,$PrecioLote,$Vencimiento,$LoteOld){
 		if($Lote!=''){
 			$Lote=strtoupper($Lote);
 			$queryUpdate="update farm_lotes set Lote='$Lote' where IdLote='$LoteOld'";
-			mysql_query($queryUpdate);
+			pg_query($queryUpdate);
 		}
 		if($PrecioLote!=0){
 			$queryUpdate="update farm_lotes set PrecioLote='$PrecioLote' where IdLote='$LoteOld'";
-			mysql_query($queryUpdate);
+			pg_query($queryUpdate);
 		}
 		
 		if($Vencimiento!='Ventto.'){
 			$queryUpdate="update farm_lotes set FechaVencimiento='$Vencimiento' where IdLote='$LoteOld'";
-			mysql_query($queryUpdate);
+			pg_query($queryUpdate);
 		}
 		
 }//funcion ActualizaDatosLotes
@@ -23,20 +23,20 @@ function ActualizaDatosLotes($Lote,$PrecioLote,$Vencimiento,$LoteOld){
 
 function ExisteLote($Lote){
    $SQL="select * from farm_lotes where Lote = '$Lote'";
-   $resp=mysql_query($SQL);
+   $resp=pg_query($SQL);
    return($resp);
 }
 
 function FechaVencimiento($LoteOld,$FechaVencimiento){
 
    $SQL1="select concat_ws('-',year(curdate()),month(curdate()),'25') as X";
-	$t=mysql_fetch_array(mysql_query($SQL1));
+	$t=pg_fetch_array(pg_query($SQL1));
  	$FechaVencimientoActual=$t[0];
    
      // $SQL="select if(datediff('$FechaVencimiento','$FechaVencimientoActual') < 0, 'N' ,'S') as Ok";
       $SQL2="select if(datediff('$FechaVencimiento','$FechaVencimientoActual') < 0,'N','S') as X";
-     // $resp=mysql_fetch_array(mysql_query($SQL));
-      $resp2=mysql_fetch_array(mysql_query($SQL2));
+     // $resp=pg_fetch_array(pg_query($SQL));
+      $resp2=pg_fetch_array(pg_query($SQL2));
 	 //$tx[0]=$resp[0];
 	 $tx=$resp2["X"];
       return($tx);
@@ -54,7 +54,7 @@ $Existe=ExisteLote($Lote);
 $FechaMenor=FechaVencimiento($LoteOld,$FechaVencimiento);
 $ok=true; $ok2=true; $ok3=true;
 
-if($row=mysql_fetch_array($Existe)){
+if($row=pg_fetch_array($Existe)){
    $salida= "NO~El lote introducido ya existe! \n Verifique el codigo del Lote!";
 	$ok=false;
 }

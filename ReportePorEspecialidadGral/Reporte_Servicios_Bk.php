@@ -179,7 +179,7 @@ $reporte='<table width="968" border="1">';
 //*************************************
 //******************************* QUERIES Y RECORRIDOS
 $respServicios=Servicios($IdSubEspecialidad,$FechaInicio,$FechaFin);
-while($rowServicios=mysql_fetch_array($respServicios)){
+while($rowServicios=pg_fetch_array($respServicios)){
 	$TotalEspecialidad=0;
 			        $TotalRecetas=0;
 					$TotalSatis=0;
@@ -205,7 +205,7 @@ PERIODO DEL: '.$FechaInicio2.' AL '.$FechaFin2.' .- </td></tr>
 
 	 
 	$nombreTera=NombreTera($IdGrupoTerapeutico,$IdSubEspecialidad,$FechaInicio,$FechaFin);
-	if($grupos=mysql_fetch_array($nombreTera)){
+	if($grupos=pg_fetch_array($nombreTera)){
 		do {$NombreTerapeutico=$grupos["GrupoTerapeutico"];
 		$IdTerapeutico=$grupos["IdTerapeutico"];
 			$SubTotal=0;
@@ -233,7 +233,7 @@ PERIODO DEL: '.$FechaInicio2.' AL '.$FechaFin2.' .- </td></tr>
 			</tr>';
 			
 		$resp1=QueryExterna($IdTerapeutico,$IdMedicina,$IdSubEspecialidad,$FechaInicio,$FechaFin);
-			while($row=mysql_fetch_array($resp1)){
+			while($row=pg_fetch_array($resp1)){
 		$GrupoTerapeutico=$IdTerapeutico;
 		$Medicina=$row["IdMedicina"];
 		$codigoMedicina=$row["Codigo"];
@@ -247,7 +247,7 @@ PERIODO DEL: '.$FechaInicio2.' AL '.$FechaFin2.' .- </td></tr>
 		
 		$respuesta=ObtenerReporteGrupoTerapeutico($IdTerapeutico,$Medicina,$FechaInicio,$FechaFin,$IdSubEspecialidad);
 			
-		    if($row2=mysql_fetch_array($respuesta)){ /* verificacion de datos */
+		    if($row2=pg_fetch_array($respuesta)){ /* verificacion de datos */
 		        $precioActual=0;
 		        
 
@@ -313,7 +313,7 @@ PERIODO DEL: '.$FechaInicio2.' AL '.$FechaFin2.' .- </td></tr>
 		  
 		
 		
-	}while($grupos=mysql_fetch_array($nombreTera));//Do-while de nombreTera
+	}while($grupos=pg_fetch_array($nombreTera));//Do-while de nombreTera
 	}else{
 	//SI NO HAY MEDICAMENTO DE ESA ESPECIALIDAD A MOSTRAR
 				/*$reporte.='<tr class="FONDO2" style="background:#CCCCCC;">

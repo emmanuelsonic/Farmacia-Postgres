@@ -17,7 +17,7 @@ function ObtenerMedicinaInformacion($IdMedicina,$Lote,$IdEstablecimiento){
                                 and IdEstablecimiento=$IdEstablecimiento
 				and left(FechaVencimiento,7) > left(curdate(),7)
 				and farm_lotes.Lote='$Lote'";
-	$resp=mysql_fetch_array(mysql_query($querySelect));
+	$resp=pg_fetch_array(pg_query($querySelect));
 	return($resp);
 }//ObtenerMedicinaInformacion
 

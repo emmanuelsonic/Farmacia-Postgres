@@ -113,7 +113,7 @@ if (!isset($_SESSION["nivel"])) {
                                 <?php
                                 conexion::conectar();
                                 if ($_SESSION["TipoFarmacia"] == 2) {
-                                    $resp = mysql_query("select distinct * 
+                                    $resp = pg_query("select distinct * 
                                                         from mnt_farmacia mf
                                                          inner join mnt_farmaciaxestablecimiento mfxe
                                                          on mfxe.IdFarmacia = mf.IdFarmacia
@@ -122,7 +122,7 @@ if (!isset($_SESSION["nivel"])) {
                                                          and mfxe.IdModalidad=$IdModalidad
                                                          ");
                                 } else {
-                                    $resp = mysql_query("select * 
+                                    $resp = pg_query("select * 
                                                          from mnt_farmacia mf
                                                          inner join mnt_farmaciaxestablecimiento mfxe
                                                          on mfxe.IdFarmacia = mf.IdFarmacia                                                         
@@ -132,7 +132,7 @@ if (!isset($_SESSION["nivel"])) {
                                                          ");
                                 }
                                 conexion::desconectar();
-                                while ($row = mysql_fetch_array($resp)) {
+                                while ($row = pg_fetch_array($resp)) {
                                     ?>
                                     <option value="<?php echo $row[0]; ?>"><?php echo $row[1]; ?></option>
         <?php

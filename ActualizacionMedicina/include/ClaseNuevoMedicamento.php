@@ -6,11 +6,11 @@ class NuevoMedicamento{
 	}
 	function ActualizarGrupo($IdGrupo,$IdMedicina){
 		$query="update farm_catalogoproductos set idterapeutico='$IdGrupo' where id='$IdMedicina'";
-		mysql_query($query);
+		pg_query($query);
 	}
 	function ActualizarUnidadMedida($IdUnidadMedida,$IdMedicina){
 		$query="update farm_catalogoproductos set idunidadmedida='$IdUnidadMedida' where id='$IdMedicina'";
-		mysql_query($query);
+		pg_query($query);
 	}
 
 }//Fin de Clase

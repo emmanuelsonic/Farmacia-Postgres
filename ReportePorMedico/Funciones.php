@@ -16,7 +16,7 @@ function GrupoTerapeutico($IdMedicina,$IdEstablecimiento,$IdModalidad){
 			".$inner."
 			where GrupoTerapeutico <>'--'
 			".$where;
-	$resp=mysql_query($query);
+	$resp=pg_query($query);
 	return($resp);
 }
 
@@ -82,7 +82,7 @@ function ObtenerReporteEspecialidades($GrupoTerapeutico,$IdMedicina,$FechaInicio
                         and sec_historial_clinico.IdEstablecimiento=$IdEstablecimiento
                         and sec_historial_clinico.IdModalidad=$IdModalidad
 			order by fcp.Codigo";
-	$resp=mysql_query($query);
+	$resp=pg_query($query);
 	return($resp);
 }
 
@@ -113,7 +113,7 @@ function ObtenerTotalRecetas($IdMedicina,$IdArea,$IdSubEspecialidad,$IdMedico,$F
 			".$Complemento1."
 			".$Complemento2;
 			
-	$resp=mysql_fetch_array(mysql_query($query));
+	$resp=pg_fetch_array(pg_query($query));
 	return($resp[0]);
 }
 
@@ -151,7 +151,7 @@ function ObtenerRecetasSatisfechas($IdMedicina,$FechaInicio,$FechaFin,$IdArea,$I
                         and farm_medicinarecetada.IdEstablecimiento=$IdEstablecimiento
                         and farm_medicinarecetada.IdModalidad=$IdModalidad
                         ";
-	$resp=mysql_fetch_array(mysql_query($query));
+	$resp=pg_fetch_array(pg_query($query));
 	return($resp[0]);
 }
 
@@ -189,7 +189,7 @@ function ObtenerRecetasInsatisfechas($IdMedicina,$FechaInicio,$FechaFin,$IdArea,
                         and farm_medicinarecetada.IdEstablecimiento=$IdEstablecimiento
                         and farm_medicinarecetada.IdModalidad=$IdModalidad
                         ";
-	$resp=mysql_fetch_array(mysql_query($query));
+	$resp=pg_fetch_array(pg_query($query));
 	return($resp[0]);
 }
 
@@ -240,7 +240,7 @@ function SumatoriaMedicamento($IdMedicina,$IdArea,$IdMedico,$IdSubEspecialidad,$
                         and l.IdEstablecimiento=$IdEstablecimiento
                         and l.IdModalidad=$IdModalidad
 			group by md.IdLote";
-	$resp=mysql_query($querySelect);
+	$resp=pg_query($querySelect);
 	return($resp);
 }
 
@@ -249,7 +249,7 @@ function ObtenerPrecioMedicina($IdMedicina,$Ano){
 				from farm_preciosxano
 				where IdMedicina='$IdMedicina'
 				and Ano	='$Ano'";
-		$resp=mysql_fetch_array(mysql_query($query));
+		$resp=pg_fetch_array(pg_query($query));
 		if($resp[0]!=NULL){$Respuesta=$resp[0];}else{$Respuesta=0;}
 		return($Respuesta);
 }
@@ -257,7 +257,7 @@ function ObtenerPrecioMedicina($IdMedicina,$Ano){
 
 	function ValorDivisor($IdMedicina){
 	   $SQL="select DivisorMedicina from farm_divisores where IdMedicina=".$IdMedicina;
-	   $resp=mysql_query($SQL);
+	   $resp=pg_query($SQL);
 	   return($resp);
     	}
 

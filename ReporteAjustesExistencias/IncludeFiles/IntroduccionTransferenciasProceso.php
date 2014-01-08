@@ -44,7 +44,7 @@ if (!isset($_SESSION["nivel"])) {
 
             $tabla = '<table width="940" border="1">
 		<tr class="FONDO"><td colspan="8" align="center"><strong>AJUSTE(S) REALIZADO(S)</strong></td></tr>';
-            if ($rowPersonal = mysql_fetch_array($respPersonal)) {
+            if ($rowPersonal = pg_fetch_array($respPersonal)) {
 
                 do {
 
@@ -68,7 +68,7 @@ if (!isset($_SESSION["nivel"])) {
 
 
                     /* TABLA DE TRANSFERENCIAS */
-                    if ($row = mysql_fetch_array($resp)) {
+                    if ($row = pg_fetch_array($resp)) {
 
                         do {
                             /* OBTENCION DE DETALLE DE TRANSFERENCIA POR LOTE */
@@ -86,7 +86,7 @@ if (!isset($_SESSION["nivel"])) {
                             $Divisor = $proceso->UnidadesContenidas($row["IdMedicina"], $IdEstablecimiento, $IdModalidad);
 
                             $TotalExistencia = $row["Cantidad"];
-                            if ($respDivisor = mysql_fetch_array($proceso->ValorDivisor($row["IdMedicina"], $IdEstablecimiento, $IdModalidad))) {
+                            if ($respDivisor = pg_fetch_array($proceso->ValorDivisor($row["IdMedicina"], $IdEstablecimiento, $IdModalidad))) {
                                 $Divisor = $respDivisor[0];
 
                                 if ($TotalExistencia < 1) {
@@ -136,9 +136,9 @@ if (!isset($_SESSION["nivel"])) {
                                 <td align="left"    style="vertical-align: middle;">' . htmlentities($row["Justificacion"]) . '</td>
                                 <td align="center"  style="vertical-align: middle;">' . $FechaAjuste . '</td>
                                </tr>';
-                        } while ($row = mysql_fetch_array($resp)); //while resp
+                        } while ($row = pg_fetch_array($resp)); //while resp
                     }
-                } while ($rowPersonal = mysql_fetch_array($respPersonal));
+                } while ($rowPersonal = pg_fetch_array($respPersonal));
             } else {
                 $tabla.="<tr class='FONDO'><td colspan='8' align='center'>NO HAY DATOS INGRESADOS PARA LOS PARAMETROS SELECCIONADOS!</td></td>";
             }

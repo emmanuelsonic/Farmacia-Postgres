@@ -22,12 +22,12 @@ if (!isset($_SESSION["nivel"])) {
         function generaSelect() { //creacioon de combo para las Regiones
             $conexion = new conexion;
             $conexion->conectar();
-            $consulta = mysql_query("select * from mnt_grupoterapeutico");
+            $consulta = pg_query("select * from mnt_grupoterapeutico");
             $conexion->desconectar();
             // Voy imprimiendo el primer select compuesto por los paises
             echo "<select name='select1' id='select1' onChange='cargaContenido(this.id)' onmouseover=\"Tip('Selecci&oacute;n de Farmacia')\" onmouseout=\"UnTip()\">";
             echo "<option value='0'>[Seleccione ...]</option>";
-            while ($registro = mysql_fetch_row($consulta)) {
+            while ($registro = pg_fetch_row($consulta)) {
                 if ($registro[1] != "--") {
                     echo "<option value='" . $registro[0] . "'>" . $registro[0] . "-" . $registro[1] . "</option>";
                 }

@@ -27,7 +27,7 @@ class TransferenciaProceso{
 		
 	    }
 
-		$resp=mysql_fetch_array(mysql_query($querySelect));
+		$resp=pg_fetch_array(pg_query($querySelect));
 		if($Bandera==1){return($resp[0]);}else{return($resp);}
 	}//ObtenerExistencia
 
@@ -60,7 +60,7 @@ class TransferenciaProceso{
 					and left(FechaVencimiento,7) < left(curdate(),7)
 					order by FechaVencimiento asc";	
 	}
-		$resp=mysql_fetch_array(mysql_query($querySelect));
+		$resp=pg_fetch_array(pg_query($querySelect));
 		return($resp);	
 	}
 	
@@ -78,7 +78,7 @@ while($Bandera==0){
 		//Primera transferencia del lote agotado...
 		$queryInsert="insert into farm_medicinavencida(IdMedicina,Existencia,IdLote,IdArea,Justificacion,Fecha,FechaHoraIngreso,IdPersonal,IdEstablecimiento,IdModalidad) 
                                                         values('$IdMedicina','$Cantidad1','$Lote','$IdAreaOrigen','$Justificacion','$FechaDescargo',now(),'$IdPersonal',$IdEstablecimiento,$IdModalidad)";
-			mysql_query($queryInsert);
+			pg_query($queryInsert);
 
 		//*******************************************************************************
 
@@ -87,14 +87,14 @@ while($Bandera==0){
                           where IdMedicina='$IdMedicina' and IdLote='$Lote' 
                           and IdArea='$IdAreaOrigen' and IdEstablecimiento=".$IdEstablecimiento." 
                           and IdModalidad=$IdModalidad";
-			mysql_query($SQL);
+			pg_query($SQL);
 		}
 		if($IdAreaOrigen==12 or $TipoFarmacia==1){
 		    $SQL="update farm_entregamedicamento set Existencia = '0' 
                           where IdMedicina='$IdMedicina' and IdLote='$Lote' 
                           and IdEstablecimiento=".$IdEstablecimiento." 
                           and IdModalidad=$IdModalidad";
-			mysql_query($SQL);
+			pg_query($SQL);
 		}
 
 		$respLote2=TransferenciaProceso::ObtenerSiguienteLote($IdMedicina,$Lote,$IdAreaOrigen,$TipoFarmacia,$IdEstablecimiento,$IdModalidad);
@@ -106,7 +106,7 @@ while($Bandera==0){
 		$Cantidad1=$Cantidad;
 		$queryInsert="insert into farm_medicinavencida(IdMedicina,Existencia,IdLote,IdArea,Justificacion,Fecha,FechaHoraIngreso,IdPersonal,IdEstablecimiento,IdModalidad) 
                                                         values('$IdMedicina','$Cantidad1','$Lote','$IdAreaOrigen','$Justificacion','$FechaDescargo',now(),'$IdPersonal',$IdEstablecimiento,$IdModalidad)";
-		mysql_query($queryInsert);
+		pg_query($queryInsert);
 			
 
 		$Existencia_new=$Existencia-$Cantidad;//Existencia remanente despues de transferencia
@@ -116,14 +116,14 @@ while($Bandera==0){
                           where IdMedicina='$IdMedicina' and IdLote='$Lote' 
                           and IdArea='$IdAreaOrigen' and IdEstablecimiento=".$IdEstablecimiento." 
                           and IdModalidad=$IdModalidad";
-			mysql_query($SQL);
+			pg_query($SQL);
 		}
 		if($IdAreaOrigen==12 or $TipoFarmacia==1){
 		    $SQL="update farm_entregamedicamento set Existencia = '$Existencia_new' 
                           where IdMedicina='$IdMedicina' and IdLote='$Lote' 
                           and IdEstablecimiento=".$IdEstablecimiento." 
                           and IdModalidad=$IdModalidad";
-			mysql_query($SQL);
+			pg_query($SQL);
 		}
 
 
@@ -160,7 +160,7 @@ while($Bandera==0){
                                         and farm_medicinavencida.IdModalidad=$IdModalidad
 					and date(farm_medicinavencida.FechaHoraIngreso) = curdate()
 					order by IdEntrega asc";
-		$resp=mysql_query($querySelect);
+		$resp=pg_query($querySelect);
 		return($resp);	
 	}//Obtener transferencias
 
@@ -170,7 +170,7 @@ while($Bandera==0){
 		$querySelect="select mnt_areafarmacia.Area
 					from mnt_areafarmacia
 					where mnt_areafarmacia.IdArea='$IdArea'";
-		if($resp=mysql_fetch_array(mysql_query($querySelect))){
+		if($resp=pg_fetch_array(pg_query($querySelect))){
 			return($resp[0]);
 		}else{
 			return("Otras Areas");
@@ -183,7 +183,7 @@ while($Bandera==0){
 	function EliminarDescargo($IdEntrega,$TipoFarmacia,$IdEstablecimiento,$IdModalidad){
 
 		$SQL="select * from farm_medicinavencida where IdEntrega=".$IdEntrega;
-		$row=mysql_fetch_array(mysql_query($SQL));
+		$row=pg_fetch_array(pg_query($SQL));
 
 		$IdMedicina=$row["IdMedicina"];
 		$Cantidad=$row["Existencia"];
@@ -216,7 +216,7 @@ while($Bandera==0){
                         and fmexa.IdModalidad=$IdModalidad";
 		}
 
-		$resp=mysql_fetch_array(mysql_query($SQL2));
+		$resp=pg_fetch_array(pg_query($SQL2));
 		
 		$ExistenciaActual=$resp["Existencia"];
 		  $Existencia_new=$ExistenciaActual+$Cantidad;
@@ -235,10 +235,10 @@ while($Bandera==0){
                        and IdModalidad=$IdModalidad";
 
 		}
- 		mysql_query($SQL3);
+ 		pg_query($SQL3);
 
 		$querySelect="delete from farm_medicinavencida where IdEntrega='$IdEntrega'";
-		mysql_query($querySelect);
+		pg_query($querySelect);
 return($Cantidad."~".$Existencia_new);
 	}//ObtenerIdRecetaRepetitivaEliminar
 
@@ -247,7 +247,7 @@ return($Cantidad."~".$Existencia_new);
 	function FinalizaTransferencia($IdPersonal){
 		$queryUpdate="update farm_transferencias set IdEstado='D' 
                               where IdPersonal='$IdPersonal' and IdEstado='X'";
-		mysql_query($queryUpdate);
+		pg_query($queryUpdate);
 	}//Receta Lista
 
 
@@ -258,13 +258,13 @@ return($Cantidad."~".$Existencia_new);
 				where farm_transferencias.FechaTransferencia=curdate()
 				and farm_transferencias.IdEstado='X'
 				and farm_transferencias.IdPersonal='$IdPersonal'";
-		$resp=mysql_query($querySelect);
+		$resp=pg_query($querySelect);
 		return($resp);
 	}//ObtenerCantidadMedicina
 
 
 	function ObtenerLotesMedicamento($IdMedicina,$Motivo,$IdArea,$TipoFarmacia,$IdEstablecimiento,$IdModalidad){
-	   if($Motivo==1){$comp="and left(farm_lotes.FechaVencimiento,7) < left(curdate(),7)";}else{$comp="and left(farm_lotes.FechaVencimiento,7) >= left(curdate(),7)";}
+	   if($Motivo==1){$comp="and left(to_char(farm_lotes.FechaVencimiento,'YYYY-MM-DD'),7) < left(to_char(curent_date,'YYYY-MM-DD'),7)";}else{$comp="and left(to_char(farm_lotes.FechaVencimiento,'YYYY-MM-DD'),7) >= left(to_char(current_date,'YYYY-MM-DD'),7)";}
 
 		if($IdArea!=12 and $TipoFarmacia==2){
 
@@ -281,22 +281,22 @@ return($Cantidad."~".$Existencia_new);
 					order by farm_lotes.FechaVencimiento";
 		}
 		if($IdArea==12 or $TipoFarmacia==1){
-		$querySelect="select farm_lotes.IdLote,farm_lotes.Lote, farm_lotes.FechaVencimiento
+		$querySelect="select farm_lotes.Id as IdLote,farm_lotes.Lote, farm_lotes.FechaVencimiento
 					from farm_lotes
 					inner join farm_entregamedicamento
-					on farm_entregamedicamento.IdLote=farm_lotes.IdLote
+					on farm_entregamedicamento.IdLote=farm_lotes.Id
 					where farm_entregamedicamento.IdMedicina='$IdMedicina'
 					and farm_entregamedicamento.Existencia <> 0
                                         and farm_entregamedicamento.IdEstablecimiento=$IdEstablecimiento
                                         and farm_entregamedicamento.IdModalidad=$IdModalidad
 					".$comp."
-					group by farm_lotes.IdLote
+					group by farm_lotes.Id
 					order by farm_lotes.FechaVencimiento";
 
 		}
 
-
-		$resp=mysql_query($querySelect);
+                var_dump($querySelect);
+		$resp=pg_query($querySelect);
 		return($resp);
 	}//ObtenerLotesMedicamento
 
@@ -307,7 +307,7 @@ return($Cantidad."~".$Existencia_new);
 				inner join farm_lotes fl
 				on fl.IdLote = ft.IdLote
 					where IdEntrega='$IdEntrega'";
-		$resp=mysql_fetch_array(mysql_query($querySelect));
+		$resp=pg_fetch_array(pg_query($querySelect));
 		return($resp);
 	}//ObtenerDetalleLote
 
@@ -316,7 +316,7 @@ return($Cantidad."~".$Existencia_new);
                  where IdMedicina=".$IdMedicina." 
                  and IdEstablecimiento=".$IdEstablecimiento." 
                  and IdModalidad=$IdModalidad";
-	   $resp=mysql_query($SQL);
+	   $resp=pg_query($SQL);
 	   return($resp);
     	}
 }//Clase RecetasProceso

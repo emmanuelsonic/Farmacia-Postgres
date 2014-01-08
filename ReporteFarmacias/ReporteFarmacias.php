@@ -32,7 +32,7 @@ if (isset($_SESSION["nivel"])) {
     if ($IdFarmacia == 0) {
         $NombreFarmacia = "Consumo General";
     } else {
-        $SQL = "select Farmacia from mnt_farmacia where IdFarmacia=" . $IdFarmacia;
+        $SQL = "select Farmacia from mnt_farmacia where Id=" . $IdFarmacia;
         $resp = pg_fetch_row(pg_query($SQL));
         $NombreFarmacia = $resp[0];
     }

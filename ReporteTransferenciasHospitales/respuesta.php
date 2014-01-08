@@ -19,14 +19,14 @@ if (!isset($_SESSION["nivel"])) {
 
                 $IdAreaOrigen = $_GET["IdAreaOrigen"];
 
-                $querySelect = "select Nombre, Concentracion, fcp.IdMedicina, FormaFarmaceutica,Presentacion, Descripcion, UnidadesContenidas
+                $querySelect = "select Nombre, Concentracion, fcp.id as IdMedicina, FormaFarmaceutica,Presentacion, Descripcion, UnidadesContenidas
 			from farm_catalogoproductos fcp
 			inner join farm_catalogoproductosxestablecimiento fcpe
-			on fcpe.IdMedicina=fcp.IdMedicina
+			on fcpe.IdMedicina=fcp.Id
 			inner join farm_entregamedicamento fmexa
 			on fmexa.IdMedicina = fcpe.IdMedicina
 			inner join farm_unidadmedidas fu
-			on fu.IdUnidadMedida=fcp.IdUnidadMedida
+			on fu.Id=fcp.IdUnidadMedida
 
                         where (Nombre like '%$Busqueda%' or Codigo='$Busqueda')
 
@@ -35,13 +35,13 @@ if (!isset($_SESSION["nivel"])) {
                         and fmexa.IdEstablecimiento=$IdEstablecimiento    
                         and fmexa.IdModalidad=$IdModalidad
                         
-                        and IdTerapeutico is not null";
-                $resp = mysql_query($querySelect);
-                while ($row = mysql_fetch_array($resp)) {
-                    $Nombre = $row["Nombre"] . " - " . $row["Concentracion"] . " - " . $row["FormaFarmaceutica"] . " - " . $row["Presentacion"];
+                        and fcpe.Id is not null";
+                $resp = pg_query($querySelect);
+                while ($row = pg_fetch_array($resp)) {
+                    $Nombre = $row["nombre"] . " - " . $row["concentracion"] . " - " . $row["formafarmaceutica"] . " - " . $row["presentacion"];
                     $IdMedicina = $row["IdMedicina"];
-                    $Descripcion = $row["Descripcion"];
-                    $Unidades = $row["UnidadesContenidas"];
+                    $Descripcion = $row["descripcion"];
+                    $Unidades = $row["unidadescontenidas"];
                     ?>
                 <li onselect="this.text.value = '<?php echo htmlentities($Nombre); ?>';
                             $('IdMedicina').value = '<?php echo $IdMedicina; ?>';
@@ -60,9 +60,9 @@ if (!isset($_SESSION["nivel"])) {
 		from mnt_establecimiento
 		where Nombre like '%$Busqueda%'
 		and IdEstablecimiento <> $IdEstablecimiento";
-            $resp = mysql_query($querySelect);
-            while ($row = mysql_fetch_array($resp)) {
-                $Nombre = $row["Nombre"] . " [" . $row["NOMSIBASI"] . "]";
+            $resp = pg_query($querySelect);
+            while ($row = pg_fetch_array($resp)) {
+                $Nombre = $row["nombre"] . " [" . $row["NOMSIBASI"] . "]";
                 $IdEstablecimiento_ = $row["IdEstablecimiento"];
                 ?>
                 <li onselect="this.text.value = '<?php echo htmlentities($Nombre); ?>';

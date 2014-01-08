@@ -14,14 +14,14 @@ if (isset($_SESSION["nivel"])) {
     $Lista = 1;
     $IdReceta = $_GET["IdReceta"];
 
-    mysql_query("update farm_recetas set IdEstado='L' where IdReceta='$IdReceta'");
+    pg_query("update farm_recetas set IdEstado='L' where IdReceta='$IdReceta'");
     /** VALORES PARA AJAX* */
 //**********************************************************************
     if ($Lista == 1) {
         //Se obtiene el detalle de la receta para determinar el consumo de medicamentos
         $resp = $query2->MedicinaReceta($IdReceta);
 
-        while ($row = mysql_fetch_array($resp)) {
+        while ($row = pg_fetch_array($resp)) {
             $IdMedicina = $row["IdMedicina"];
             $IdReceta = $row["IdReceta"];
             $satisfecha = $row["IdEstado"];

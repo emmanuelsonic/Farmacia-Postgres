@@ -53,7 +53,7 @@ if (!isset($_SESSION["nivel"])) {
             $IdArea = $_GET["IdArea"];
             $resp = $proceso->ObtenerAjustes($IdPersonal, $Fecha, $_SESSION["IdEstablecimiento"], $IdModalidad);
             /* TABLA DE TRANSFERENCIAS */
-            if ($row = mysql_fetch_array($resp)) {
+            if ($row = pg_fetch_array($resp)) {
                 $tabla = '<table width="1018" border="1">
 		<tr><td colspan="8" align="center"><strong>AJUSTE(S) REALIZADO(S)</strong></td></tr>
 		<tr class="FONDO">
@@ -67,7 +67,7 @@ if (!isset($_SESSION["nivel"])) {
 		<td width="74" align="center"><strong>Cancelar</strong></td>
 		</tr>';
                 $resp2 = $proceso->ObtenerAjustes($IdPersonal, $Fecha, $_SESSION["IdEstablecimiento"], $IdModalidad);
-                while ($row = mysql_fetch_array($resp2)) {
+                while ($row = pg_fetch_array($resp2)) {
                     /* OBTENCION DE DETALLE DE TRANSFERENCIA POR LOTE */
                     $resp = $proceso->ObtenerDetalleLote($row["IdAjuste"]);
                     $Cantidad = $resp["Cantidad"];
@@ -82,7 +82,7 @@ if (!isset($_SESSION["nivel"])) {
                     $Divisor = $proceso->UnidadesContenidas($row["IdMedicina"]);
 
                     $TotalExistencia = $row["Cantidad"];
-                    if ($respDivisor = mysql_fetch_array($proceso->ValorDivisor($row["IdMedicina"], $_SESSION["IdEstablecimiento"], $IdModalidad))) {
+                    if ($respDivisor = pg_fetch_array($proceso->ValorDivisor($row["IdMedicina"], $_SESSION["IdEstablecimiento"], $IdModalidad))) {
                         $Divisor = $respDivisor[0];
 
                         if ($TotalExistencia < 1) {
@@ -148,7 +148,7 @@ if (!isset($_SESSION["nivel"])) {
             $combo = "<select id='IdLote' name='IdLote'>";
             $combo.="<option value='0'>[Seleccione Lote...]</option>";
             $ExistenciaTotal = 0;
-            while ($row = mysql_fetch_array($resp)) {
+            while ($row = pg_fetch_array($resp)) {
                 $fecha = explode('-', $row[3]);
                 $fecha = $fecha[2] . "-" . $fecha[1] . "-" . $fecha[0];
 
@@ -158,7 +158,7 @@ if (!isset($_SESSION["nivel"])) {
                 $UnidadesContenidas = $proceso->UnidadesContenidas($IdMedicina);
                 $Divisor = 1;
 
-                if ($respDivisor = mysql_fetch_array($proceso->ValorDivisor($IdMedicina, $_SESSION["IdEstablecimiento"], $IdModalidad))) {
+                if ($respDivisor = pg_fetch_array($proceso->ValorDivisor($IdMedicina, $_SESSION["IdEstablecimiento"], $IdModalidad))) {
                     $Divisor = $respDivisor[0];
 
                     if ($CantidadReal < 1) {

@@ -14,7 +14,7 @@
         require('../Clases/class.php');
         conexion::conectar();
         $querySelect = "select Dosis from farm_medicinarecetada where IdMedicinaRecetada='$IdMedicinaRecetada'";
-        $DosisOld = mysql_fetch_array(mysql_query($querySelect));
+        $DosisOld = pg_fetch_array(pg_query($querySelect));
         ?>
         <table align="center">
             <tr><th>Nueva Dosis</th></tr>

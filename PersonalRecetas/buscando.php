@@ -49,10 +49,10 @@ position:absolute;
 <div id="Layer112">
 <?php 
 $resp2=Obtencion::ObtenerPersonalReceta($IdPersonal);
-$Datos=mysql_fetch_array($resp2);
+$Datos=pg_fetch_array($resp2);
 $NombreEmpleado=$Datos["Nombre"];
 $resp=Obtencion::ObtenerDatosRecetas($IdPersonal);
-if($test=mysql_fetch_array($resp)){
+if($test=pg_fetch_array($resp)){
 $resp=Obtencion::ObtenerDatosRecetas($IdPersonal);
 ?>
 <form name="datos" id="datos" action="">
@@ -67,7 +67,7 @@ $resp=Obtencion::ObtenerDatosRecetas($IdPersonal);
       <td width="340" align="center" class="FONDO">Nombre Medico </td>
       <td width="203" align="center" class="FONDO">Detalles </td>
     </tr>
-<?php while($row=mysql_fetch_array($resp)){
+<?php while($row=pg_fetch_array($resp)){
 $IdReceta=$row["IdReceta"];
 $NombrePaciente=$row["NombrePaciente"];
 $Medico=$row["NombreEmpleado"];

@@ -5,26 +5,26 @@ class ReporteFarmacias{
 /*COMBOS*/
 	function GruposTerapeuticos($IdTerapeutico){
 		$Complemento="";
-		if($IdTerapeutico!=0){$Complemento="and IdTerapeutico='$IdTerapeutico'";}
-		$query="select IdTerapeutico, GrupoTerapeutico
+		if($IdTerapeutico!=0){$Complemento="and Id='$IdTerapeutico'";}
+		$query="select id as IdTerapeutico, GrupoTerapeutico
 				from mnt_grupoterapeutico
 				where GrupoTerapeutico <> '--'
 				".$Complemento;
-		$resp=mysql_query($query);
+		$resp=pg_query($query);
 		return($resp);				
 	}//GruposTerapeutics
 	
 	function MedicamentosPorGrupo($IdTerapeutico,$IdEstablecimiento,$IdModalidad){
 
-		$query="select farm_catalogoproductos.IdMedicina, Nombre, Concentracion,FormaFarmaceutica,Presentacion,Codigo
+		$query="select farm_catalogoproductos.id as IdMedicina, Nombre, Concentracion,FormaFarmaceutica,Presentacion,Codigo
 				from farm_catalogoproductos
 				inner join farm_catalogoproductosxestablecimiento fcpe
-				on fcpe.IdMedicina=farm_catalogoproductos.IdMedicina
-				where IdTerapeutico='$IdTerapeutico'
+				on fcpe.IdMedicina=farm_catalogoproductos.Id
+				where fcpe.Id='$IdTerapeutico'
                                 and fcpe.IdEstablecimiento=$IdEstablecimiento
                                 and fcpe.IdModalidad=$IdModalidad
 				order by Codigo";
-		$resp=mysql_query($query);
+		$resp=pg_query($query);
 		return($resp);
 	}
 	
@@ -35,23 +35,23 @@ class ReporteFarmacias{
 	function DatosMedicamentosPorGrupo($IdTerapeutico,$IdFarmacia,$IdMedicina,$IdEstablecimiento,$IdModalidad){
 		$Complemento="";
 		//pasar por farm_medicinarecetada para obtener exactamente el medicamento en la base de datos
-		if($IdMedicina!=0){$Complemento="and farm_catalogoproductos.IdMedicina='$IdMedicina'";}
+		if($IdMedicina!=0){$Complemento="and farm_catalogoproductos.Id='$IdMedicina'";}
                 
-		$query="select farm_catalogoproductos.IdMedicina,Codigo, Nombre, Concentracion,FormaFarmaceutica,Presentacion,Descripcion,UnidadesContenidas
+		$query="select farm_catalogoproductos.id as IdMedicina,Codigo, Nombre, Concentracion,FormaFarmaceutica,Presentacion,Descripcion,UnidadesContenidas
 				from farm_catalogoproductos
 				inner join farm_unidadmedidas
-				on farm_unidadmedidas.IdUnidadMedida=farm_catalogoproductos.IdUnidadMedida
+				on farm_unidadmedidas.Id=farm_catalogoproductos.IdUnidadMedida
 
 				inner join farm_catalogoproductosxestablecimiento fcpe
-				on fcpe.IdMedicina=farm_catalogoproductos.IdMedicina
+				on fcpe.IdMedicina=farm_catalogoproductos.Id
 				
-				where IdTerapeutico='$IdTerapeutico'
+				where fcpe.Id='$IdTerapeutico'
 				and fcpe.IdEstablecimiento=$IdEstablecimiento
                                 and fcpe.IdModalidad=$IdModalidad
 				".$Complemento."
 				order by Codigo
 				";
-		$resp=mysql_query($query);
+		$resp=pg_query($query);
 		return($resp);
 	}
 
@@ -81,15 +81,15 @@ class ReporteFarmacias{
 
 		from farm_recetas
 		inner join farm_medicinarecetada
-		on farm_medicinarecetada.IdReceta=farm_recetas.IdReceta
+		on farm_medicinarecetada.IdReceta=farm_recetas.Id
 		inner join farm_medicinadespachada
 		on farm_medicinadespachada.IdMedicinaRecetada=farm_medicinarecetada.IdMedicinaRecetada
 		inner join farm_lotes
-		on farm_lotes.IdLote=farm_medicinadespachada.IdLote
+		on farm_lotes.Id=farm_medicinadespachada.IdLote
 		inner join farm_catalogoproductos
-		on farm_medicinarecetada.IdMedicina=farm_catalogoproductos.IdMedicina
+		on farm_medicinarecetada.IdMedicina=farm_catalogoproductos.Id
 		inner join farm_unidadmedidas
-		on farm_unidadmedidas.IdUnidadMedida=farm_catalogoproductos.IdUnidadMedida
+		on farm_unidadmedidas.Id=farm_catalogoproductos.IdUnidadMedida
 		
 		where Fecha between '".$FechaInicial."' and '".$FechaFinal."'
 		and farm_medicinarecetada.IdMedicina=".$IdMedicina."
@@ -99,9 +99,9 @@ class ReporteFarmacias{
                 and farm_medicinadespachada.IdModalidad=$IdModalidad
 		".$Complemento."
 		".$ConsumoReal."
-		group by farm_medicinarecetada.IdMedicina,farm_lotes.IdLote";
+		group by farm_medicinarecetada.IdMedicina,farm_lotes.Id";
 		
-		$resp=mysql_query($SQL);
+		$resp=pg_query($SQL);
 		return($resp);
 	}
 	
@@ -129,14 +129,14 @@ class ReporteFarmacias{
 		$query="select sum(farm_medicinarecetada.Cantidad) as Total
 				from farm_recetas
 				inner join farm_medicinarecetada
-				on farm_medicinarecetada.IdReceta=farm_recetas.IdReceta
+				on farm_medicinarecetada.IdReceta=farm_recetas.Id
 				where Fecha between '$FechaInicial' and '$FechaFinal'
 				and (farm_recetas.IdEstado='E' or farm_recetas.IdEstado='ER')
 				".$Complemento."
 				".$ConsumoReal."				
 				and IdMedicina='$IdMedicina'
 				group by IdMedicina";
-		$resp=mysql_fetch_array(mysql_query($query));
+		$resp=pg_fetch_array(pg_query($query));
 		return($resp[0]);		
 	}
 	
@@ -145,7 +145,7 @@ class ReporteFarmacias{
 				from farm_preciosxano
 				where IdMedicina='$IdMedicina'
 				and Ano	='$Ano'";
-		$resp=mysql_fetch_array(mysql_query($query));
+		$resp=pg_fetch_array(pg_query($query));
 		if($resp[0]!=NULL){$Respuesta=$resp[0];}else{$Respuesta=0;}
 		return($Respuesta);
 	}
@@ -175,7 +175,7 @@ class ReporteFarmacias{
 		$query="select count(farm_medicinarecetada.IdMedicinaRecetada) as Total
 				from farm_medicinarecetada
 				inner join farm_recetas
-				on farm_recetas.IdReceta=farm_medicinarecetada.IdReceta
+				on farm_recetas.Id=farm_medicinarecetada.IdReceta
 				where (farm_recetas.IdEstado='E' or farm_recetas.IdEstado='ER')
 				and farm_medicinarecetada.IdMedicina='$IdMedicina'
 				and farm_recetas.Fecha between '$FechaInicial' and '$FechaFinal'
@@ -184,7 +184,7 @@ class ReporteFarmacias{
                                 and farm_recetas.IdEstablecimiento=$IdEstablecimiento
                                 and farm_recetas.IdModalidad=$IdModalidad
 				".$Complemento;
-		$resp=mysql_fetch_array(mysql_query($query));
+		$resp=pg_fetch_array(pg_query($query));
 		return($resp[0]);
 	}
 	
@@ -210,7 +210,7 @@ class ReporteFarmacias{
 		$query="select count(farm_medicinarecetada.IdMedicina) as Total
 				from farm_medicinarecetada
 				inner join farm_recetas
-				on farm_recetas.IdReceta=farm_medicinarecetada.IdReceta
+				on farm_recetas.Id=farm_medicinarecetada.IdReceta
 				where (farm_recetas.IdEstado='E' or farm_recetas.IdEstado='ER')
 				and farm_medicinarecetada.IdMedicina='$IdMedicina'
 				and farm_recetas.Fecha between '$FechaInicial' and '$FechaFinal'
@@ -220,7 +220,7 @@ class ReporteFarmacias{
                                 and farm_recetas.IdEstablecimiento=$IdEstablecimiento
                                 and farm_recetas.IdModalidad=$IdModalidad
 				".$Complemento;
-		$resp=mysql_fetch_array(mysql_query($query));
+		$resp=pg_fetch_array(pg_query($query));
 		return($resp[0]);
 	}
 	
@@ -246,7 +246,7 @@ class ReporteFarmacias{
 		$query="select count(farm_medicinarecetada.IdMedicina) as Total
 				from farm_medicinarecetada
 				inner join farm_recetas
-				on farm_recetas.IdReceta=farm_medicinarecetada.IdReceta
+				on farm_recetas.Id=farm_medicinarecetada.IdReceta
 				where (farm_recetas.IdEstado='E' or farm_recetas.IdEstado='ER')
 				and farm_medicinarecetada.IdMedicina='$IdMedicina'
 				and farm_recetas.Fecha between '$FechaInicial' and '$FechaFinal'
@@ -256,7 +256,7 @@ class ReporteFarmacias{
                                 and farm_recetas.IdEstablecimiento=$IdEstablecimiento
                                 and farm_recetas.IdModalidad=$IdModalidad
 				".$Complemento;
-		$resp=mysql_fetch_array(mysql_query($query));
+		$resp=pg_fetch_array(pg_query($query));
 		return($resp[0]);
 		
 	}
@@ -284,25 +284,25 @@ class ReporteFarmacias{
 		$query="select distinct farm_medicinarecetada.IdMedicina
 				from farm_medicinarecetada
 				inner join farm_recetas
-				on farm_recetas.IdReceta=farm_medicinarecetada.IdReceta
+				on farm_recetas.Id=farm_medicinarecetada.IdReceta
 				inner join farm_catalogoproductos
-				on farm_catalogoproductos.IdMedicina=farm_medicinarecetada.IdMedicina
+				on farm_catalogoproductos.Id=farm_medicinarecetada.IdMedicina
 				inner join mnt_grupoterapeutico
-				on mnt_grupoterapeutico.IdTerapeutico=farm_catalogoproductos.IdTerapeutico
+				on mnt_grupoterapeutico.Id=farm_catalogoproductos.IdTerapeutico
 
 				inner join farm_catalogoproductosxestablecimiento fcpe
-				on fcpe.IdMedicina=farm_catalogoproductos.IdMedicina
+				on fcpe.IdMedicina=farm_catalogoproductos.Id
 
 				where farm_recetas.Fecha between '$FechaInicial' and '$FechaFinal'
 				and (farm_recetas.IdEstado='E' or farm_recetas.IdEstado='ER')
-				and mnt_grupoterapeutico.IdTerapeutico='$IdTerapeutico'
+				and mnt_grupoterapeutico.Id='$IdTerapeutico'
                                     
                                 and farm_medicinarecetada.IdEstablecimiento=$IdEstablecimiento
                                 and farm_medicinarecetada.IdModalidad=$IdModalidad
                                 and fcpe.IdEstablecimiento=$IdEstablecimiento
                                 and fcpe.IdModalidad=$IdModalidad
 				".$Complemento;
-		$resp=mysql_query($query);
+		$resp=pg_query($query);
 		return($resp);
 	}//Ingreso por Grupo
 	
@@ -313,7 +313,7 @@ class ReporteFarmacias{
                 and IdEstablecimiento=$IdEstablecimiento
                 and IdModalidad=$IdModalidad
 		and IdMedicina=".$IdMedicina;
-	   $resp=mysql_query($SQL);
+	   $resp=pg_query($SQL);
 	   return ($resp);
 	}
 	
@@ -323,7 +323,7 @@ class ReporteFarmacias{
                     where IdMedicina=$IdMedicina
                     and IdEstablecimiento=$IdEstablecimiento
                     and IdModalidad=$IdModalidad";
-	   $resp=mysql_query($SQL);
+	   $resp=pg_query($SQL);
 	   return($resp);
     	}
 /*************************************/

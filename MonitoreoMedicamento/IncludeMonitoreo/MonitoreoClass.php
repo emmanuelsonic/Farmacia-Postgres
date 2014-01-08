@@ -3,7 +3,7 @@ class Obtencion{
 function ObtenerGrupos(){
 
 $selectGrupo="select * from mnt_grupoterapeutico";
-$Grupo=mysql_query($selectGrupo);
+$Grupo=pg_query($selectGrupo);
 
 return($Grupo);
 }//Grupos
@@ -16,7 +16,7 @@ inner join farm_medicinaexistenciaxarea
 on farm_medicinaexistenciaxarea.IdMedicina=farm_catalogoproductos.IdMedicina
 where farm_medicinaexistenciaxarea.IdArea='$area' and farm_catalogoproductos.IdTerapeutico='$IdTerapeutico'";
 
- $resp=mysql_query($querySelect);
+ $resp=pg_query($querySelect);
 
  return($resp);
 
@@ -24,7 +24,7 @@ where farm_medicinaexistenciaxarea.IdArea='$area' and farm_catalogoproductos.IdT
 
 function ObtenerExistencias($IdArea,$IdMedicina){
 
- $RespEx=mysql_query("select farm_medicinaexistenciaxarea.Existencia, farm_lotes.Lote, 
+ $RespEx=pg_query("select farm_medicinaexistenciaxarea.Existencia, farm_lotes.Lote, 
 farm_lotes.FechaVencimiento
 from farm_medicinaexistenciaxarea
 inner join farm_lotes
@@ -41,7 +41,7 @@ order by FechaVencimiento asc");
 
 function ObtenerExistenciasBodega($IdMedicina){
 
- $RespEx=mysql_query("select farm_entregamedicamento.Existencia, farm_lotes.Lote, 
+ $RespEx=pg_query("select farm_entregamedicamento.Existencia, farm_lotes.Lote, 
 farm_lotes.FechaVencimiento
 from farm_entregamedicamento
 inner join farm_lotes
@@ -84,9 +84,9 @@ function ObtenerPorcentaje($IdMedicina,$IdArea){
 				where farm_medicinaexistenciaxarea.IdArea='$IdArea'
 				and farm_medicinaexistenciaxarea.IdMedicina='$IdMedicina'";
 				
-				$resp1=mysql_fetch_array(mysql_query($querySelect));
-				$resp2=mysql_fetch_array(mysql_query($querySelect2));
-				$resp3=mysql_fetch_array(mysql_query($querySelect3));
+				$resp1=pg_fetch_array(pg_query($querySelect));
+				$resp2=pg_fetch_array(pg_query($querySelect2));
+				$resp3=pg_fetch_array(pg_query($querySelect3));
 				$datos[0]=$resp1[0];//mes anterior
 				$datos[1]=$resp2[0];//mes actual
 				$datos[2]=$resp3[0];//mes actual
@@ -122,9 +122,9 @@ function ObtenerPorcentajeBodega($IdMedicina){
 				from farm_entregamedicamento
 				where farm_entregamedicamento.IdMedicina='$IdMedicina'";
 				
-				$resp1=mysql_fetch_array(mysql_query($querySelect));
-				$resp2=mysql_fetch_array(mysql_query($querySelect2));
-				$resp3=mysql_fetch_array(mysql_query($querySelect3));
+				$resp1=pg_fetch_array(pg_query($querySelect));
+				$resp2=pg_fetch_array(pg_query($querySelect2));
+				$resp3=pg_fetch_array(pg_query($querySelect3));
 				$datos[0]=$resp1[0];//mes anterior
 				$datos[1]=$resp2[0];//mes actual
 				$datos[2]=$resp3[0];//mes actual
@@ -134,7 +134,7 @@ function ObtenerPorcentajeBodega($IdMedicina){
 
 	function ValorDivisor($IdMedicina){
 	   $SQL="select DivisorMedicina from farm_divisores where IdMedicina=".$IdMedicina;
-	   $resp=mysql_query($SQL);
+	   $resp=pg_query($SQL);
 	   return($resp);
     	}
 
@@ -142,13 +142,13 @@ function ObtenerPorcentajeBodega($IdMedicina){
 class Combos{
    function Farmacias(){
 	$SQL="select * from mnt_farmacia";
-	$resp=mysql_query($SQL);
+	$resp=pg_query($SQL);
 	return($resp);
    }
 
    function Areas($IdFarmacia){
 	$SQL="select * from mnt_areafarmacia where IdArea<> 7 and Habilitado='S' and IdFarmacia=".$IdFarmacia;
-	$resp=mysql_query($SQL);
+	$resp=pg_query($SQL);
 		return($resp);
    }
 

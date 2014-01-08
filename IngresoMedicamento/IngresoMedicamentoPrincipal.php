@@ -77,8 +77,8 @@ $nick=$_SESSION["nick"];
       <td>Unidad de Medida: </td>
       <td><div id="ComboUnidadMedida"><select id="UnidadMedida" name="UnidadMedida">
 	  <option value="0">[Seleccione...]</option>
-	  <?php $resp=mysql_query("select * from farm_unidadmedidas where IdUnidadMedida=1 or IdUnidadMedida=2 or IdUnidadMedida=7 or IdUnidadMedida = 17");
-	  while($row=mysql_fetch_array($resp)){?>
+	  <?php $resp=pg_query("select * from farm_unidadmedidas where Id=1 or Id=2 or Id=7 or Id= 17");
+	  while($row=pg_fetch_array($resp)){?>
 	  <option value="<?php echo $row[0];?>"><?php echo $row[1];?></option>
 	  <?php }?>
 	  </select></div>	  </td>
@@ -88,9 +88,9 @@ $nick=$_SESSION["nick"];
       <td><select id="GrupoTerapeutico" name="GrupoTerapeutico">
 	  <option value="0">Seleccione un Grupo Terapeutico</option>
 	  <?php $resp=$new->ComboGrupoTerapeutico();
-  	  while($row=mysql_fetch_array($resp)){
-	  	$IdGrupo=$row["IdTerapeutico"];
-		$Grupo=$row["GrupoTerapeutico"];
+  	  while($row=pg_fetch_array($resp)){
+	  	$IdGrupo=$row["id"];
+		$Grupo=$row["grupoterapeutico"];
 		if($Grupo != "--"){
 	  ?>
 		<option value="<?php echo $IdGrupo;?>"><?php echo $IdGrupo;?> --- <?php echo $Grupo;?></option>	

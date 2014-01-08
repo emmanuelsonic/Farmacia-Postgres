@@ -16,7 +16,7 @@ on mnt_empleados.IdEmpleado=sec_historial_clinico.IdEmpleado
 inner join mnt_subservicio
 on mnt_subservicio.IdSubServicio=sec_historial_clinico.IdSubServicio
 where farm_recetas.IdReceta='$IdReceta'";
-$resp=mysql_query($querySelect);
+$resp=pg_query($querySelect);
 return($resp);
 }
 
@@ -66,7 +66,7 @@ and farm_recetas.IdArea='$IdArea'
 order by farm_recetas.Fecha desc, farm_recetas.NumeroReceta asc";
 }
 //Para consulta del mes en where month(FechaConsulta)=month(curdate())...Para despues
-$resp=mysql_query($querySelect);
+$resp=pg_query($querySelect);
 return($resp);
 }//ObtenerDatosPacienteReceta
 
@@ -82,7 +82,7 @@ on farm_medicinarecetada.IdReceta=farm_recetas.IdReceta
 inner join farm_catalogoproductos
 on farm_medicinarecetada.IdMedicina=farm_catalogoproductos.IdMedicina
 where farm_recetas.IdReceta='$IdReceta'";
-$respuesta=mysql_query($querySelect);
+$respuesta=pg_query($querySelect);
 return($respuesta);
 }//fin de datosReceta
 
@@ -93,7 +93,7 @@ function MedicinaReceta($IdReceta){
 				inner join farm_recetas
 				on farm_recetas.IdReceta=farm_medicinarecetada.IdReceta
 				where farm_recetas.IdReceta='$IdReceta'";
-	$resp=mysql_query($querySelect);
+	$resp=pg_query($querySelect);
 	return($resp);
 	
 	

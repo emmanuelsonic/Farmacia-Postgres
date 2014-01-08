@@ -124,8 +124,8 @@ $FechaInicio=$_REQUEST["FechaInicio"];
 $FechaFin=$_REQUEST["FechaFin"];
 
 
-$resp=mysql_query("select concat_ws('-',day('$FechaInicio'),month('$FechaInicio'),year('$FechaInicio'))as fechaInicio, concat_ws('-',day('$FechaFin'),month('$FechaFin'),year('$FechaFin'))as fechaFin");
-$Fechas=mysql_fetch_array($resp);
+$resp=pg_query("select concat_ws('-',day('$FechaInicio'),month('$FechaInicio'),year('$FechaInicio'))as fechaInicio, concat_ws('-',day('$FechaFin'),month('$FechaFin'),year('$FechaFin'))as fechaFin");
+$Fechas=pg_fetch_array($resp);
 $FechaInicio2=$Fechas["fechaInicio"];$FechaFin2=$Fechas["fechaFin"];
 ?>
 <div id="Layer11">
@@ -173,7 +173,7 @@ $nombreTera=$query->NombreTera(0);
 ?>
 	<table width="989">
 <?php
-while($grupos=mysql_fetch_array($nombreTera)){//While GrupoTera
+while($grupos=pg_fetch_array($nombreTera)){//While GrupoTera
 	$NombreTerapeutico=$grupos["GrupoTerapeutico"];
 	$IdTerapeutico=$grupos["IdTerapeutico"];
 	if($NombreTerapeutico!="--"){//para los grupos terapeuticos
@@ -196,7 +196,7 @@ while($grupos=mysql_fetch_array($nombreTera)){//While GrupoTera
 <?php
 //*****Verificacion de numero de datos, asi se rompe el lazo para evitar impresiones de datos no existentes}
 	$DataMedicamento=$query->MedicinaPorGrupoTotal($IdTerapeutico);
-	while($RowMedicina=mysql_fetch_array($DataMedicamento)){//While Medicina AQUI VOY
+	while($RowMedicina=pg_fetch_array($DataMedicamento)){//While Medicina AQUI VOY
 	$IdMedicina=$RowMedicina["IdMedicina"];
     $codigoMedicina=$RowMedicina["Codigo"];
     $NombreMedicina=$RowMedicina["Nombre"];
@@ -239,7 +239,7 @@ while($grupos=mysql_fetch_array($nombreTera)){//While GrupoTera
 	  $respLotes=queries::ObtenerLotesExistenciasTotal($IdMedicina,1);
 	  ?>
 	  <td align="center"><?php
-	  while($rowLote=mysql_fetch_array($respLotes)){
+	  while($rowLote=pg_fetch_array($respLotes)){
           /*    IMPRESION DE LOTES Y EXISTENCIAS DEL MEDICAMENTO    */
 	  
 	  $Lote=$rowLote["Lote"];

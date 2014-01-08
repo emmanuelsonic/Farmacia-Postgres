@@ -51,7 +51,7 @@ class RecetasProceso{
 					inner join mnt_subespecialidad
 					on mnt_subespecialidad.NombreSubEspecialidad=mnt_subservicio.NombreSubServicio
 					where mnt_subespecialidad.IdSubEspecialidad='$IdSubEspecialidad'";
-		$resp=mysql_fetch_array(mysql_query($querySelect));
+		$resp=pg_fetch_array(pg_query($querySelect));
 		return($resp[0]);	
 	}//Obtener IdSubServicio
 
@@ -64,7 +64,7 @@ class RecetasProceso{
                                 inner join mnt_servicioxestablecimiento mse
                                 on mse.IdServicioxEstablecimiento=msse.IdServicioxEstablecimiento
 				where msse.IdSubServicioxEstablecimiento=".$IdSubServicio;
-		$resp=mysql_fetch_array(mysql_query($query));
+		$resp=pg_fetch_array(pg_query($query));
 		return($resp[0]);
 	}
 
@@ -195,6 +195,7 @@ class RecetasProceso{
 		
 		//****************************
 		
+<<<<<<< HEAD
 		$query="SELECT farm_medicinarecetada.Id,farm_recetas.Id,farm_catalogoproductos.Nombre, Concentracion, FormaFarmaceutica, Presentacion, Cantidad,NombreEmpleado, Fecha, Area, CorrelativoAnual, 
                         username is not null, username,concat_ws(' ','Dr(a).',firstname||' '||lastname) as Digitador,
 
@@ -236,6 +237,42 @@ class RecetasProceso{
                         AND farm_recetas.IdEstablecimiento=$IdEstablecimiento
                         AND farm_recetas.IdModalidad=$IdModalidad
                         ORDER BY Area,Fecha";
+=======
+		$query="select IdMedicinaRecetada,farm_medicinarecetada.IdMedicina,farm_recetas.IdReceta,farm_recetas.IdReceta, 
+                       farm_catalogoproductos.Nombre, Concentracion, FormaFarmaceutica, Presentacion, Cantidad,NombreEmpleado, Fecha, Area, CorrelativoAnual, 
+                        if(farm_usuarios.Nombre is not null,farm_usuarios.Nombre,concat_ws(' ','Dr(a).',NombreEmpleado)) as Digitador,
+		case farm_recetas.IdFarmacia 
+			when 1 then 'Central' 
+			when 2 then 'Con. Externa' 
+			when 3 then 'Emergencias' end as NombreFarmacia
+
+				from farm_recetas
+				inner join farm_medicinarecetada
+				on farm_medicinarecetada.IdReceta=farm_recetas.IdReceta
+				inner join farm_catalogoproductos
+				on farm_catalogoproductos.IdMedicina=farm_medicinarecetada.IdMedicina
+				inner join sec_historial_clinico
+				on sec_historial_clinico.IdHistorialClinico=farm_recetas.IdHistorialClinico
+				inner join mnt_empleados
+				on mnt_empleados.IdEmpleado=sec_historial_clinico.IdEmpleado
+				inner join mnt_areafarmacia
+				on mnt_areafarmacia.IdArea=farm_recetas.IdAreaOrigen
+				left join farm_usuarios
+				on farm_usuarios.IdPersonal=farm_recetas.IdPersonalIntro
+				inner join mnt_subservicioxestablecimiento
+				on mnt_subservicioxestablecimiento.IdSubServicioxEstablecimiento=sec_historial_clinico.IdSubServicioxEstablecimiento
+				
+				where Fecha between '$FechaInicial' and '$FechaFinal'
+				and farm_recetas.IdFarmacia <> 4
+				$filtro5
+				$filtro1
+				$filtro2
+				$filtro3
+				$filtro4	
+                                and farm_recetas.IdEstablecimiento=$IdEstablecimiento
+                                and farm_recetas.IdModalidad=$IdModalidad
+				order by Area,Fecha";
+>>>>>>> b828137fda9ad3e0fabfa24c69e6cc9738584735
 		$resp=pg_query($query);
 		return($resp);
 	}//Obtener Recetas 
@@ -324,44 +361,44 @@ class RecetasProceso{
 					from mnt_empleados
 					where mnt_empleados.CodigoFarmacia='$CodigoFarmacia'
                                         and IdEstablecimiento=$IdEstablecimiento";
-		$resp=mysql_fetch_array(mysql_query($querySelect));
+		$resp=pg_fetch_array(pg_query($querySelect));
 		return($resp);
 	}//ObtenerDatosMedico
 	
 	/*	ACUTALIZACION DE INFORMACION	*/
 	function ActualizarArea($IdArea,$IdReceta){
 		$query="update farm_recetas set IdArea='$IdArea' where IdReceta='$IdReceta'";
-		mysql_query($query);
+		pg_query($query);
 		$query2="select Area from mnt_areafarmacia where IdArea='$IdArea'";
-		$resp=mysql_fetch_array(mysql_query($query2));
+		$resp=pg_fetch_array(pg_query($query2));
 		$salida="<a href='#' onClick='javascript:Correcciones(\"NombreArea\");'>".$resp[0]."</a>";
 		return($salida);		
 	}//actualizaicon de area
 	
 	function ActualizarMedico($IdHistorialClinico,$IdMedico){
 		$query="update sec_historial_clinico set IdEmpleado='$IdMedico' where IdHistorialClinico='$IdHistorialClinico'";
-		mysql_query($query);
+		pg_query($query);
 		$query2="select NombreEmpleado from mnt_empleados where IdEmpleado='$IdMedico'";
-		$resp=mysql_fetch_array(mysql_query($query2));
+		$resp=pg_fetch_array(pg_query($query2));
 		$salida="<a href='#' onClick='javascript:Correcciones(\"NombreMedico\");'>".$resp[0]."</a>";
 		return($salida);
 	}
 
 	function ActualizaEstadoMedicina($IdMedicinaRecetada,$IdEstado){
 		$query="update farm_medicinarecetada set IdEstado='$IdEstado' where IdMedicinaRecetada=".$IdMedicinaRecetada;
-		mysql_query($query);
+		pg_query($query);
 	}
 	
 	function ActualizarEspecialidad($IdHistorialClinico,$IdSubEspecialidad){
 		$IdSubServicio=RecetasProceso::ObtenerIdSubServicio($IdSubEspecialidad);
 		
 		$query="update sec_historial_clinico set IdSubServicio='$IdSubServicio',IdSubEspecialidad='$IdSubEspecialidad' where IdHistorialClinico='$IdHistorialClinico'";
-		mysql_query($query);
+		pg_query($query);
 		
 		$query2="select NombreSubEspecialidad, case IdEspecialidad when 0 then 'CON. EXT.' when 3 then 'CON. EXT.' when 4 then '' end as Origen
 				from mnt_subespecialidad
 				where IdSubEspecialidad='$IdSubEspecialidad'";
-		$resp=mysql_fetch_array(mysql_query($query2));
+		$resp=pg_fetch_array(pg_query($query2));
 		if($resp[1]!='' and $resp[1]!=NULL){$Especialidad=$resp[1].' -> '.$resp[0];}else{$Especialidad=$resp[0];}
 		$respuesta="<a href='#' onClick='javascript:Correcciones(\"Especialidad\");'>".$Especialidad."</a>";
 		return($respuesta);
@@ -371,7 +408,7 @@ class RecetasProceso{
 		$query="select IdArea, Area
 		from mnt_areafarmacia
 		where IdArea != 7";
-		$resp=mysql_query($query);
+		$resp=pg_query($query);
 		return($resp);
 	}
 
@@ -385,9 +422,15 @@ class RecetasProceso{
 	}//Cierre
 		
 	function CierreMes($Fecha){
+<<<<<<< HEAD
 		$sql="SELECT MesCierre
                       FROM farm_cierre
                       WHERE MesCierre=substring('$Fecha',1,7)";
+=======
+		$sql="select MesCierre
+			from farm_cierre
+			where MesCierre=left('$Fecha',7)";
+>>>>>>> b828137fda9ad3e0fabfa24c69e6cc9738584735
 		$resp=pg_query($sql);
 		return($resp);		
 	}//CierreMes
@@ -408,11 +451,11 @@ class RecetasProceso{
                         and fme.IdEstablecimiento=$IdEstablecimiento
                         and fme.IdModalidad=$IdModalidad
 			order by FechaVencimiento asc, IdExistencia asc";
-		$lotes=mysql_query($queryLote);
+		$lotes=pg_query($queryLote);
 		
                 
                 //Se recorren los siguiente lotes... Modo iterativo
-                while($lotesA=mysql_fetch_array($lotes)){
+                while($lotesA=pg_fetch_array($lotes)){
                         if($Cantidad <= $lotesA["Existencia"]){
                             //****** Si la cantidad de medicamento no exede el total del primer lote a descagar...
                             $IdLote=$lotesA["IdLote"];
@@ -424,12 +467,12 @@ class RecetasProceso{
                             //se actualiza la existencia del lote en uso
                             $actualiza="update farm_medicinaexistenciaxarea set Existencia='$existencia_new' 
                                         where IdExistencia='$IdExistenciaTabla' and IdEstablecimiento=$IdEstablecimiento and IdModalidad=$IdModalidad";
-                            mysql_query($actualiza);
+                            pg_query($actualiza);
 
                             //se ingresa el lote utilizado
                             $query="insert into farm_medicinadespachada (IdMedicinaRecetada,IdLote,CantidadDespachada,IdEstablecimiento,IdModalidad) 
                                                                         values('$IdMedicinaRecetada','$IdLote','$Cantidad',$IdEstablecimiento,$IdModalidad)";
-                            mysql_query($query);
+                            pg_query($query);
 
                         //Se termina el lazo porque el lote en cuestion suple la demanda restante
                         break;
@@ -445,12 +488,12 @@ class RecetasProceso{
                             //Se cierra el lote con existencia = 0
                             $actualiza="update farm_medicinaexistenciaxarea set Existencia='0' 
                                         where IdExistencia='$IdExistenciaTabla' and IdEstablecimiento=$IdEstablecimiento and IdModalidad=$IdModalidad";
-                            mysql_query($actualiza);
+                            pg_query($actualiza);
 
                             //se ingresa el lote utilizado
                             $query="insert into farm_medicinadespachada (IdMedicinaRecetada,IdLote,CantidadDespachada,IdEstablecimiento,IdModalidad) 
                                                                   values('$IdMedicinaRecetada','$IdLote','$existencia_old',$IdEstablecimiento,$IdModalidad)";
-                            mysql_query($query);
+                            pg_query($query);
 
                             $Cantidad=$restante2;
                         }//else de la comparacion de restante vs existencia
@@ -460,7 +503,7 @@ class RecetasProceso{
                 /*
                 Funcion de Carlos Fuentes
                 
-                $lotesA=mysql_fetch_array($lotes);
+                $lotesA=pg_fetch_array($lotes);
                 if($Cantidad <= $lotesA["Existencia"]){
 		//****** Si la cantidad de medicamento no exede el total del primer lote a descagar...
 			
@@ -473,12 +516,12 @@ class RecetasProceso{
 			$actualiza="update farm_medicinaexistenciaxarea set Existencia='$existencia_new' 
                                     where IdExistencia='$IdExistenciaTabla' and IdEstablecimiento=$IdEstablecimiento
                                     and IdModalidad=$IdModalidad";
-			mysql_query($actualiza);
+			pg_query($actualiza);
 			
 			//se ingresa el lote utilizado
 			$query="insert into farm_medicinadespachada (IdMedicinaRecetada,IdLote,CantidadDespachada,IdEstablecimiento,IdModalidad) 
                                                               values('$IdMedicinaRecetada','$IdLote','$Cantidad',$IdEstablecimiento,$IdModalidad)";
-			mysql_query($query);
+			pg_query($query);
 			
 			
 		
@@ -499,15 +542,15 @@ class RecetasProceso{
 				$actualiza="update farm_medicinaexistenciaxarea set Existencia='0' 
                                             where IdExistencia='$IdExistenciaTabla'
                                             and IdEstablecimiento=$IdEstablecimiento and IdModalidad=$IdModalidad";
-				mysql_query($actualiza);
+				pg_query($actualiza);
 				
 				//se ingresa el lote utilizado
 			$query="insert into farm_medicinadespachada (IdMedicinaRecetada,IdLote,CantidadDespachada,IdEstablecimiento,IdModalidad) 
                                                               values('$IdMedicinaRecetada','$IdLote','$existencia_old',$IdEstablecimiento,$IdModalidad)";
-			mysql_query($query);
+			pg_query($query);
 				
 			//Se recorren los siguiente lotes... Modo iterativo
-			while($lotesA=mysql_fetch_array($lotes)){
+			while($lotesA=pg_fetch_array($lotes)){
 				if($restante <= $lotesA["Existencia"]){
 				//****** Si la cantidad de medicamento no exede el total del primer lote a descagar...
 				$IdLote=$lotesA["IdLote"];
@@ -520,12 +563,12 @@ class RecetasProceso{
 					$actualiza="update farm_medicinaexistenciaxarea set Existencia='$existencia_new' 
                                                     where IdExistencia='$IdExistenciaTabla'
                                                     and IdEstablecimiento=$IdEstablecimiento and IdModalidad=$IdModalidad";
-					mysql_query($actualiza);
+					pg_query($actualiza);
 				
 					//se ingresa el lote utilizado
 					$query="insert into farm_medicinadespachada (IdMedicinaRecetada,IdLote,CantidadDespachada,IdEstablecimiento,IdModalidad) 
                                                                               values('$IdMedicinaRecetada','$IdLote','$restante',$IdEstablecimiento,$IdModalidad)";
-					mysql_query($query);
+					pg_query($query);
 				
 					//Se termina el lazo porque el lote en cuestion suple la demanda restante
 					break;
@@ -542,12 +585,12 @@ class RecetasProceso{
 					$actualiza="update farm_medicinaexistenciaxarea set Existencia='0' 
                                                     where IdExistencia='$IdExistenciaTabla'}
                                                     and IdEstablecimiento=$IdEstablecimiento and IdModalidad=$IdModalidad";
-					mysql_query($actualiza);
+					pg_query($actualiza);
 					
 					//se ingresa el lote utilizado
 					$query="insert into farm_medicinadespachada (IdMedicinaRecetada,IdLote,CantidadDespachada,IdEstablecimiento,IdModalidad) 
                                                                               values('$IdMedicinaRecetada','$IdLote','$existencia_old',$IdEstablecimiento,$IdModalidad)";
-					mysql_query($query);
+					pg_query($query);
 					
 					$restante=$restante2;
 					
@@ -572,9 +615,9 @@ class RecetasProceso{
 			where IdMedicinaRecetada=".$IdMedicinaRecetada."
                         and IdEstablecimiento=$IdEstablecimiento
                         and IdModalidad=$IdModalidad";
-		$resp=mysql_query($query);
+		$resp=pg_query($query);
 		
-		while($row=mysql_fetch_array($resp)){
+		while($row=pg_fetch_array($resp)){
 			$CantidadDespacha=$row["CantidadDespachada"];
 			$IdLoteDespachado=$row["IdLote"];
 			$IdMedicinaDespachada=$row["IdMedicinaDespachada"];
@@ -587,7 +630,7 @@ class RecetasProceso{
                                 and IdEstablecimiento=$IdEstablecimiento
                                 and IdModalidad=$IdModalidad
 				order by IdExistencia asc";
-			$datos=mysql_fetch_array(mysql_query($queryExistencia));
+			$datos=pg_fetch_array(pg_query($queryExistencia));
 			
 		//Aumento de existencia
 			$Nueva_Existencia=$CantidadDespacha+$datos["Existencia"];
@@ -598,14 +641,14 @@ class RecetasProceso{
 				where IdExistencia='$IdExistenciaTabla'
                                 and IdEstablecimiento=$IdEstablecimiento
                                 and IdModalidad=$IdModalidad";
-			mysql_query($query2);
+			pg_query($query2);
 			
 		// Eliminacion de movimiento de despacho
 			$AnulacionDespacho="delete from farm_medicinadespachada 
 					where IdMedicinaDespachada=".$IdMedicinaDespachada."
                                         and IdEstablecimiento=$IdEstablecimiento
                                         and IdModalidad=$IdModalidad";
-			mysql_query($AnulacionDespacho);
+			pg_query($AnulacionDespacho);
 			
 			
 		}//Recorrido de farm_medicinadespachada	
@@ -621,7 +664,7 @@ class RecetasProceso{
 	function ActualizacionInventarioCantidad($IdMedicinaRecetada,$NuevaCantidad,$IdArea){
 	//Obtencion de Cantidad Antigua
 	$query="select IdMedicina,Cantidad from farm_medicinarecetada where IdMedicinaRecetada=".$IdMedicinaRecetada;
-	$datos=mysql_fetch_array(mysql_query($query));
+	$datos=pg_fetch_array(pg_query($query));
 	//Primera parte cuando se aumenta la Cantidad
 		if($datos["Cantidad"] < $NuevaCantidad){
 			
@@ -670,7 +713,7 @@ class RecetasProceso{
 				$actualizaDespacho="update farm_medicinadespachada 
 						set CantidadDespachada='$restante2'
 						where IdMedicinaDespachada='$IdMedicinaDespachada'";
-				mysql_query($actualizaDespacho);
+				pg_query($actualizaDespacho);
 				
 			    //Aumento de existencias en lote utilizado por el moviemitno anterior
 				$ExistenciaAnterior=$row["Existencia"];
@@ -680,7 +723,7 @@ class RecetasProceso{
 				$actualizaExistencia="update farm_medicinaexistenciaxarea
 						set Existencia='$ExistenciaNueva'
 						where IdArea='$IdArea' and IdLote='$IdLote'";
-				mysql_query($actualizaExistencia);
+				pg_query($actualizaExistencia);
 				
 				break;
 			    }else{
@@ -704,11 +747,11 @@ class RecetasProceso{
 				$actualizaExistencia="update farm_medicinaexistenciaxarea
 						set Existencia='$ExistenciaNueva'
 						where IdArea='$IdArea' and IdLote='$IdLote'";	
-				mysql_query($actualizaExistencia);
+				pg_query($actualizaExistencia);
 				
 			    //Eliminacion del movimiento de farm_medicinadespachada
 				$eliminaMovimiento="delete from farm_medicinadespachada where IdMedicinaDespachada=".$IdMedicinaDespachada;
-				mysql_query($eliminaMovimiento);
+				pg_query($eliminaMovimiento);
 				
 				if($prueba==0){
 					break;
@@ -732,7 +775,7 @@ class RecetasProceso{
                   where IdMedicina=".$IdMedicina."
                   and IdEstablecimiento=$IdEstablecimiento
                   and IdModalidad=$IdModalidad";
-	   $resp=mysql_query($SQL);
+	   $resp=pg_query($SQL);
 	   return($resp);
     	}
 
@@ -743,7 +786,7 @@ function ObtenerAreaReceta($IdReceta,$IdEstablecimiento,$IdModalidad){
                 where IdReceta=".$IdReceta."
                 and IdEstablecimiento=$IdEstablecimiento
                 and IdModalidad=$IdModalidad";
-	$resp=mysql_fetch_array(mysql_query($SQL));
+	$resp=pg_fetch_array(pg_query($SQL));
 	return($resp[0]);
 }
 
@@ -762,10 +805,10 @@ function ObtenerExistencia($IdMedicina,$IdArea,$Fecha,$IdEstablecimiento,$IdModa
 	and IdArea=".$IdArea."
         and IdEstablecimiento=$IdEstablecimiento
         and IdModalidad=$IdModalidad */
-	$resp=mysql_fetch_array(mysql_query($SQL));
+	$resp=pg_fetch_array(pg_query($SQL));
         if($resp[0]!='' and $resp[0]!=NULL)
             {
-                if($row=mysql_fetch_array($this->ValorDivisor($IdMedicina,$IdEstablecimiento)))
+                if($row=pg_fetch_array($this->ValorDivisor($IdMedicina,$IdEstablecimiento)))
                 {
 		$respuesta=number_format($resp[0]*$row[0],0,'.','');
 		}else{

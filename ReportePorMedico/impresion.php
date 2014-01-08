@@ -77,8 +77,8 @@ $IdSubEspecialidad=$_REQUEST["select1"];
 $IdMedico=$_REQUEST["select2"];//IdMedico si no es seleccinado siempre es Cero
 if($IdMedico!='0'){
 
-$MedResp=mysql_query("select NombreEmpleado from mnt_empleados where IdEmpleado='$IdMedico'");
-$MedRow=mysql_fetch_array($MedResp);
+$MedResp=pg_query("select NombreEmpleado from mnt_empleados where IdEmpleado='$IdMedico'");
+$MedRow=pg_fetch_array($MedResp);
 $NomMed=$MedRow["NombreEmpleado"];
 
 }else{$NomMed="";}
@@ -92,8 +92,8 @@ $FechaFin2=$FechaFin[2].'-'.$FechaFin[1].'-'.$FechaFin[0];
 $FechaInicio=$_REQUEST["fechaInicio"];
 $FechaFin=$_REQUEST["fechaFin"];
 
-$resp=mysql_query("select NombreSubEspecialidad from mnt_subespecialidad where IdSubEspecialidad='$IdSubEspecialidad'");
-$RowEsp=mysql_fetch_array($resp);
+$resp=pg_query("select NombreSubEspecialidad from mnt_subespecialidad where IdSubEspecialidad='$IdSubEspecialidad'");
+$RowEsp=pg_fetch_array($resp);
 $NomEsp=$RowEsp[0];
 
 ?>
@@ -126,14 +126,14 @@ echo"$DateNow";?>
 //*************************************
 //******************************* QUERIES Y RECORRIDOS
 $nombreTera=GrupoTerapeutico();
-while($grupos=mysql_fetch_array($nombreTera)){
+while($grupos=pg_fetch_array($nombreTera)){
 	$NombreTerapeutico=$grupos["GrupoTerapeutico"];
 	$IdTerapeutico=$grupos["IdTerapeutico"];
 
 //*****Verificacion de numero de datos, asi se rompe el lazo para evitar impresiones de datos no existentes
 $respuesta=ObtenerReporteEspecialidades($IdTerapeutico,$IdMedicina,$FechaInicio,$FechaFin,$IdSubEspecialidad,$IdMedico,$IdArea);
 	
-if($row=mysql_fetch_array($respuesta)) {
+if($row=pg_fetch_array($respuesta)) {
 //***************
 			$SubTotal=0;
 ?>
@@ -175,7 +175,7 @@ $Cantidad_1=0;$Cantidad_2=0;$Monto_Total=0;$Monto_Total2=0;$Lote=array();$Lote2_
 
 $i=0;//Posicion inicial de los vectores
 $j=0;
-			while($rowLotes=mysql_fetch_array($respLotes)){//OBTENGO LOTES RECETAS ETC
+			while($rowLotes=pg_fetch_array($respLotes)){//OBTENGO LOTES RECETAS ETC
 				$Cantidad1=$rowLotes["CantidadLote1"];
 				$Lote1=$rowLotes["Lote1"];
 				
@@ -380,7 +380,7 @@ $UnidadMedida=$row4["Descripcion"];//Tipo de unidad de Medida
 		//$Lote=array();$Lote2_=array();
 		//}//if Medicina != tmpMedicina impresion de la tabla de resultados
 
-}while($row3=mysql_fetch_array($respuesta));
+}while($row3=pg_fetch_array($respuesta));
    
 	$Total+=$SubTotal;
 ?>     

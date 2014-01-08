@@ -19,14 +19,14 @@ switch($_GET["Bandera"]){
 
 	//Comprobacion de periodo valido
 	$respValida=$proc->ValidacionPeriodo($IdMedicina,$FechaInicio,$FechaFin,$_SESSION["IdEstablecimiento"],$IdModalidad);
-	if($existe=mysql_fetch_array($respValida)){
+	if($existe=pg_fetch_array($respValida)){
 	   echo "NO";
 	}else{
 	
 	   //*************************
 	   $proc= new Desabastecimiento;
 	   $promedio=$proc->InsatisfechasPromedio($IdMedicina,$FechaInicio,$FechaFin,$_SESSION["IdEstablecimiento"],$IdModalidad);
-	   if($row=mysql_fetch_array($promedio)){
+	   if($row=pg_fetch_array($promedio)){
 	      echo "Recetas Insatisfechas: ".$row["PromInsatisfechas"]." <br> Promedio de Recetas Diarias: ".$row["PromedioDiaRecetas"];
 
 	      $proc->IngresarDatosInsatisfecha($IdMedicina,$FechaInicio,$FechaFin,$row["PromInsatisfechas"],$row["PromedioDiaRecetas"],$_SESSION["IdEstablecimiento"],$IdModalidad);

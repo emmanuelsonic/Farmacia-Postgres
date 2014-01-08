@@ -36,8 +36,8 @@ else{
 
 }
 	}
-$aux = Mysql_Fetch_Assoc(mysql_query($sqlStrAux,$link));
-$query = mysql_query($sqlStr.$limit, $link);
+$aux = pg_Fetch_Assoc(pg_query($sqlStrAux,$link));
+$query = pg_query($sqlStr.$limit, $link);
 ?>	<p><?php
 		if($aux['total'] and isset($busqueda)){
 				echo "{$aux['total']} Resultado".($aux['total']>1?'s':'')." que coinciden con tu b&uacute;squeda \"<strong>$busqueda</strong>\".";
@@ -63,7 +63,7 @@ $query = mysql_query($sqlStr.$limit, $link);
 			echo "\t<table class=\"registros\">\n";
 			echo "<tr class=\"titulos\"><td>Nick</td><td align=\"center\">Nombre</td><td>Nivel</td><td>Farmacia</td><td>Area</td><td align='center'>Editar Usuario</td></tr>\n";
 			$r=0;
-			while($row = mysql_fetch_assoc($query)){
+			while($row = pg_fetch_assoc($query)){
 $Nick=$row["nick"];
 $Nombre=$row["Nombre"];
 $Nivel=$row["Nivel"];

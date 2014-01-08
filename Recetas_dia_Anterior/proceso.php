@@ -17,8 +17,8 @@ if (isset($_SESSION["nivel"])) {
 
 //*******************************
 
-    mysql_query("update farm_recetas set IdEstado='P' where IdReceta='$IdReceta'");
-    mysql_query("update farm_recetas set IdPersonal='$IdPersonal' where IdReceta='$IdReceta'");
+    pg_query("update farm_recetas set IdEstado='P' where IdReceta='$IdReceta'");
+    pg_query("update farm_recetas set IdPersonal='$IdPersonal' where IdReceta='$IdReceta'");
 
     $query = new Repetitivas;
     $query2 = new queries;
@@ -26,7 +26,7 @@ if (isset($_SESSION["nivel"])) {
 
     $respDatos = $query->ObtenerDatosPacienteRecetaProceso($IdReceta);
 
-    while ($row = mysql_fetch_array($respDatos)) {
+    while ($row = pg_fetch_array($respDatos)) {
         //Datos Generales de todos los pacientes.-
         $paciente = $row["NOMBRE"];
         $paciente = htmlentities(strtoupper($paciente));
@@ -82,7 +82,7 @@ if (isset($_SESSION["nivel"])) {
                                         <?php
                                         }
                                         if ($Estado == "P") {
-                                            $RowName = mysql_fetch_array($query2->NombreTecnico($IdReceta));
+                                            $RowName = pg_fetch_array($query2->NombreTecnico($IdReceta));
                                             $Corr = $RowName["IdPersonal"];
                                             $NombreTecnico = $RowName["NombreTecnico"];
                                             if (!isset($Corr)) {
@@ -121,7 +121,7 @@ if (isset($_SESSION["nivel"])) {
                             <td width="138"><div align="center"><strong>Satisfecho</strong></div></td>
                         </tr>
                         <?php
-                        while ($row2 = mysql_fetch_array($respDetalles)) {
+                        while ($row2 = pg_fetch_array($respDetalles)) {
                             $cantidad = number_format($row2["Cantidad"], 0, '.', '');
                             $NombreMedicina = htmlentities($row2["medicina"]);
                             $Concentracion = $row2["Concentracion"];

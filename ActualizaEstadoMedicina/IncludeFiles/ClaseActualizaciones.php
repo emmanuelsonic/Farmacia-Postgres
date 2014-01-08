@@ -7,7 +7,7 @@ class Actualizaciones{
 					where (IdEstado='H' or IdEstado='I')
 					order by Nombre
 					LIMIT $pagina,20";
-		$resp=mysql_query($querySelect);
+		$resp=pg_query($querySelect);
 		return($resp);		
 	}//Datos Generales
 	
@@ -23,7 +23,7 @@ class Actualizaciones{
 					where (IdEstado='H' or IdEstado='I')
 					and $filtro
 					order by Nombre";
-		$resp=mysql_query($querySelect);
+		$resp=pg_query($querySelect);
 		return($resp);	}//BusquedaMedico
 	
 	
@@ -32,7 +32,7 @@ class Actualizaciones{
 					from farm_catalogoproductos
 					where(IdEstado='H' or IdEstado='I')
 					order by Nombre";
-		$resp=mysql_fetch_array(mysql_query($querySelect));
+		$resp=pg_fetch_array(pg_query($querySelect));
 		return($resp[0]);
 	}
 	
@@ -40,7 +40,7 @@ class Actualizaciones{
 		$querySelect="select CodigoFarmacia
 					from mnt_subespecialidad
 					where IdSubEspecialidad='$IdSubEspecialidad'";
-		$resp=mysql_fetch_array(mysql_query($querySelect));
+		$resp=pg_fetch_array(pg_query($querySelect));
 		return($resp[0]);
 	}
 	
@@ -48,7 +48,7 @@ class Actualizaciones{
 		$querySelect="select IdSubEspecialidad,NombreSubEspecialidad
 					from mnt_subespecialidad
 					where IdSubEspecialidad=".$IdSubEspecialidad;
-		$resp=mysql_fetch_array(mysql_query($querySelect));
+		$resp=pg_fetch_array(pg_query($querySelect));
 		return($resp[1]);		
 	}//SubEspecialidad
 	
@@ -58,18 +58,18 @@ class Actualizaciones{
 					inner join mnt_empleados
 					on mnt_empleados.IdSubEspecialidad=mnt_subespecialidad.IdSubEspecialidad
 					where IdEmpleado='$IdEmpleado'";
-		$resp=mysql_fetch_array(mysql_query($querySelect));
+		$resp=pg_fetch_array(pg_query($querySelect));
 		return($resp[0]);		
 	}//MedicoSubEspecialidad
 	
 	function ActualizarCodigoFarmacia($IdSubEspecialidad,$CodigoNuevo){
 		$queryUpdate="update mnt_subespecialidad set CodigoFarmacia='$CodigoNuevo' where IdSubEspecialidad='$IdSubEspecialidad'";
-		mysql_query($queryUpdate);
+		pg_query($queryUpdate);
 	}//Actualiza Codigo
 	
 	function VerificaCodigo($IdSubEspecialidad,$CodigoNuevo){
 		$querySelect="select IdSubEspecialidad from mnt_subespecialidad where CodigoFarmacia='$CodigoNuevo' and IdSubEspecialidad <> '$IdSubEspecialidad'";
-		$resp=mysql_fetch_array(mysql_query($querySelect));
+		$resp=pg_fetch_array(pg_query($querySelect));
 		return($resp[0]);
 	}//varificacion de Codigo
 	
@@ -79,13 +79,13 @@ class Actualizaciones{
 		$querySelect="select IdEstado
 					from farm_catalogoproductos
 					where IdMedicina='$IdMedicina'";
-		$resp=mysql_fetch_array(mysql_query($querySelect));
+		$resp=pg_fetch_array(pg_query($querySelect));
 		return($resp[0]);
 	}
 	
 	function ActualizaEstadoCuenta($IdMedicina,$NuevoEstado){
 		$queryUpdate="update farm_catalogoproductos set IdEstado='$NuevoEstado' where IdMedicina='$IdMedicina'";
-		mysql_query($queryUpdate);
+		pg_query($queryUpdate);
 		
 	}
 	

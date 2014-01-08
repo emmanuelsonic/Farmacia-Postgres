@@ -33,7 +33,7 @@ if (!isset($_SESSION["nivel"])) {
             } else {
                 $comp = "";
             }
-            $consulta = mysql_query("select mf.IdFarmacia,Farmacia
+            $consulta = pg_query("select mf.IdFarmacia,Farmacia
                                     from mnt_farmacia mf
                                     inner join mnt_farmaciaxestablecimiento mfe
                                     on mfe.IdFarmacia = mf.IdFarmacia
@@ -44,7 +44,7 @@ if (!isset($_SESSION["nivel"])) {
             // Voy imprimiendo el primer select compuesto por los paises
             echo "<select name='IdFarmacia' id='IdFarmacia'>";
             echo "<option value='0'>[Consumo General ...]</option>";
-            while ($registro = mysql_fetch_row($consulta)) {
+            while ($registro = pg_fetch_row($consulta)) {
                 echo "<option value='" . $registro[0] . "'>" . $registro[1] . "</option>";
             }
             echo "</select>";
@@ -111,7 +111,7 @@ if (!isset($_SESSION["nivel"])) {
                                     <option value="0">[General ...]</option>
                                     <?php
                                     conexion::conectar();
-                                    $consulta = mysql_query("SELECT distinct mnt_grupoterapeutico.* 
+                                    $consulta = pg_query("SELECT distinct mnt_grupoterapeutico.* 
                                                             FROM mnt_grupoterapeutico
                                                             inner join farm_catalogoproductos fcp
                                                             on fcp.IdTerapeutico=mnt_grupoterapeutico.IdTerapeutico
@@ -121,9 +121,9 @@ if (!isset($_SESSION["nivel"])) {
                                                             and fcpe.IdEstablecimiento=$IdEstablecimiento
                                                             and fcpe.IdModalidad=$IdModalidad
                                                             order by mnt_grupoterapeutico.IdTerapeutico
-                                                ") or die(mysql_error());
+                                                ") or die(pg_error());
                                     conexion::desconectar();
-                                    while ($registro = mysql_fetch_row($consulta)) {
+                                    while ($registro = pg_fetch_row($consulta)) {
                                         // Convierto los caracteres conflictivos a sus entidades HTML correspondientes para su correcta visualizacion
                                         $registro[1] = htmlentities($registro[1]);
                                         // Imprimo las opciones del select

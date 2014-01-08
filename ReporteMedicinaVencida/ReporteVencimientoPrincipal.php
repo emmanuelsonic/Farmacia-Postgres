@@ -39,12 +39,12 @@ function ComboAreas($IdEstablecimiento, $IdModalidad) {
             and mafe.IdEstablecimiento=$IdEstablecimiento
             and mafe.IdModalidad=$IdModalidad
             ";
-    $resp = mysql_query($SQL);
+    $resp = pg_query($SQL);
     conexion::desconectar();
 
     $combo = "<select id='IdArea' name='IdArea'>
 		<option value='0'>[GENERAL...]</option>";
-    while ($row = mysql_fetch_array($resp)) {
+    while ($row = pg_fetch_array($resp)) {
         $combo.="<option value='" . $row["IdArea"] . "'>" . $row["Area"] . "</otion>";
     }
     $combo.="</select>";
@@ -54,12 +54,12 @@ function ComboAreas($IdEstablecimiento, $IdModalidad) {
 function ComboTerapeutico() {
     conexion::conectar();
     $SQL = "select IdTerapeutico,GrupoTerapeutico from mnt_grupoterapeutico where GrupoTerapeutico <> '--'";
-    $resp = mysql_query($SQL);
+    $resp = pg_query($SQL);
     conexion::desconectar();
 
     $combo = "<select id='IdTerapeutico' name='IdTerapeutico' onchange='CargarMedicinas(this.value);'>
 		<option value='0'>[GENERAL...]</option>";
-    while ($row = mysql_fetch_array($resp)) {
+    while ($row = pg_fetch_array($resp)) {
         $combo.="<option value='" . $row["IdTerapeutico"] . "'>" . $row["IdTerapeutico"] . ' - ' . $row["GrupoTerapeutico"] . "</otion>";
     }
     $combo.="</select>";

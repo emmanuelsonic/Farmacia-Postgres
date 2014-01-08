@@ -10,7 +10,7 @@ class Bitacora {
                 and IdModalidad=$IdModalidad
                     
                 ";
-        $resp = mysql_query($SQL);
+        $resp = pg_query($SQL);
         return($resp);
     }
 
@@ -32,7 +32,7 @@ class Bitacora {
                 and fbem.IdEstablecimiento=$IdEstablecimiento
                 and fbem.IdModalidad=$IdModalidad
 		" . $comp;
-        $resp = mysql_query($SQL);
+        $resp = pg_query($SQL);
         return($resp);
     }
 
@@ -58,7 +58,7 @@ class Bitacora {
                 and fem.IdEstablecimiento=$IdEstablecimiento
                 and fem.IdModalidad=$IdModalidad
 		order by Codigo,FechaIngreso";
-        $resp = mysql_query($SQL);
+        $resp = pg_query($SQL);
         return($resp);
     }
 
@@ -68,7 +68,7 @@ class Bitacora {
                 where IdMedicina= $IdMedicina
                 and IdEstablecimiento=$IdEstablecimiento
                 and IdModalidad=$IdModalidad";
-        $resp = mysql_query($SQL);
+        $resp = pg_query($SQL);
         return($resp);
     }
 

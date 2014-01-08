@@ -31,20 +31,20 @@ if (!isset($_SESSION["nivel"])) {
         function ComboEmisor($IdEstablecimiento,$IdModalidad) { //creacioon de combo para las Regiones
             $conexion = new conexion;
             $conexion->conectar();
-            $consulta = mysql_query("select distinct farm_usuarios.IdPersonal,Nombre 
-                                     from farm_usuarios
+            $consulta = pg_query("select distinct fos_user_user.Id,firstname
+                                     from fos_user_user
                                      inner join farm_ajustes
-                                     on farm_ajustes.IdPersonal = farm_usuarios.IdPersonal
+                                     on farm_ajustes.IdPersonal = fos_user_user.Id
                                      where farm_ajustes.IdEstablecimiento=$IdEstablecimiento
                                      and farm_ajustes.IdModalidad=$IdModalidad
-                                     and farm_usuarios.IdEstablecimiento=$IdEstablecimiento
-                                     and farm_usuarios.IdModalidad=$IdModalidad
+                                     and fos_user_user.Id_Establecimiento=$IdEstablecimiento
+                                     and fos_user_user.id_area_mod_estab=$IdModalidad
                                      ");
             $conexion->desconectar();
             // Voy imprimiendo el primer select compuesto por los paises
             echo "<select name='IdPersonal' id='IdPersonal'>";
             echo "<option value='0'>[Todos los usuarios...]</option>";
-            while ($registro = mysql_fetch_row($consulta)) {
+            while ($registro = pg_fetch_row($consulta)) {
                 if ($registro[1] != "--") {
                     echo "<option value='" . $registro[0] . "'>" . $registro[1] . "</option>";
                 }

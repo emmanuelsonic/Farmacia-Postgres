@@ -84,11 +84,11 @@ $esta2="";
 else{
 $esta2=$_SESSION["estaCod"]; }
     conexion::conectar();
-	//$consulta2=mysql_query("SELECT NOMBRE FROM $tabla WHERE sib='$opcionSeleccionada' ORDER BY nombre") or die(mysql_error());
+	//$consulta2=pg_query("SELECT NOMBRE FROM $tabla WHERE sib='$opcionSeleccionada' ORDER BY nombre") or die(pg_error());
 	if($esta2!='' && $esta2!='0' && $seguridad!='1'){
-	$consulta2=pg_query("SELECT estasib.NOMBRE, tipo_establecimiento.tipo FROM estasib, tipo_establecimiento WHERE estasib.idest='$esta2' and estasib.id_tipo=tipo_establecimiento.id_tipo ORDER BY tipo, NOMBRE") or die(mysql_error());
+	$consulta2=pg_query("SELECT estasib.NOMBRE, tipo_establecimiento.tipo FROM estasib, tipo_establecimiento WHERE estasib.idest='$esta2' and estasib.id_tipo=tipo_establecimiento.id_tipo ORDER BY tipo, NOMBRE") or die(pg_error());
 	}else{
-	$consulta2=pg_query("SELECT estasib.NOMBRE, tipo_establecimiento.tipo FROM estasib, tipo_establecimiento WHERE estasib.sib='$opcionSeleccionada' and estasib.id_tipo=tipo_establecimiento.id_tipo ORDER BY tipo, NOMBRE") or die(mysql_error());}
+	$consulta2=pg_query("SELECT estasib.NOMBRE, tipo_establecimiento.tipo FROM estasib, tipo_establecimiento WHERE estasib.sib='$opcionSeleccionada' and estasib.id_tipo=tipo_establecimiento.id_tipo ORDER BY tipo, NOMBRE") or die(pg_error());}
 	conexion::desconectar();
 	
 	// Comienzo a imprimir el select

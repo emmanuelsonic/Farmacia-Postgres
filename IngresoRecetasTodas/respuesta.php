@@ -25,9 +25,15 @@ switch($Bandera){
 
                 $resp = pg_query($querySelect);
                 while ($row = pg_fetch_array($resp)) {
+<<<<<<< HEAD
                     $Nombre = $row["nombre"] . " - " . $row["concentracion"] . " - " . $row["formafarmaceutica"] . " - " . $row["presentacion"];
                     $IdMedicina = $row["id"]; //Estaba IdMedicina
                     $Codigo = $row["codigo"];
+=======
+                    $Nombre = $row["Nombre"] . " - " . $row["Concentracion"] . " - " . $row["FormaFarmaceutica"] . " - " . $row["Presentacion"];
+                    $IdMedicina = $row["IdMedicina"];
+                    $Codigo = $row["Codigo"];
+>>>>>>> b828137fda9ad3e0fabfa24c69e6cc9738584735
                     ?>
                     <li onselect="this.text.value = '<?php echo htmlentities($Nombre); ?>';$('IdMedicina').value='<?php echo $IdMedicina; ?>';ObtenerExistenciaTotal();"> 
                         <span><?php echo $Codigo; ?></span>

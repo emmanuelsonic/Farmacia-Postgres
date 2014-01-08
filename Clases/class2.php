@@ -56,15 +56,15 @@ function InicioSesion($usuario,$contra){
 					where login='$usuario'
 					and password='$contra'
 					and modulo='ALM'";
-	$resp=mysql_query($querySelect);
-	if($row=mysql_fetch_array($resp)){
+	$resp=pg_query($querySelect);
+	if($row=pg_fetch_array($resp)){
 		$_SESSION["Nick"]=$usuario;
 		$_SESSION["NombreEmpleado"]=$row["NombreEmpleado"];
 		$_SESSION["Nivel"]=$row["Nivel"];
 		$_SESSION["IdUsuario"]=$row["Correlativo"];
 		$_SESSION["IdEmpleado"]=$row["IdEmpleado"];
 			$querySelect="select EstadoCuenta from alm_estadocuenta where IdEmpleado='".$row["IdEmpleado"]."'";
-			$resp=mysql_fetch_array(mysql_query($querySelect));
+			$resp=pg_fetch_array(pg_query($querySelect));
 			if($resp[0]==NULL or $resp[0]!='I'){
 				$_SESSION["EstadoCuenta"]='H';
 				$respuesta='S';
@@ -88,7 +88,7 @@ function NombreEmpleado($IdEmpleado){
 $querySelect="select mnt_empleados.NombreEmpleado
 			from mnt_empleados
 			where mnt_empleados.IdEmpleado='$IdEmpleado'";
-$resp=mysql_fetch_array(mysql_query($querySelect));
+$resp=pg_fetch_array(pg_query($querySelect));
 return($resp[0]);
 }//NombreEmpleado
 
@@ -97,27 +97,27 @@ function LotesDeEntrega($IdMedicina){
 	$querySelect="select Cantidad, Lote, DATE_FORMAT(FechaVencimiento,'%d/%m/%Y') as FechaVencimiento
 			from alm_entregamedicamento
 			inner join farm_lotes
-			on farm_lotes.IdLote=alm_entregamedicamento.IdLote
+			on farm_lotes.id=alm_entregamedicamento.IdLote
 			where alm_entregamedicamento.IdMedicina=$IdMedicina
 			and IdEstado=1";
-	$resp=mysql_query($querySelect);
+	$resp=pg_query($querySelect);
 	return($resp);
 }
 
 
 
 function ObtenerLotesPorExistencia($IdMedicina){
-	$querySelect="select farm_entregamedicamento.Existencia,farm_lotes.IdLote, Lote, DATE_FORMAT(FechaVencimiento,'%d-%m-%Y') as FechaVencimiento
+	$querySelect="select farm_entregamedicamento.Existencia,farm_lotes.id, Lote, DATE_FORMAT(FechaVencimiento,'%d-%m-%Y') as FechaVencimiento
 				from farm_lotes
 				inner join farm_entregamedicamento
-				on farm_entregamedicamento.IdLote=farm_lotes.IdLote
+				on farm_entregamedicamento.IdLote=farm_lotes.id
 				where farm_entregamedicamento.IdMedicina='$IdMedicina'
 				and Existencia <> '0'
 				order by FechaVencimiento";
-	$resp=mysql_query($querySelect);
+	$resp=pg_query($querySelect);
 	$datos="<select id='IdLote' name='IdLote' onclick='javascript:AlmExistencia(this.value);'>
 	<option value='0'>[Seleccione...]</option>";	
-	while($row=mysql_fetch_array($resp)){
+	while($row=pg_fetch_array($resp)){
 		$datos.="<option value='".$row["IdLote"]."'>".$row["Lote"]." - ".$row["FechaVencimiento"]."</option>";
 	}//while
 	$datos.="</select>";
@@ -129,7 +129,7 @@ function EmpleadoNumeroCorrelativo($IdEmpleado){
 	$querySelect="select Correlativo
 	from mnt_empleados
 	where IdEmpleado='$IdEmpleado'";
-	$resp=mysql_fetch_array(mysql_query($querySelect));
+	$resp=pg_fetch_array(pg_query($querySelect));
 	return($resp[0]);
 }
 
@@ -137,7 +137,7 @@ function EmpleadoNumeroCorrelativo($IdEmpleado){
 
 function ObtenerExistenciaPorLote($IdLote){
 	$querySelect="select Existencia from farm_entregamedicamento where IdLote=".$IdLote;
-	$resp=mysql_fetch_array(mysql_query($querySelect));
+	$resp=pg_fetch_array(pg_query($querySelect));
 	return($resp["Existencia"]);
 }
 
@@ -145,7 +145,7 @@ function ObtenerExistenciaPorLote($IdLote){
 function RealizarTransferencia($IdMedicina,$Cantidad,$IdLote,$IdUsuarioReg){
 	
 	$querySelect="select Existencia from alm_existencias where IdLote=".$IdLote;
-		$resp=mysql_fetch_array(mysql_query($querySelect));
+		$resp=pg_fetch_array(pg_query($querySelect));
 		$Existencia_new=$resp[0]-$Cantidad;
 		$Existencia_old=$resp[0];
 		
@@ -156,7 +156,7 @@ if($Existencia_new < 0){
 		$Existencia_new = 0;
 		
 	$queryInsert="insert into alm_entregamedicamento (IdMedicina,Cantidad,IdLote,Fecha,IdEstado,IdUsuarioReg) values('$IdMedicina','".$Existencia_old."','$IdLote',curdate(),'1','$IdUsuarioReg')";
-	$resp=mysql_query($queryInsert) or die('N');
+	$resp=pg_query($queryInsert) or die('N');
 
 			
 	/* BALANCEO DEINAMICO DE LOTES PARA CUBRIR DEMANDA */
@@ -166,12 +166,12 @@ if($Existencia_new < 0){
 		$querySelect="select Existencia,alm_existencias.IdLote, FechaVencimiento
 					from alm_existencias
 					inner join farm_lotes
-					on farm_lotes.IdLote=alm_existencias.IdLote
+					on farm_lotes.id=alm_existencias.IdLote
 					
 					where IdMedicina='$IdMedicina'
 					and alm_existencias.IdLote != '$IdLote'
 					order by FechaVencimiento limit $siguiente,1";
-		$CargaLotes=mysql_fetch_array(mysql_query($querySelect));	
+		$CargaLotes=pg_fetch_array(pg_query($querySelect));	
 		 $cargaBal=$CargaLotes["Existencia"]-$cargaBal;
 		 
 		 	if($cargaBal < 0){
@@ -182,7 +182,7 @@ if($Existencia_new < 0){
 			
 		 
 $queryInsert="insert into alm_entregamedicamento (IdMedicina,Cantidad,IdLote,Fecha,IdEstado,IdUsuarioReg) values('".$IdMedicina."','".$Cantidad."','".$CargaLotes["IdLote"]."',curdate(),'1','$IdUsuarioReg')";
-	$resp=mysql_query($queryInsert);		 
+	$resp=pg_query($queryInsert);		 
 		 
 		 $siguiente ++;
 	}//fin de while  negativo			
@@ -191,26 +191,26 @@ $queryInsert="insert into alm_entregamedicamento (IdMedicina,Cantidad,IdLote,Fec
 	/*		SI LA RESTA DE LA EXISTENCIA MENOS LA CANTIDAD PEDIDA ES MAYOR QUE CERO		*/
 
 			$querySelectTrans="select IdMedicina, Cantidad, IdLote from alm_entregamedicamento where IdLote='$IdLote' and IdUsuarioReg='$IdUsuarioReg' and IdEstado=1";
-			$respTrans=mysql_query($querySelectTrans);
+			$respTrans=pg_query($querySelectTrans);
 			
-			if($testTrans=mysql_fetch_array($respTrans)){
+			if($testTrans=pg_fetch_array($respTrans)){
 			//si hay datos previos de ese lote se hace una actualizacion sumando las nueva cantidad a transferir
 					
 					$Cantidad_new=$testTrans["Cantidad"]+$Cantidad;
 					$queryUpdateTrans="update alm_entregamedicamento set Cantidad='$Cantidad_new' where IdLote=".$IdLote;
-					$resp=mysql_query($queryUpdateTrans);
+					$resp=pg_query($queryUpdateTrans);
 
 			}else{	// si hay no hay datos de ese lote se introduce un registro nuevo
 
 	$queryInsert="insert into alm_entregamedicamento (IdMedicina,Cantidad,IdLote,Fecha,IdEstado,IdUsuarioReg) values('$IdMedicina','$Cantidad','$IdLote',curdate(),'1','$IdUsuarioReg')";
-	$resp=mysql_query($queryInsert) or die('N');
+	$resp=pg_query($queryInsert) or die('N');
 			}
 
 }
 		
 		
 	$queryUpdate="update alm_existencias set Existencia='$Existencia_new' where IdLote=".$IdLote;
-		$resp=mysql_query($queryUpdate);		
+		$resp=pg_query($queryUpdate);		
 	
 	return($resp);
 		
@@ -220,30 +220,30 @@ $queryInsert="insert into alm_entregamedicamento (IdMedicina,Cantidad,IdLote,Fec
 function RealizarTransferenciaDoble($IdMedicina,$Cantidad,$IdLote,$IdUsuarioReg){
 	
 			$querySelect="select Existencia from alm_existencias where IdLote=".$IdLote;
-			$total=mysql_fetch_array(mysql_query($querySelect));
+			$total=pg_fetch_array(pg_query($querySelect));
 			
 			$querySelectTrans="select IdMedicina, Cantidad, IdLote from alm_entregamedicamento where IdLote='$IdLote' and IdUsuarioReg='$IdUsuarioReg' and IdEstado=1";
-			$respTrans=mysql_query($querySelectTrans);
+			$respTrans=pg_query($querySelectTrans);
 			
-			if($testTrans=mysql_fetch_array($respTrans)){
+			if($testTrans=pg_fetch_array($respTrans)){
 			//si hay datos previos de ese lote se hace una actualizacion sumando las nueva cantidad a transferir
 					
 					$Cantidad_new=$total[0]+$testTrans["Cantidad"];
 					$queryUpdateTrans="update alm_entregamedicamento set Cantidad='$Cantidad_new' where IdLote=".$IdLote;
-					$resp=mysql_query($queryUpdateTrans);
+					$resp=pg_query($queryUpdateTrans);
 
 			}else{	// si hay no hay datos de ese lote se introduce un registro nuevo
 			
 			
 					$queryInsert="insert into alm_entregamedicamento (IdMedicina,Cantidad,IdLote,Fecha,IdEstado,IdUsuarioReg) values('$IdMedicina','".$total[0]."','$IdLote',curdate(),'1','$IdUsuarioReg')";
-					$resp=mysql_query($queryInsert);
+					$resp=pg_query($queryInsert);
 			}//else
 	
 	
 	
 	
 			$queryUpdate="update alm_existencias set Existencia='0' where IdLote=".$IdLote;
-				mysql_query($queryUpdate);
+				pg_query($queryUpdate);
 	
 	
 	
@@ -257,15 +257,15 @@ function RealizarTransferenciaDoble($IdMedicina,$Cantidad,$IdLote,$IdUsuarioReg)
 		$querySelect="select Existencia,alm_existencias.IdLote, FechaVencimiento
 					from alm_existencias
 					inner join farm_lotes
-					on farm_lotes.IdLote=alm_existencias.IdLote
+					on farm_lotes.id=alm_existencias.IdLote
 					
 					where IdMedicina='$IdMedicina'
 					and alm_existencias.IdLote != '$IdLote'
 					order by FechaVencimiento limit $siguiente,1";
 			
-		if($test=mysql_fetch_array(mysql_query($querySelect))){
+		if($test=pg_fetch_array(pg_query($querySelect))){
 			
-				$CargaLotes=mysql_fetch_array(mysql_query($querySelect));	
+				$CargaLotes=pg_fetch_array(pg_query($querySelect));	
 				 $cargaBal=$CargaLotes["Existencia"]-$cargaBal;
 				 
 					if($cargaBal < 0){
@@ -279,11 +279,11 @@ function RealizarTransferenciaDoble($IdMedicina,$Cantidad,$IdLote,$IdUsuarioReg)
 					
 				 
 		$queryInsert="insert into alm_entregamedicamento (IdMedicina,Cantidad,IdLote,Fecha,IdEstado,IdUsuarioReg) values('".$IdMedicina."','".$Cantidad."','".$CargaLotes["IdLote"]."',curdate(),'1','$IdUsuarioReg')";
-			$resp=mysql_query($queryInsert);		
+			$resp=pg_query($queryInsert);		
 			
 			
 			$queryUpdate="update alm_existencias set Existencia='$Existencia_new' where IdLote=".$CargaLotes["IdLote"];
-					mysql_query($queryUpdate);
+					pg_query($queryUpdate);
 			
 				 
 				 $siguiente ++;
@@ -304,12 +304,12 @@ function RealizarTransferenciaDoble($IdMedicina,$Cantidad,$IdLote,$IdUsuarioReg)
 function DesplegarTransferencias($IdUsuarioReg,$Externo){
 	if($Externo==0){
 	$querySelect2="select alm_entregamedicamento.IdMedicina,alm_entregamedicamento.IdEntrega,farm_catalogoproductos.Nombre, farm_catalogoproductos.Concentracion,
-				alm_entregamedicamento.Cantidad,farm_lotes.Lote,farm_lotes.IdLote,FechaVencimiento
+				alm_entregamedicamento.Cantidad,farm_lotes.Lote,farm_lotes.id as idlote,FechaVencimiento
 				from farm_catalogoproductos
 				inner join alm_entregamedicamento
-				on alm_entregamedicamento.IdMedicina=farm_catalogoproductos.IdMedicina
+				on alm_entregamedicamento.IdMedicina=farm_catalogoproductos.Id
 				inner join farm_lotes
-				on farm_lotes.IdLote=alm_entregamedicamento.IdLote
+				on farm_lotes.id=alm_entregamedicamento.IdLote
 				where alm_entregamedicamento.IdUsuarioReg=$IdUsuarioReg
 				and alm_entregamedicamento.IdEstado=1
 				and Fecha=curdate()";	
@@ -318,9 +318,9 @@ function DesplegarTransferencias($IdUsuarioReg,$Externo){
 				sum(alm_entregamedicamento.Cantidad)as Cantidad,farm_lotes.IdLote
 				from farm_catalogoproductos
 				inner join alm_entregamedicamento
-				on alm_entregamedicamento.IdMedicina=farm_catalogoproductos.IdMedicina
+				on alm_entregamedicamento.IdMedicina=farm_catalogoproductos.Id
 				inner join farm_lotes
-				on farm_lotes.IdLote=alm_entregamedicamento.IdLote
+				on farm_lotes.id=alm_entregamedicamento.IdLote
 				where alm_entregamedicamento.IdUsuarioReg=$IdUsuarioReg
 				and alm_entregamedicamento.IdEstado=1
 				and Fecha=curdate()
@@ -330,8 +330,8 @@ function DesplegarTransferencias($IdUsuarioReg,$Externo){
 	
 	}
 				
-	$resp2=mysql_query($querySelect2);
-	$resp3=mysql_query($querySelect2);
+	$resp2=pg_query($querySelect2);
+	$resp3=pg_query($querySelect2);
 	
 	$datos="<table align='center' width='100%'>";
 	if($Externo==1){
@@ -357,17 +357,17 @@ function DesplegarTransferencias($IdUsuarioReg,$Externo){
 	$datos.="</tr>";
 	
 	
-	if($row2=mysql_fetch_array($resp3)){
+	if($row2=pg_fetch_array($resp3)){
 		$NoMovimiento=0;
 	
-	while($row=mysql_fetch_array($resp2)){
+	while($row=pg_fetch_array($resp2)){
 			/*OBTENCION DE MEDIDA PARA EL MEDICAMENTO*/
 			$querySelect1="select Descripcion,UnidadesContenidas
 			from farm_unidadmedidas
 			inner join farm_catalogoproductos
-			on farm_catalogoproductos.IdUnidadMedida=farm_unidadmedidas.IdUnidadMedida
+			on farm_catalogoproductos.IdUnidadMedida=farm_unidadmedidas.id
 			where IdMedicina=".$row["IdMedicina"];
-			$unidades=mysql_fetch_array(mysql_query($querySelect1));
+			$unidades=pg_fetch_array(pg_query($querySelect1));
 			/*********************************************/
 			if($row2["IdMedicina"]==$row["IdMedicina"]){
 				$NoMovimiento++;
@@ -375,12 +375,12 @@ function DesplegarTransferencias($IdUsuarioReg,$Externo){
 				$NoMovimiento=1;
 			}
 			
-						$row2=mysql_fetch_array($resp3);
+						$row2=pg_fetch_array($resp3);
 			
 		$datos.="<tr class='FONDO'><td align='center'>".$NoMovimiento."</td><td align='center'>".$row["Nombre"]." - ".$row["Concentracion"]."</td><td align='center'>".$unidades["Descripcion"]."</td><td align='center'>".$row["Cantidad"]/$unidades["UnidadesContenidas"]."</td><td align='center'>";
 		if($Externo==1){
 			$respLotes=queries::LotesDeEntrega($row["IdMedicina"]);
-			while($rowLotes=mysql_fetch_array($respLotes)){
+			while($rowLotes=pg_fetch_array($respLotes)){
 				$datos.="Cantidad: ".$rowLotes["Cantidad"]."<br>";
 				$datos.="Lote: ".$rowLotes["Lote"]."<br>";
 				$datos.="Fecha de Vencimiento: ".$rowLotes["FechaVencimiento"]."<br><br>";		
@@ -421,20 +421,20 @@ function EliminarTransferencia($IdEntrega){
 
 /*		AUNMENTO DE EXISTENCIAS EN LOS LOTES EN QUE SERAN ELIMINADAS LAS TRANSFERENCIAS			*/
 	$querySelect="select Cantidad, IdLote from alm_entregamedicamento where IdEntrega=".$IdEntrega;
-				$resp=mysql_fetch_array(mysql_query($querySelect));
+				$resp=pg_fetch_array(pg_query($querySelect));
 		
 	$querySelect="select Existencia from alm_existencias where IdLote=".$resp["IdLote"];
-				$resp2=mysql_fetch_array(mysql_query($querySelect));
+				$resp2=pg_fetch_array(pg_query($querySelect));
 		
 		$Existencia_new=$resp2["Existencia"]+$resp["Cantidad"];
 		
 	$queryUpdate="update alm_existencias set Existencia='$Existencia_new' where IdLote=".$resp["IdLote"];
-				mysql_query($queryUpdate);
+				pg_query($queryUpdate);
 
 /************************************************************************************************/		
 
 	$queryDelete="delete from alm_entregamedicamento where IdEntrega=".$IdEntrega;
-	mysql_query($queryDelete);	
+	pg_query($queryDelete);	
 }//Elimnar Tranferencia
 
 
@@ -446,32 +446,32 @@ function FinalizarTransferencias($IdUsuarioReg){
 				where IdUsuarioReg='$IdUsuarioReg'
 				and IdEstado=1
 				and Fecha=curdate()";
-	$resp=mysql_query($querySelect);
+	$resp=pg_query($querySelect);
 	
-	while($row=mysql_fetch_array($resp)){
+	while($row=pg_fetch_array($resp)){
 		
 		$querySelect2="select IdMedicina, Existencia, IdLote from farm_entregamedicamento where IdLote=".$row["IdLote"];
-				$resp2=mysql_query($querySelect2);
+				$resp2=pg_query($querySelect2);
 				
-		if($test=mysql_fetch_array($resp2)){
+		if($test=pg_fetch_array($resp2)){
 		$Existencia_new=$test["Existencia"]+$row["Cantidad"];
 		
 		$queryUpdateExistencia="update farm_entregamedicamento set Existencia='$Existencia_new' where IdLote=".$row["IdLote"];
-				mysql_query($queryUpdateExistencia);
+				pg_query($queryUpdateExistencia);
 		
 		}else{
 		
 			
 		/*concretar la transferencia de medicamento a Farmacia*/
 		$queryInsert="insert into farm_entregamedicamento (IdMedicina,Existencia,IdLote) values('".$row["IdMedicina"]."','".$row["Cantidad"]."','".$row["IdLote"]."')";
-				mysql_query($queryInsert);
+				pg_query($queryInsert);
 
 		}
 		
 		
 		$queryUpdate="update alm_entregamedicamento set IdEstado=2 where IdEntrega=".$row["IdEntrega"];
 		
-		mysql_query($queryUpdate);
+		pg_query($queryUpdate);
 		
 	}
 	
@@ -488,7 +488,7 @@ function FinalizarTransferencias($IdUsuarioReg){
 
 function CodigoLote($IdLote){
 	$querySelect="select Lote from farm_lotes where IdLote='$IdLote'";
-	$resp=mysql_fetch_array(mysql_query($querySelect));
+	$resp=pg_fetch_array(pg_query($querySelect));
 	return($resp[0]);
 }
 
@@ -497,9 +497,9 @@ function ObtenerUnidadMedida($IdMedicina){
 	$querySelect="select farm_unidadmedidas.UnidadesContenidas
 				from farm_unidadmedidas
 				inner join farm_catalogoproductos
-				on farm_catalogoproductos.IdUnidadMedida=farm_unidadmedidas.IdUnidadMedida
-				where farm_catalogoproductos.IdMedicina='$IdMedicina'";
-	$resp=mysql_fetch_array(mysql_query($querySelect));
+				on farm_catalogoproductos.IdUnidadMedida=farm_unidadmedidas.id
+				where farm_catalogoproductos.Id='$IdMedicina'";
+	$resp=pg_fetch_array(pg_query($querySelect));
 	return($resp[0]);
 }//ObtenerUnidadMedida
 
@@ -509,20 +509,20 @@ function ObtenerUnidadMedida($IdMedicina){
 
 function ConfirmaExistencia($IdMedicina,$Lote,$IdEstablecimiento,$IdModalidad){
 if($Lote!='Lote.'){
-$querySelect="select farm_entregamedicamento.Existencia,farm_lotes.IdLote
+$querySelect="select farm_entregamedicamento.Existencia,farm_lotes.id as IdLote
 			from farm_entregamedicamento
 			inner join farm_lotes
-			on farm_lotes.IdLote=farm_entregamedicamento.IdLote 
+			on farm_lotes.Id=farm_entregamedicamento.IdLote 
 			where farm_entregamedicamento.IdMedicina='$IdMedicina' 
 			and farm_lotes.Lote='$Lote'
                         and farm_entregamedicamento.IdEstablecimiento=$IdEstablecimiento
                         and farm_entregamedicamento.IdModalidad=$IdModalidad
 			and Existencia <> 0 
-			and left(curdate(),7) <= left(FechaVencimiento,7)";
+			and left(to_char(current_date,'YYYY-MM-DD'),7) <= left(to_char(FechaVencimiento,'YYYY-MM-DD'),7)";
 }else{
 //$querySelect="select * from farm_medicinaexistenciaxarea where IdMedicina='$IdMedicina' and IdArea='$IdArea'";
 }
-$resp=mysql_query($querySelect);
+$resp=pg_query($querySelect);
 return($resp);
 }//confirma existencia
 
@@ -530,7 +530,7 @@ return($resp);
 function AumentaExistencias($IdMedicina,$cantidad,$ventto,$Lote,$Precio,$IdEstablecimiento,$IdModalidad){
 /* AQUI $Lote ES UNA CADENA QUE IDENTIFICA EL CODIGO DEL LOTE */
 	$respuesta=queries::ConfirmaExistencia($IdMedicina,$Lote,$IdEstablecimiento,$IdModalidad);
-	if($row=mysql_fetch_array($respuesta)){
+	if($row=pg_fetch_array($respuesta)){
 		$Multiplicador=queries::ObtenerUnidadMedida($IdMedicina);
 		$cantidad=$cantidad*$Multiplicador;
 		queries::ActualizarExistencias($IdMedicina,$cantidad,$Lote,$IdEstablecimiento,$IdModalidad);
@@ -544,7 +544,7 @@ function AumentaExistencias($IdMedicina,$cantidad,$ventto,$Lote,$Precio,$IdEstab
 
 function ActualizarExistencias($IdMedicina,$cantidad,$Lote,$IdEstablecimiento,$IdModalidad){
 $resp=queries::ConfirmaExistencia($IdMedicina,$Lote,$IdEstablecimiento,$IdModalidad);
-$row=mysql_fetch_array($resp);
+$row=pg_fetch_array($resp);
 $IdLote=$row["IdLote"];
 $cantidad_old=$row["Existencia"];
 $cantidad_new=$cantidad_old+$cantidad;
@@ -554,7 +554,7 @@ $queryUpdate="update farm_entregamedicamento set Existencia='$cantidad_new'
               and IdEstablecimiento=".$IdEstablecimiento." 
               and IdModalidad=$IdModalidad";
 
-		$IdEntrega=mysql_fetch_array(mysql_query("select IdEntrega 
+		$IdEntrega=pg_fetch_array(pg_query("select IdEntrega 
                                                         from farm_entregamedicamento 
                                                         where IdMedicina='$IdMedicina' and IdLote='$IdLote' 
                                                         and IdEstablecimiento=".$IdEstablecimiento." 
@@ -566,8 +566,8 @@ $queryBitacora="insert into farm_bitacoraentregamedicamento (IdMedicina,Existenc
 }else{
 //$queryUpdate="update farm_entregamedicamento set Existencia='$cantidad_new' where IdMedicina='$IdMedicina' and Existencia <> '0'";
 }
-mysql_query($queryUpdate);
-mysql_query($queryBitacora);
+pg_query($queryUpdate);
+pg_query($queryBitacora);
 
 }//Actualizacion Existencias
 
@@ -576,18 +576,18 @@ function IntroducirExistencias($IdMedicina,$cantidad,$fecha,$Lote,$Precio,$IdEst
 	if($Lote!='Lote.' and $fecha!='Fecha Ventto.'){
 	$queryInsert="insert into farm_lotes(Lote,PrecioLote,FechaVencimiento,IdEstablecimiento,IdModalidad) 
                         values('$Lote','$Precio','$fecha',$IdEstablecimiento,$IdModalidad)";
-	mysql_query($queryInsert);	
-	$IdLote=mysql_insert_id();
+	pg_query($queryInsert);	
+	$IdLote=pg_insert_id();
 
 	$queryInsert="insert into farm_entregamedicamento(IdMedicina,Existencia,IdLote,IdEstablecimiento,IdModalidad) 
                                 values('$IdMedicina','$cantidad','$IdLote',$IdEstablecimiento,$IdModalidad)";
-		mysql_query($queryInsert);
+		pg_query($queryInsert);
 
-				$IdEntrega=mysql_insert_id();
+				$IdEntrega=pg_insert_id();
 
 	$queryBitacora="insert into farm_bitacoraentregamedicamento (IdMedicina,Existencia,IdEntregaOrigen,IdLote,FechaHoraIngreso,IdEstablecimiento,IdModalidad) 
                         values('$IdMedicina','$cantidad','$IdEntrega','$IdLote',now(),$IdEstablecimiento,$IdModalidad)";
-    		mysql_query($queryBitacora);
+    		pg_query($queryBitacora);
 	}
 
 }//Introducir Existencia
@@ -599,8 +599,8 @@ function IntroducirExistencias($IdMedicina,$cantidad,$fecha,$Lote,$Precio,$IdEst
 function ObtenerPrecioLote($Lote){
 	$querySelect="select farm_lotes.PrecioLote
 					from farm_lotes
-					where farm_lotes.IdLote='$Lote'";
-	$resp=mysql_fetch_array(mysql_query($querySelect));
+					where farm_lotes.Id='$Lote'";
+	$resp=pg_fetch_array(pg_query($querySelect));
 	return($resp[0]);
 }//ObtenerPrecioLote
 
@@ -610,15 +610,15 @@ function ObtenerPrecioLote($Lote){
 
 /**********	DATOS MEDICINA	***************/
 function ObtenerDatosMedicina($IdMedicina){
-$queryMedicina="select IdMedicina, Nombre, Concentracion, Descripcion, UnidadesContenidas,GrupoTerapeutico
+$queryMedicina="select id as IdMedicina, Nombre, Concentracion, Descripcion, UnidadesContenidas,GrupoTerapeutico
 				from farm_catalogoproductos 
 				inner join mnt_grupoterapeutico
 				on mnt_grupoterapeutico.IdTerapeutico=farm_catalogoproductos.IdTerapeutico
 				inner join farm_unidadmedidas
-				on farm_unidadmedidas.IdUnidadMedida=farm_catalogoproductos.IdUnidadMedida
-				where farm_catalogoproductos.IdMedicina='$IdMedicina'";
+				on farm_unidadmedidas.id=farm_catalogoproductos.IdUnidadMedida
+				where farm_catalogoproductos.Id='$IdMedicina'";
 
-$info=mysql_query($queryMedicina);
+$info=pg_query($queryMedicina);
 
 return($info);
 }//fin DatosMedicina
@@ -633,10 +633,10 @@ conexion::conectar();
 	$querySelect="select NombreEmpleado, IdEmpleado
 				from mnt_empleados
 				where IdTipoEmpleado='ALM'";
-	$resp=mysql_query($querySelect);	
+	$resp=pg_query($querySelect);	
 	$combo='<select id="IdEmpleado" name="IdEmpleado">
               <option value="0">[Seleccione...]</option>';
-	while($row=mysql_fetch_array($resp)){
+	while($row=pg_fetch_array($resp)){
 		$combo.="<option value='".$row["IdEmpleado"]."'>".$row["NombreEmpleado"]."</option>";
 	}
 	$combo.="</select>";
@@ -664,10 +664,10 @@ function ComboMedicina($IdTerapeutico){
 				where IdTerapeutico=".$IdTerapeutico."
 				and IdEstado = 'H'
 				order by Nombre";
-	$resp=mysql_query($querySelect);
+	$resp=pg_query($querySelect);
 	$combo="<select id='IdMedicina' name='IdMedicina'>
 			<option value='0'>[Seleccione ...]</option>";
-	while($row=mysql_fetch_array($resp)){
+	while($row=pg_fetch_array($resp)){
 		$combo.="<option value='".$row["IdMedicina"]."'>".$row["Nombre"]." - ".$row["Concentracion"]."</option>";
 	}//while
 	$combo.="</select>";
@@ -679,7 +679,7 @@ function GrupoTerapeutico(){
 				from mnt_grupoterapeutico
 				where GrupoTerapeutico <> '--'
 				order by GrupoTerapeutico";
-	$resp=mysql_query($querySelect);
+	$resp=pg_query($querySelect);
 	return($resp);
 }//Grupo Terapeutico
 
@@ -687,7 +687,7 @@ function NombreGrupoTerapeutico($IdTerapeutico){
 	$querySelect="select GrupoTerapeutico
 				from mnt_grupoterapeutico
 				where IdTerapeutico=".$IdTerapeutico;
-	$resp=mysql_fetch_array(mysql_query($querySelect));
+	$resp=pg_fetch_array(pg_query($querySelect));
 	return($resp[0]);
 }//NombreGrupoTerapeutico
 
@@ -695,11 +695,11 @@ function LotesPorMedicina($IdMedicina){
 	$querySelect="select Existencia, Lote, FechaVencimiento
 				from farm_Lotes
 				inner join farm_entregamedicamento
-				on farm_entregamedicamento.IdLote = farm_lotes.IdLote
+				on farm_entregamedicamento.IdLote = farm_lotes.Id
 				where farm_entregamedicamento.IdMedicina='$IdMedicina'
 				and farm_entregamedicamento.Existencia <> '0'
 				order by FechaVencimiento";
-	$resp=mysql_query($querySelect);
+	$resp=pg_query($querySelect);
 	return($resp);
 }//Lotes por Medicina
 
@@ -714,9 +714,9 @@ function ReporteExistenciaGral($Externo){
 	<tr><td colspan='5' align='center'>Fecha de Reporte: <strong>".date('d/m/Y')."</strong><br><br></td>";
 	}
 
-	while($row=mysql_fetch_array($resp)){
+	while($row=pg_fetch_array($resp)){
 		$resp2=queries::ReporteExistencia($row["IdTerapeutico"],0,1,0);
-		if($row2=mysql_fetch_array($resp2)){
+		if($row2=pg_fetch_array($resp2)){
 		
 	$data.='<tr class="FONDO2"><td align="center" colspan="5"><strong>'.$row["GrupoTerapeutico"].'</strong></td></tr>
 	<tr><td align="center" class="FONDO"><strong>Medicamento</strong></td><td align="center" class="FONDO"><strong>Concentracion</strong></td><td align="center" class="FONDO"><strong>Unidad de Medida</strong></td><td align="center" class="FONDO"><strong>Existencia</strong></td><td align="center" class="FONDO"><strong>Detalle de Lote</strong></td></tr>';
@@ -726,14 +726,14 @@ function ReporteExistenciaGral($Externo){
 		
 			$resp2=queries::ReporteExistencia($row["IdTerapeutico"],0,1,0);
 			
-			while($row2=mysql_fetch_array($resp2)){
+			while($row2=pg_fetch_array($resp2)){
 						
 				$resp3=queries::LotesPorMedicina($row2["IdMedicina"]);
 				
 				
 				$data.='<tr><td class="FONDO" align="center">'.$row2["Nombre"].'</td><td class="FONDO" align="center">'.$row2["Concentracion"].'</td><td class="FONDO" align="center">'.$row2["Descripcion"].'</td><td class="FONDO" align="center">'.$row2["ExistenciaTotal"]/$row2["UnidadesContenidas"].'</td><td class="FONDO" align="center">';
 				
-				while($row3=mysql_fetch_array($resp3)){
+				while($row3=pg_fetch_array($resp3)){
 					$data.="Existencia: ".$row3["Existencia"]/$row2["UnidadesContenidas"]."  ".$row2["Descripcion"]."<br>";
 					$data.="Lote: ".$row3["Lote"]."<br>";
 					$data.="Fecha Vencimiento: ".$row3["FechaVencimiento"]."<br><br>";
@@ -762,19 +762,19 @@ function ReporteExistencia($IdTerapeutico,$IdMedicina,$Bandera,$Externo){
 	}
 	
 	if($IdTerapeutico != 0 and $IdMedicina != 0){
-		$var2="and farm_catalogoproductos.IdTerapeutico='$IdTerapeutico' and farm_catalogoproductos.IdMedicina='$IdMedicina'";
+		$var2="and farm_catalogoproductos.IdTerapeutico='$IdTerapeutico' and farm_catalogoproductos.Id='$IdMedicina'";
 	}
 	
-	$querySelect="select farm_catalogoproductos.IdMedicina, GrupoTerapeutico, Nombre, Concentracion, sum(Existencia)as ExistenciaTotal, UnidadesContenidas,Descripcion
+	$querySelect="select farm_catalogoproductos.id as IdMedicina, GrupoTerapeutico, Nombre, Concentracion, sum(Existencia)as ExistenciaTotal, UnidadesContenidas,Descripcion
 				from mnt_grupoterapeutico
 				inner join farm_catalogoproductos
 				on farm_catalogoproductos.IdTerapeutico=mnt_grupoterapeutico.IdTerapeutico
 				inner join farm_entregamedicamento
-				on farm_entregamedicamento.IdMedicina=farm_catalogoproductos.IdMedicina
+				on farm_entregamedicamento.IdMedicina=farm_catalogoproductos.Id
 				inner join farm_lotes
-				on farm_lotes.IdLote=farm_entregamedicamento.IdLote
+				on farm_lotes.id=farm_entregamedicamento.IdLote
 				inner join farm_unidadmedidas
-				on farm_unidadmedidas.IdUnidadMedida=farm_catalogoproductos.IdUnidadMedida
+				on farm_unidadmedidas.id=farm_catalogoproductos.IdUnidadMedida
 				where farm_catalogoproductos.IdEstado = 'H'
 				and mnt_grupoterapeutico.GrupoTerapeutico <> '--'
 				and mnt_grupoterapeutico.IdTerapeutico=1
@@ -782,7 +782,7 @@ function ReporteExistencia($IdTerapeutico,$IdMedicina,$Bandera,$Externo){
 				$var1
 				$var2
 				group by farm_catalogoproductos.Nombre";
-	$resp=mysql_query($querySelect);
+	$resp=pg_query($querySelect);
 	if($Bandera==1){
 		return($resp);
 	}else{
@@ -795,9 +795,9 @@ function ReporteExistencia($IdTerapeutico,$IdMedicina,$Bandera,$Externo){
 	}
 
 		
-		if($row=mysql_fetch_array($resp)){
+		if($row=pg_fetch_array($resp)){
 			
-			$row=mysql_fetch_array(mysql_query($querySelect));
+			$row=pg_fetch_array(pg_query($querySelect));
 			
 			$data.='<tr class="FONDO2"><td colspan="5" align="center"><strong>'.$row["GrupoTerapeutico"].'</strong></td></tr>
 			<tr><td align="center" class="FONDO"><strong>Medicamento</strong></td><td align="center" class="FONDO"><strong>Concentracion</strong></td><td align="center" class="FONDO"><strong>Unidad de Medida</strong></td><td align="center" class="FONDO"><strong>Existencia</strong></td><td align="center" class="FONDO"><strong>Detalle de Lote</strong></td></tr>';	
@@ -806,13 +806,13 @@ function ReporteExistencia($IdTerapeutico,$IdMedicina,$Bandera,$Externo){
 				$data.="<tr><td colspan='5'><hr></td></tr>";
 			}
 			
-				$resp=mysql_query($querySelect);
-			while($row=mysql_fetch_array($resp)){
+				$resp=pg_query($querySelect);
+			while($row=pg_fetch_array($resp)){
 				$data.='<tr><td align="center" class="FONDO">'.$row["Nombre"].'</td><td align="center" class="FONDO">'.$row["Concentracion"].'</td><td align="center" class="FONDO">'.$row["Descripcion"].'</td><td align="center" class="FONDO">'.$row["ExistenciaTotal"]/$row["UnidadesContenidas"].'</td><td align="center" class="FONDO">';
 				
 				$resp3=queries::LotesPorMedicina($row["IdMedicina"]);
 				
-				while($row3=mysql_fetch_array($resp3)){
+				while($row3=pg_fetch_array($resp3)){
 					$data.="Existencia: ".$row3["Existencia"]/$row["UnidadesContenidas"]." ".$row["Descripcion"]."<br>";
 					$data.="Lote: ".$row3["Lote"]."<br>";
 					$data.="Fecha Vencimiento: ".$row3["FechaVencimiento"]."<br><br>";
@@ -851,9 +851,9 @@ function ReporteEntregasGral($IdTerapeutico,$IdMedicina,$IdEmpleado,$FechaInicio
 	$querySelect="select distinct Fecha, DATE_FORMAT(Fecha,'%d/%m/%Y') as Entrega
 				from farm_catalogoproductos
 				inner join alm_entregamedicamento
-				on farm_catalogoproductos.IdMedicina=alm_entregamedicamento.IdMedicina
+				on farm_catalogoproductos.Id=alm_entregamedicamento.IdMedicina
 				inner join farm_lotes
-				on farm_lotes.IdLote=alm_entregamedicamento.IdLote
+				on farm_lotes.id=alm_entregamedicamento.IdLote
 				
 				where alm_entregamedicamento.IdEstado=2
 				and Fecha between '$FechaInicio' and '$FechaFin'
@@ -862,13 +862,13 @@ function ReporteEntregasGral($IdTerapeutico,$IdMedicina,$IdEmpleado,$FechaInicio
 				$var3
 				order by Fecha";
 	
-	$resp=mysql_query($querySelect);
+	$resp=pg_query($querySelect);
 	
 	
 	
 	$data="<table width='100%'>";
-	if($row=mysql_fetch_array($resp)){
-		$resp=mysql_query($querySelect);
+	if($row=pg_fetch_array($resp)){
+		$resp=pg_query($querySelect);
 	
 	if($Externo==1){
 		$Fecha1=explode('-',$FechaInicio);
@@ -891,16 +891,16 @@ function ReporteEntregasGral($IdTerapeutico,$IdMedicina,$IdEmpleado,$FechaInicio
 	}
 	
 	
-	while($rowFechas=mysql_fetch_array($resp)){
+	while($rowFechas=pg_fetch_array($resp)){
 		$data.="<tr><td class='FONDO' colspan='5' align='center'><br><strong>FECHA DE ENTREGA:&nbsp;&nbsp;".$rowFechas["Entrega"]."</strong></td></tr>";
 		
 			/*		DATOS DE MEDICAMENTOS ENTREGADO		*/
 	$querySelectEntregas="select alm_entregamedicamento.IdMedicina,Nombre,Concentracion,sum(Cantidad)as Cantidad,Fecha
 				from farm_catalogoproductos
 				inner join alm_entregamedicamento
-				on farm_catalogoproductos.IdMedicina=alm_entregamedicamento.IdMedicina
+				on farm_catalogoproductos.Id=alm_entregamedicamento.IdMedicina
 				inner join farm_lotes
-				on farm_lotes.IdLote=alm_entregamedicamento.IdLote
+				on farm_lotes.id=alm_entregamedicamento.IdLote
 				
 				where alm_entregamedicamento.IdEstado=2
 				and Fecha = '".$rowFechas["Fecha"]."'
@@ -909,33 +909,33 @@ function ReporteEntregasGral($IdTerapeutico,$IdMedicina,$IdEmpleado,$FechaInicio
 				$var3
 				group by alm_entregamedicamento.IdMedicina,Fecha
 				order by Nombre";
-		$respMedicina=mysql_query($querySelectEntregas);
-			$resptmp=mysql_query($querySelectEntregas);
-				$tmp=mysql_fetch_array($resptmp);
+		$respMedicina=pg_query($querySelectEntregas);
+			$resptmp=pg_query($querySelectEntregas);
+				$tmp=pg_fetch_array($resptmp);
 				
 
 				
 				
 		$data.="<tr><td class='FONDO' align='center'><strong>Medicamento</strong></td><td class='FONDO' align='center'><strong>Concentracion</strong></td><td class='FONDO' align='center'><strong>Cantidad Entregada</strong></td><td class='FONDO' align='center'><strong>Lote</strong></td></tr>";
-		while($rowMedicina=mysql_fetch_array($respMedicina)){
-			$tmp=mysql_fetch_array($resptmp);
+		while($rowMedicina=pg_fetch_array($respMedicina)){
+			$tmp=pg_fetch_array($resptmp);
 			
 			/*		OBTENCION DE INFORMACION DE LOTES ENTREGADOS 	*/
 						$queryLotes="select Cantidad, Lote, FechaVencimiento
 						from alm_entregamedicamento
 						inner join farm_lotes
-						on farm_lotes.IdLote=alm_entregamedicamento.IdLote
+						on farm_lotes.id=alm_entregamedicamento.IdLote
 						where IdMedicina=".$rowMedicina["IdMedicina"]."
 						and alm_entregamedicamento.Fecha='".$rowFechas["Fecha"]."'";
 						
-						$respLotes=mysql_query($queryLotes);
+						$respLotes=pg_query($queryLotes);
 						
 			/********************************************************/
 			
 			
 			$data.="<tr><td class='FONDO' align='center'>".$rowMedicina["Nombre"]."</td><td class='FONDO' align='center'>".$rowMedicina["Concentracion"]."</td><td class='FONDO' align='center'>".$rowMedicina["Cantidad"]."</td><td class='FONDO' align='center'>";
 			/*	DESPLEGAR INFORMACION DE LOTES	 */
-			while($rowLotes=mysql_fetch_array($respLotes)){
+			while($rowLotes=pg_fetch_array($respLotes)){
 				$data.="Cantidad Entregada:&nbsp;".$rowLotes["Cantidad"]."<br>";
 				$data.="Codigo Lote:&nbsp;".$rowLotes["Lote"]."<br>";
 				$data.="Fecha de Vencimiento:&nbsp;".$rowLotes["FechaVencimiento"]."<br><br>";
@@ -989,7 +989,7 @@ function InformacionDeUsuario($pagina,$Limite){
 				on alm_estadocuenta.IdEmpleado=mnt_empleados.IdEmpleado
 				
 				$Paginacion";
-	$resp=mysql_query($querySelect);
+	$resp=pg_query($querySelect);
 	return($resp);
 }//Informacion General de Usuario
 
@@ -1000,7 +1000,7 @@ function NumeroDeUsuario(){
 				on mnt_usuarios.IdEmpleado=mnt_empleados.IdEmpleado
 				inner join alm_estadocuenta
 				on alm_estadocuenta.IdEmpleado=mnt_empleados.IdEmpleado";
-	$resp=mysql_fetch_array(mysql_query($querySelect));
+	$resp=pg_fetch_array(pg_query($querySelect));
 	return($resp[0]);	
 }//NumeroDeUsuario
 function CuentasDeUsuario($pagina,$Limite){
@@ -1014,7 +1014,7 @@ function CuentasDeUsuario($pagina,$Limite){
       <td align="center" class="FONDO"><strong>Estado de Cuenta </strong></td>
       <td align="center" class="FONDO"><strong>Habilitar/Deshabilitar</strong></td>
     </tr>';
-	while($row=mysql_fetch_array($resp)){
+	while($row=pg_fetch_array($resp)){
 		$datos.=" <tr><td align='center' class='FONDO'>".$row["nivel"]."</td>
 				  <td align='center' class='FONDO'>".$row["NombreEmpleado"]."</td>
 				  <td align='center' class='FONDO'>".$row["EstadoCuentaName"]."</td>";
@@ -1063,7 +1063,7 @@ function CambiosEstado($IdEmpleado,$EstadoActual){
 	}else{
 		$queryUpdate="update alm_estadocuenta set EstadoCuenta='H' where IdEmpleado='$IdEmpleado'";
 	}
-	mysql_query($queryUpdate);
+	pg_query($queryUpdate);
 	
 }//
 

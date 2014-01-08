@@ -10,10 +10,10 @@ if (!isset($_SESSION["IdPersonal"]) or $_SESSION["IdPersonal"] != 1) { ?>
 
     function farmacias() {
         $query = "select * from mnt_farmacia where HabilitadoFarmacia='S'";
-        $resp = mysql_query($query);
+        $resp = pg_query($query);
         $combo = "<select id='IdFarmacia' name='IdFarmacia'>
                 <option value='0'>[GENERAL]</option>";
-        while ($row = mysql_fetch_array($resp)) {
+        while ($row = pg_fetch_array($resp)) {
             $combo.="
                 <option value='" . $row["IdFarmacia"] . "'>" . $row["Farmacia"] . "</option>";
         }

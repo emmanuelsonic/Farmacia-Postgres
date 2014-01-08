@@ -3,7 +3,7 @@
 class Especialidades{
     function ObtenerEspecialidades(){
 	$SQL="select * from mnt_especialidad";
-		$resp=mysql_query($SQL);
+		$resp=pg_query($SQL);
 	return($resp);
     }
 
@@ -13,23 +13,23 @@ class Especialidades{
 		where IdEspecialidad=".$IdEspecialidad." 
 		and IdEstablecimiento=".$IdEstablecimiento." 
 		and (Condicion='H' ".$comp.")";
-	$resp=mysql_fetch_array(mysql_query($SQL));
+	$resp=pg_fetch_array(pg_query($SQL));
 	return($resp[0]);
     }
 
     function LevantamientoEspecialidad($IdEspecialidad,$IdEstablecimiento,$IdUsuarioReg){
 	$SQL="insert into mnt_especialidadxestablecimiento (IdEspecialidad,IdEstablecimiento,IdUsuarioReg,FechaHoraReg) values('$IdEspecialidad','$IdEstablecimiento','$IdUsuarioReg',now())";
-	mysql_query($SQL);
+	pg_query($SQL);
     }
 
     function HabilitarEspecialidad($IdEspecialidad,$IdEstablecimiento,$IdUsuarioMod){
 	$SQL="update mnt_especialidadxestablecimiento set Condicion='H', IdUsuarioMod='$IdUsuarioMod',FechaHoraMod=now() where IdEspecialidad=".$IdEspecialidad." and IdEstablecimiento=".$IdEstablecimiento;
-	mysql_query($SQL);
+	pg_query($SQL);
     }
 
     function DeshabilitarEspecialidad($IdEspecialidad,$IdEstablecimiento,$IdUsuarioMod){
  	$SQL="update mnt_especialidadxestablecimiento set Condicion='I', IdUsuarioMod='$IdUsuarioMod',FechaHoraMod=now() where IdEspecialidad=".$IdEspecialidad." and IdEstablecimiento=".$IdEstablecimiento;
-	mysql_query($SQL);
+	pg_query($SQL);
     }
 
 }//Especialidades
@@ -40,7 +40,7 @@ class SubEspecialidades{
 	$SQL="select * from mnt_especialidadxestablecimiento 
 		where IdEstablecimiento=".$IdEstablecimiento." 
 		and Condicion ='H'";
-	$resp=mysql_fetch_array(mysql_query($SQL));
+	$resp=pg_fetch_array(pg_query($SQL));
 	return($resp[0]);
     }
 
@@ -50,9 +50,9 @@ class SubEspecialidades{
 		on mnt_especialidad.IdEspecialidad=mnt_especialidadxestablecimiento.IdEspecialidad 
 		where IdEstablecimiento=".$IdEstablecimiento." 
 		and Condicion ='H'";
-	$resp=mysql_query($SQL);
+	$resp=pg_query($SQL);
 	$opciones="";
-	while($row=mysql_fetch_array($resp)){
+	while($row=pg_fetch_array($resp)){
 	  $opciones.="<option value='".$row["IdEspecialidad"]."'>".$row["NombreEspecialidad"]."</option>";
 	}
 	return($opciones);
@@ -61,30 +61,30 @@ class SubEspecialidades{
 	$SQL="select * from mnt_subservicio
 		where IdServicio='CONEXT'
 		and IdEspecialidad=".$IdEspecialidad;
-		$resp=mysql_query($SQL);
+		$resp=pg_query($SQL);
 	return($resp);
     }
 
     function SubEspecialidadHabilitada($IdSubEspecialidad,$IdEstablecimiento,$est = 0){
 	if($est!=0){$comp='or Condicion="I"';}else{$comp="";}
 	$SQL="select * from mnt_subservicioxestablecimiento where IdSubServicio=".$IdSubEspecialidad." and IdEstablecimiento=".$IdEstablecimiento." and (Condicion='H' ".$comp.")";
-	$resp=mysql_fetch_array(mysql_query($SQL));
+	$resp=pg_fetch_array(pg_query($SQL));
 	return($resp[0]);
     }
 
     function LevantamientoSubEspecialidad($IdEspecialidad,$IdEstablecimiento,$IdUsuarioReg){
 	$SQL="insert into mnt_subservicioxestablecimiento (IdSubServicio,IdEstablecimiento,IdUsuarioReg,FechaHoraReg) values('$IdEspecialidad','$IdEstablecimiento','$IdUsuarioReg',now())";
-	mysql_query($SQL);
+	pg_query($SQL);
     }
 
     function HabilitarSubEspecialidad($IdSubEspecialidad,$IdEstablecimiento,$IdUsuarioMod){
 	$SQL="update mnt_subservicioxestablecimiento set Condicion='H', IdUsuarioMod='$IdUsuarioMod',FechaHoraMod=now() where IdSubServicio=".$IdSubEspecialidad." and IdEstablecimiento=".$IdEstablecimiento;
-	mysql_query($SQL);
+	pg_query($SQL);
     }
 
     function DeshabilitarSubEspecialidad($IdSubEspecialidad,$IdEstablecimiento,$IdUsuarioMod){
  	$SQL="update mnt_subservicioxestablecimiento set Condicion='I', IdUsuarioMod='$IdUsuarioMod',FechaHoraMod=now() where IdSubServicio=".$IdSubEspecialidad." and IdEstablecimiento=".$IdEstablecimiento;
-	mysql_query($SQL);
+	pg_query($SQL);
     }
 
 }//SubEspecialidades
@@ -93,7 +93,7 @@ class SubEspecialidades{
 class Servicios{
 function ObtenerServicios(){
 	$SQL="select * from mnt_servicio";
-		$resp=mysql_query($SQL);
+		$resp=pg_query($SQL);
 	return($resp);
     }
 
@@ -103,23 +103,23 @@ function ObtenerServicios(){
 		where IdServicio='".$IdServicio."' 
 		and IdEstablecimiento=".$IdEstablecimiento." 
 		and (Condicion='H' ".$comp.")";
-	$resp=mysql_fetch_array(mysql_query($SQL));
+	$resp=pg_fetch_array(pg_query($SQL));
 	return($resp[0]);
     }
 
     function LevantamientoServicio($IdServicio,$IdEstablecimiento,$IdUsuarioReg){
 	$SQL="insert into mnt_servicioxestablecimiento (IdServicio,IdEstablecimiento,IdUsuarioReg,FechaHoraReg) values('$IdServicio','$IdEstablecimiento','$IdUsuarioReg',now())";
-	mysql_query($SQL);
+	pg_query($SQL);
     }
 
     function HabilitarServicio($IdServicio,$IdEstablecimiento,$IdUsuarioMod){
 	$SQL="update mnt_servicioxestablecimiento set Condicion='H', IdUsuarioMod='$IdUsuarioMod',FechaHoraMod=now() where IdServicio='".$IdServicio."' and IdEstablecimiento=".$IdEstablecimiento;
-	mysql_query($SQL);
+	pg_query($SQL);
     }
 
     function DeshabilitarServicio($IdServicio,$IdEstablecimiento,$IdUsuarioMod){
  	$SQL="update mnt_servicioxestablecimiento set Condicion='I', IdUsuarioMod='$IdUsuarioMod',FechaHoraMod=now() where IdServicio='".$IdServicio."' and IdEstablecimiento=".$IdEstablecimiento;
-	mysql_query($SQL);
+	pg_query($SQL);
     }
 
 }
@@ -134,7 +134,7 @@ function ServicioHabilitado($IdEstablecimiento){
 		where IdEstablecimiento=".$IdEstablecimiento." 
 		and Condicion ='H'
 		and s.IdServicio not in ('CONEXT','SERFAR','DCOLAB','DCORX')";
-	$resp=mysql_fetch_array(mysql_query($SQL));
+	$resp=pg_fetch_array(pg_query($SQL));
 	return($resp[0]);
     }
 
@@ -145,9 +145,9 @@ function ServicioHabilitado($IdEstablecimiento){
 		where IdEstablecimiento=".$IdEstablecimiento." 
 		and mnt_servicio.IdServicio not in ('CONEXT','SERFAR','DCOLAB','DCORX')
 		and Condicion ='H'";
-	$resp=mysql_query($SQL);
+	$resp=pg_query($SQL);
 	$opciones="";
-	while($row=mysql_fetch_array($resp)){
+	while($row=pg_fetch_array($resp)){
 	  $opciones.="<option value='".$row["IdServicio"]."'>".$row["NombreServicio"]."</option>";
 	}
 	return($opciones);
@@ -155,30 +155,30 @@ function ServicioHabilitado($IdEstablecimiento){
     function ObtenerSubServicio($IdServicio){
 	$SQL="select * from mnt_subservicio
 		where IdServicio='".$IdServicio."'";
-		$resp=mysql_query($SQL);
+		$resp=pg_query($SQL);
 	return($resp);
     }
 
     function SubServicioHabilitado($IdSubServicio,$IdEstablecimiento,$est = 0){
 	if($est!=0){$comp='or Condicion="I"';}else{$comp="";}
 	$SQL="select * from mnt_subservicioxestablecimiento where IdSubServicio=".$IdSubServicio." and IdEstablecimiento=".$IdEstablecimiento." and (Condicion='H' ".$comp.")";
-	$resp=mysql_fetch_array(mysql_query($SQL));
+	$resp=pg_fetch_array(pg_query($SQL));
 	return($resp[0]);
     }
 
     function LevantamientoSubServicio($IdSubServicio,$IdEstablecimiento,$IdUsuarioReg){
 	$SQL="insert into mnt_subservicioxestablecimiento (IdSubServicio,IdEstablecimiento,IdUsuarioReg,FechaHoraReg) values('$IdSubServicio','$IdEstablecimiento','$IdUsuarioReg',now())";
-	mysql_query($SQL);
+	pg_query($SQL);
     }
 
     function HabilitarSubServicio($IdSubServicio,$IdEstablecimiento,$IdUsuarioMod){
 	$SQL="update mnt_subservicioxestablecimiento set Condicion='H', IdUsuarioMod='$IdUsuarioMod',FechaHoraMod=now() where IdSubServicio=".$IdSubServicio." and IdEstablecimiento=".$IdEstablecimiento;
-	mysql_query($SQL);
+	pg_query($SQL);
     }
 
     function DeshabilitarSubServicio($IdSubServicio,$IdEstablecimiento,$IdUsuarioMod){
  	$SQL="update mnt_subservicioxestablecimiento set Condicion='I', IdUsuarioMod='$IdUsuarioMod',FechaHoraMod=now() where IdSubServicio=".$IdSubServicio." and IdEstablecimiento=".$IdEstablecimiento;
-	mysql_query($SQL);
+	pg_query($SQL);
     }
 
 }
@@ -187,7 +187,7 @@ function ServicioHabilitado($IdEstablecimiento){
 class Laboratorio{
     function ObtenerAreas(){
 	$SQL="select * from lab_areas";
-	$resp=mysql_query($SQL);
+	$resp=pg_query($SQL);
 	return($resp);
     }
     
@@ -198,31 +198,31 @@ class Laboratorio{
 		where IdArea='".$IdArea."'
 		and (Condicion='H' ".$comp.")
 		and IdEstablecimiento=".$IdEstablecimiento;
-	$resp=mysql_fetch_array(mysql_query($SQL));
+	$resp=pg_fetch_array(pg_query($SQL));
 	return($resp[0]);
     }
     
     function LevantamientoArea($IdArea,$IdEstablecimiento,$IdUsuarioReg){
 	$SQL1="update lab_areas set Habilitado='S',IdUsuarioMod='$IdUsuarioReg',FechaHoraMod=now() where IdARea='$IdArea'";
 	$SQL2="insert into lab_areasxestablecimiento (IdArea,IdEstablecimiento,IdUsuarioReg,FechaHoraReg) values('$IdArea','$IdEstablecimiento','$IdUsuarioReg',now())";
-	mysql_query($SQL1);
-	mysql_query($SQL2);
+	pg_query($SQL1);
+	pg_query($SQL2);
     }
     
     function HabilitarArea($IdArea,$IdEstablecimiento,$IdUsuarioReg){
 	$SQL1="update lab_areas set Habilitado='S',IdUsuarioMod='$IdUsuarioReg',FechaHoraMod=now() where IdARea='$IdArea'";
 	$SQL2="update lab_areasxestablecimiento set Condicion='H', IdUsuarioMod='$IdUsuarioReg', FechaHoraMod=now()
 		where IdArea='$IdArea' and IdEstablecimiento='$IdEstablecimiento'";
-	mysql_query($SQL1);
-	mysql_query($SQL2);
+	pg_query($SQL1);
+	pg_query($SQL2);
     }
 
     function DeshabilitarArea($IdArea,$IdEstablecimiento,$IdUsuarioReg){
 	$SQL1="update lab_areas set Habilitado='N',IdUsuarioMod='$IdUsuarioReg',FechaHoraMod=now() where IdARea='$IdArea'";
 	$SQL2="update lab_areasxestablecimiento set Condicion='I', IdUsuarioMod='$IdUsuarioReg', FechaHoraMod=now()
 		where IdArea='$IdArea' and IdEstablecimiento='$IdEstablecimiento'";
-	mysql_query($SQL1);
-	mysql_query($SQL2);
+	pg_query($SQL1);
+	pg_query($SQL2);
     }
 
     function ObtenerAreasHabilitadas($IdEstablecimiento){
@@ -233,13 +233,13 @@ class Laboratorio{
 		and Condicion='H'
 		and la.IdArea <> 'JEF'
 		and IdEstablecimiento=".$IdEstablecimiento;
-	$resp=mysql_query($SQL);
+	$resp=pg_query($SQL);
 	return($resp);
     }
 
     function ExamenesxArea($IdArea){
 	$SQL="select * from lab_examenes where IdArea='$IdArea'";
-	$resp=mysql_query($SQL);
+	$resp=pg_query($SQL);
 	return($resp);
     }
     function ExamenHabilitado($IdExamen,$IdEstablecimiento,$est = 0){
@@ -249,25 +249,25 @@ class Laboratorio{
 	where IdExamenes='$IdExamen'
 	and IdEstablecimiento=".$IdEstablecimiento."
 	and (Condicion = 'H' ".$comp." )";
-	$resp=mysql_fetch_array(mysql_query($SQL));
+	$resp=pg_fetch_array(pg_query($SQL));
 	return($resp[0]);
     }
 
     function LevantamientoExamen($IdExamen,$IdEstablecimiento,$IdUsuarioReg){
 	$SQL="insert into lab_examenesxestablecimiento (IdExamenes,IdEstablecimiento,IdUsuarioReg,FechaHoraReg) values('$IdExamen','$IdEstablecimiento','$IdUsuarioReg',now())";
-	mysql_query($SQL);
+	pg_query($SQL);
     }
 
     function HabilitarExamen($IdExamen,$IdEstablecimiento,$IdUsuarioReg){
 	$SQL="update lab_examenesxestablecimiento set Condicion='H', IdUsuarioMod='$IdUsuarioReg', FechaHoraMod=now()
 		where IdExamenes='$IdExamen' and IdEstablecimiento=".$IdEstablecimiento;
-	mysql_query($SQL);
+	pg_query($SQL);
     }
 
     function DeshabilitarExamen($IdExamen,$IdEstablecimiento,$IdUsuarioReg){
 	$SQL="update lab_examenesxestablecimiento set Condicion='I', IdUsuarioMod='$IdUsuarioReg', FechaHoraMod=now()
 		where IdExamenes='$IdExamen' and IdEstablecimiento=".$IdEstablecimiento;
-	mysql_query($SQL);
+	pg_query($SQL);
     }
 
 
@@ -330,7 +330,7 @@ class Farmacia{
     function DeshabilitarMedicina($IdMedicina,$IdEstablecimiento,$IdUsuarioMod,$IdModalidad){
 	$SQL="update farm_catalogoproductosxestablecimiento set Condicion='I', IdUsuarioMod='$IdUsuarioMod', FechaHoraMod=now() 
               where IdMedicina=".$IdMedicina." and IdEstablecimiento=".$IdEstablecimiento." and IdModalidad=$IdModalidad";
-	mysql_query($SQL);
+	pg_query($SQL);
     }
     function EstadoEstupefaciente($IdMedicina,$IdEstablecimiento,$Estado,$IdUsuarioMod,$IdModalidad){
 	$verifica=$this->MedicamentoHabilitado($IdMedicina,$IdEstablecimiento,$IdModalidad,1);
@@ -339,7 +339,7 @@ class Farmacia{
 	   if($verifica!=NULL and $verifica!=''){
 		$SQL="update farm_catalogoproductosxestablecimiento set Estupefaciente='S',Condicion='H',IdUsuarioMod='$IdUsuarioMod', FechaHoraMod=now() 
                       where IdMedicina=".$IdMedicina." and IdEstablecimiento=".$IdEstablecimiento." and IdModalidad=$IdModalidad";
-		$resp=mysql_fetch_array(mysql_query($SQL));
+		$resp=pg_fetch_array(pg_query($SQL));
 	   }else{
 		//si el medicamento no esta previamente habilitado, se habilita antes de convertirlo en 
 		//estupefaciente
@@ -347,14 +347,14 @@ class Farmacia{
 	
 		$SQL="update farm_catalogoproductosxestablecimiento set Estupefaciente='S',IdUsuarioMod='$IdUsuarioMod', FechaHoraMod=now() 
                       where IdMedicina=".$IdMedicina." and IdEstablecimiento=".$IdEstablecimiento." and IdModalidad=$IdModalidad";
-		$resp=mysql_fetch_array(mysql_query($SQL));
+		$resp=pg_fetch_array(pg_query($SQL));
 	   }
 	break;
 	default:
 	   //Si el estado es a N (no estupefaciente)
 	   $SQL="update farm_catalogoproductosxestablecimiento set Estupefaciente='N',IdUsuarioMod='$IdUsuarioMod', FechaHoraMod=now() 
                  where IdMedicina=".$IdMedicina." and IdEstablecimiento=".$IdEstablecimiento." and IdModalidad=$IdModalidad";
-	   $resp=mysql_fetch_array(mysql_query($SQL));
+	   $resp=pg_fetch_array(pg_query($SQL));
 	break;
 	}
 	
@@ -374,17 +374,17 @@ class Farmacia{
     }
 
     function IngresaDivisor($IdMedicina,$Divisor,$IdEstablecimiento,$IdModalidad){
-	$row=mysql_fetch_array($this->ValorDivisor($IdMedicina,$IdEstablecimiento,$IdModalidad));
+	$row=pg_fetch_array($this->ValorDivisor($IdMedicina,$IdEstablecimiento,$IdModalidad));
 	if(($row[0]!=NULL and $Divisor == 0)){
 	   $SQL="delete from farm_divisores 
                  where IdMedicina=".$IdMedicina." 
                  and IdEstablecimiento=".$IdEstablecimiento." and IdModalidad=$IdModalidad";
-	   $resp=mysql_query($SQL);
+	   $resp=pg_query($SQL);
 	}else{
 	   if($Divisor > 0 and $row[0]==NULL){
 		$SQL="insert into farm_divisores (IdMedicina,DivisorMedicina,IdEstablecimiento,IdModalidad) 
                                            values('$IdMedicina','$Divisor',$IdEstablecimiento,$IdModalidad)";
-		$resp=mysql_query($SQL);
+		$resp=pg_query($SQL);
 	}
 	}	  
 	
@@ -395,7 +395,7 @@ class Farmacia{
               where IdMedicina=".$IdMedicina." 
               and IdEstablecimiento=".$IdEstablecimiento."
               and IdModalidad=$IdModalidad";
-	$resp=mysql_query($SQL);
+	$resp=pg_query($SQL);
 	return($resp);
     }
 
@@ -417,17 +417,17 @@ class Especiales{
 	on  e.IdEspecialidad = ee.IdEspecialidad
 	".$comp." 
 	".$comp2;
-	$resp=mysql_query($SQL);
+	$resp=pg_query($SQL);
 	return($resp);
    }
    function AgregarEspecialidad($NombreEspecialidad,$IdUsuarioReg){
 	$SQL="insert into mnt_especialidad (NombreEspecialidad,IdUsuarioReg,FechaHoraReg) values('$NombreEspecialidad','$IdUsuarioReg',now())";
-	mysql_query($SQL);
+	pg_query($SQL);
    }
 
    function ActualizarEspecialidad($NombreEspecialidad,$IdEspecialidad,$IdUsuarioMod){
 	$SQL="update mnt_especialidad set NombreEspecialidad='$NombreEspecialidad', IdUsuarioMod='$IdUsuarioMod', FechaHoraMod=now() where IdEspecialidad=".$IdEspecialidad;
-	mysql_query($SQL);
+	pg_query($SQL);
    }
 
 
@@ -436,7 +436,7 @@ class Especiales{
    function EspecialidadesHabilitadas(){
 	$SQL="select e.IdEspecialidad, NombreEspecialidad
 		from mnt_especialidad e";
-	$resp=mysql_query($SQL);
+	$resp=pg_query($SQL);
 	return($resp);
    }
 
@@ -456,23 +456,23 @@ class Especiales{
 	on esp.IdEspecialidad=e.IdEspecialidad
 	".$comp." 
 	".$comp2;
-	$resp=mysql_query($SQL);
+	$resp=pg_query($SQL);
 	return($resp);
    }
 
 
    function AgregarSubEspecialidad($NombreSubEspecialidad,$IdEspecialidad,$IdUsuarioReg){
 	$SQL="insert into mnt_subservicio (IdServicio,NombreSubServicio,IdEspecialidad,IdUsuarioReg,FechaHoraReg) values('CONEXT','$NombreSubEspecialidad','$IdEspecialidad','$IdUsuarioReg',now())";
-	mysql_query($SQL);
+	pg_query($SQL);
    }
 
    function ActualizarSubEspecialidad($NombreSubEspecialidad,$IdSubEspecialidad,$IdEspecialidad,$IdUsuarioMod){
 	$SQL="update mnt_subservicio set NombreSubServicio='$NombreSubEspecialidad', IdUsuarioMod='$IdUsuarioMod', FechaHoraMod=now() where IdSubServicio=".$IdSubEspecialidad;
-	mysql_query($SQL);
+	pg_query($SQL);
 
 	if($IdEspecialidad!=0){
 		$SQL="update mnt_subservicio set IdEspecialidad='$IdEspecialidad', IdUsuarioMod='$IdUsuarioMod', FechaHoraMod=now() where IdSubServicio=".$IdSubEspecialidad;
-		mysql_query($SQL);
+		pg_query($SQL);
 	}
 
    }
@@ -495,19 +495,19 @@ function MostrarServicios($IdServicio,$NombreServicio){
 	on ts.IdTipoServicio=e.IdTipoServicio
 	".$comp." 
 	".$comp2."";
-	$resp=mysql_query($SQL);
+	$resp=pg_query($SQL);
 	return($resp);
    }
 
    function ValidaCodigo($IdServicio, $tipoValidacion = 0, $IdServicioOld = ''){
 	if($tipoValidacion==0){
 	   $SQL="select * from mnt_servicio where IdServicio='$IdServicio'";
-	   $resp=mysql_query($SQL);
+	   $resp=pg_query($SQL);
 	}else{
 	   if($IdServicio != $IdServicioOld){
 		$SQL="select * from mnt_servicio where IdServicio='$IdServicio'";
-	   	$resp=mysql_query($SQL);
-		if($row=mysql_fetch_array($resp)){
+	   	$resp=pg_query($SQL);
+		if($row=pg_fetch_array($resp)){
 		   $resp=1;
 		}else{
 		   $resp=0;
@@ -522,13 +522,13 @@ function MostrarServicios($IdServicio,$NombreServicio){
 
    function AgregarServicio($NombreServicio,$IdServicio,$IdTipoServicio){
 	$SQL="insert into mnt_servicio (IdServicio,IdTipoServicio,NombreServicio) values('$IdServicio','$IdTipoServicio','$NombreServicio')";
-	mysql_query($SQL);
+	pg_query($SQL);
    }
 
    function ActualizarServicio($NombreServicio,$IdServicio,$IdTipoServicio,$IdServicioOld){
 	if($IdTipoServicio!='0'){$comp="IdTipoServicio='$IdTipoServicio',";}else{$comp="";}
 	$SQL="update mnt_servicio set IdServicio='$IdServicio', ".$comp." NombreServicio='$NombreServicio' where IdServicio='".$IdServicioOld."'";
-	mysql_query($SQL);
+	pg_query($SQL);
    }
 
 
@@ -538,13 +538,13 @@ function MostrarServicios($IdServicio,$NombreServicio){
 	$SQL="select * 
 		from mnt_tiposervicio
 		".$comp;
-	$resp=mysql_query($SQL);
+	$resp=pg_query($SQL);
 	return($resp);
    }
 
    function AgregarTipoServicio($Nombre,$IdTipoServicio){
 	$SQL="insert into mnt_tiposervicio (IdTipoServicio,Nombre) values ('$IdTipoServicio','$Nombre')";
-	mysql_query($SQL);
+	pg_query($SQL);
    }
 
 
@@ -553,8 +553,8 @@ function MostrarServicios($IdServicio,$NombreServicio){
 	   $SQL="select * 
 		from mnt_tiposervicio
 		where IdTipoServicio='$IdTipoServicio'";
-	   $resp=mysql_query($SQL);
-	   if($row=mysql_fetch_array($resp)){
+	   $resp=pg_query($SQL);
+	   if($row=pg_fetch_array($resp)){
 		return(1);
 	    }else{
 		return(0);
@@ -568,10 +568,10 @@ function MostrarServicios($IdServicio,$NombreServicio){
 
    function ActualizarTipoServicio($Nombre,$IdTipoServicio,$IdTipoServicioOld){
 	$SQL="update mnt_tiposervicio set IdTipoServicio='$IdTipoServicio', Nombre='$Nombre' where IdTipoServicio='$IdTipoServicioOld'";
-	mysql_query($SQL);
+	pg_query($SQL);
 	//Se hace un cambio en casacada de la tabla mnt_servicios para actualizar el cambio de IdTipoServicio
 		$SQL2="update mnt_servicio set IdTipoServicio='$IdTipoServicio' where IdTipoServicio='$IdTipoServicioOld'";
-		mysql_query($SQL2);
+		pg_query($SQL2);
    }
 
 }
@@ -581,25 +581,25 @@ class Usuarios{
 	
 	function AgregarUsuario($IdEmpleado,$login,$password){
 		$query="insert into mnt_usuarios (login,password,nivel,modulo,Grupo,IdEmpleado) values('$login','$password','1','SEL','0','$IdEmpleado')";
-		mysql_query($query);		
+		pg_query($query);		
 		
 	}//Agregar Usuarios al sistema
 	
 	
 	function ObtenerUsuarios($EstadoCuenta){
 		$query="select * from usuarios where Nivel=".$EstadoCuenta;
-		$resp=mysql_query($query);
+		$resp=pg_query($query);
 		return($resp);		
 	}//Obtencion de usuarios
 	
 	function Bloqueo($iduser){
 		$query="update usuarios set Nivel=0 where IdUser=".$iduser;
-		mysql_query($query);
+		pg_query($query);
 	}
 	
 	function Habilitar($iduser){
 		$query="update usuarios set Nivel=1 where IdUser=".$iduser;
-		mysql_query($query);
+		pg_query($query);
 	}
 }
 //*****************************************************************

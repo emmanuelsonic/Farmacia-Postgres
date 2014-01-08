@@ -7,7 +7,7 @@ from farm_recetas
 inner join farm_usuarios
 on (farm_usuarios.IdPersonal=farm_recetas.IdPersonal or farm_usuarios.IdPersonal=farm_recetas.IdPersonalIntro)
 where (farm_recetas.IdEstado='E' or farm_recetas.IdEstado='T') and farm_recetas.IdPersonal='$IdPersonal'";
-	  $resp=mysql_query($querySelect);
+	  $resp=pg_query($querySelect);
 return($resp);
 }//ObtenerPersonalReceta
 
@@ -28,7 +28,7 @@ on mnt_empleados.IdEmpleado=sec_historial_clinico.IdEmpleado
 where (farm_recetas.IdEstado='E' or farm_recetas.IdEstado='T' OR farm_recetas.IdEstado='ER' OR farm_recetas.IdEstado='RT') 
 and (farm_recetas.IdPersonal='$IdPersonal' or farm_recetas.IdPersonalIntro='$IdPersonal')
 and year(farm_recetas.Fecha)=year(curdate())order by farm_recetas.Fecha desc".$limit;
-	  $resp=mysql_query($querySelect);
+	  $resp=pg_query($querySelect);
 return($resp);
 }//ObtenerDatosRecetasLimit
 
@@ -49,7 +49,7 @@ on mnt_empleados.IdEmpleado=sec_historial_clinico.IdEmpleado
 where (farm_recetas.IdEstado='E' or farm_recetas.IdEstado='T' OR farm_recetas.IdEstado='ER' OR farm_recetas.IdEstado='RT') 
 and farm_recetas.IdPersonal='$IdPersonal'
 and year(farm_recetas.Fecha)=year(curdate())";
-	  $resp=mysql_query($querySelect);
+	  $resp=pg_query($querySelect);
 return($resp);
 }//ObtenerDatosRecetas
 
@@ -76,7 +76,7 @@ inner join farm_catalogoproductos
 on farm_medicinarecetada.IdMedicina=farm_catalogoproductos.IdMedicina
 where (farm_recetas.IdEstado='E' or farm_recetas.IdEstado='T' OR farm_recetas.IdEstado='ER' OR farm_recetas.IdEstado='RT') 
 and farm_recetas.IdReceta='$IdReceta'";
-$resp=mysql_query($querySelect);
+$resp=pg_query($querySelect);
 return($resp);
 }//DetalleReceta
 

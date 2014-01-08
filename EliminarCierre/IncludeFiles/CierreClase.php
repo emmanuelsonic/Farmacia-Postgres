@@ -13,7 +13,7 @@ class Proceso{
                         and farm_cierre.IdModalidad=$IdModalidad
 			order by MesCierre
 			";
-		$resp=mysql_query($query);
+		$resp=pg_query($query);
 		return($resp);
 	}
 
@@ -23,7 +23,7 @@ class Proceso{
 		$query="delete from farm_cierre where IdCierre=".$IdCierre." 
                                                 and IdEstablecimiento=".$IdEstablecimiento." 
                                                 and IdModalidad=$IdModalidad";
-		if(mysql_query($query)){
+		if(pg_query($query)){
 			return true;
 		}else{
 			return false;

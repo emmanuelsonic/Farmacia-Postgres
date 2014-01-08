@@ -4,7 +4,7 @@ conexion::conectar();
 $IdPersonal = $_GET["IdPersonal"];
 $NombrePersonal=$_GET["NombrePersonal"];
 $query = Obtencion::ObtenerDatosRecetasLimit($IdPersonal," LIMIT 2");
-if($test=mysql_fetch_array($query)){
+if($test=pg_fetch_array($query)){
 
 require('include/conexion.php');
 require('include/pagination.class2.php');
@@ -38,7 +38,7 @@ $aux = Obtencion::ObtenerDatosRecetasTotal($IdPersonal);
 	<tr><td height="90"><div id="resultados2" align="center">
       <p>
         <?php
-$aux=mysql_fetch_array($aux);
+$aux=pg_fetch_array($aux);
 				echo $aux['total']." Recetas para el usuario seleccionado";
 	?>
       </p>
@@ -58,7 +58,7 @@ $aux=mysql_fetch_array($aux);
 			echo "<tr class='titulos'><td colspan='8' style='background:#FFFF00'>Nombre de Empleado: <strong>$NombrePersonal</strong></td></tr>";
 			echo "<tr class=\"titulos\"><td><strong>Estado</strong></td><td><strong>Receta #</strong></td><td align=\"center\"><strong>Nombre Paciente</strong></td><td><strong>Nombre de Medico</strong></td><td><strong>Repetitiva</strong></td><td><strong>Digitada</strong></td><td align='center'><strong>Fecha</strong></td><td align='center'><strong>Ver Detalle</strong></td></tr>\n";
 			$r=0;
-			while($row = mysql_fetch_assoc($query)){
+			while($row = pg_fetch_assoc($query)){
 $IdReceta=$row["IdReceta"];
 $NumeroReceta=$row["NumeroReceta"];
 $NombrePaciente=htmlentities($row["NombrePaciente"]);
@@ -66,8 +66,8 @@ $Medico=$row["NombreEmpleado"];
 $IdEstado=$row["IdEstado"];
 $Intro=$row["IdPersonalIntro"];
 $Fecha=$row["Fecha"];
-$resp=mysql_query("select concat_ws('-',day('$Fecha'),month('$Fecha'),year('$Fecha'))as fecha");
-$Fechas=mysql_fetch_array($resp);
+$resp=pg_query("select concat_ws('-',day('$Fecha'),month('$Fecha'),year('$Fecha'))as fecha");
+$Fechas=pg_fetch_array($resp);
 $Fecha2=$Fechas["fecha"];
 
 //**************?>

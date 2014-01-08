@@ -15,26 +15,26 @@ $farmacia=$_REQUEST["farmacia"];
 
 $querySelectFarmacia="select mnt_farmacia.Farmacia from mnt_farmacia where mnt_farmacia.IdFarmacia='$farmacia'";
 $querySelectArea="select mnt_areafarmacia.Area from mnt_areafarmacia where mnt_areafarmacia.IdArea='$area'";
-$Dfarmacia=mysql_query($querySelectFarmacia);
-$Darea=mysql_query($querySelectArea);
+$Dfarmacia=pg_query($querySelectFarmacia);
+$Darea=pg_query($querySelectArea);
 
 $Grupo=Obtencion::ObtenerGrupos();
 //***************************************************************************
-$dataFarmacia=mysql_fetch_array($Dfarmacia);
-$dataArea=mysql_fetch_array($Darea);
+$dataFarmacia=pg_fetch_array($Dfarmacia);
+$dataArea=pg_fetch_array($Darea);
 $NomFarmacia=$dataFarmacia[0];
 $NomArea=$dataArea[0];
 //$count=0;
 
 $conteo=0;
-while($DataGrupo=mysql_fetch_array($Grupo)){
+while($DataGrupo=pg_fetch_array($Grupo)){
 $NombreGrupo=$DataGrupo["GrupoTerapeutico"];
 $IdTerapeutico=$DataGrupo["IdTerapeutico"];
 
 $resp=Obtencion::ObtenerDetalleMedicamentoPorGrupo($area,$IdTerapeutico);
 
 
-if($Datos=mysql_fetch_array($resp)){?>
+if($Datos=pg_fetch_array($resp)){?>
 <tr class="MYTABLE"><td align="center" colspan="4">&nbsp;<strong><?php echo $NombreGrupo;?></strong></td></tr>
   <tr class="MYTABLE">
     <td width="75" align="center">&nbsp;<strong>Codigo</strong></td>
@@ -78,7 +78,7 @@ $ConsumoMesPasado=0;
 				<td>&nbsp;<?php echo $Nombre." - ".$Concentracion.'<br>'.$Forma;?></td>
 				<td align="center"><div id="<?php echo $divExis;?>">
 	<?php 
-			while($data=mysql_fetch_array($RespEx)){
+			while($data=pg_fetch_array($RespEx)){
 			$existencia=$data["Existencia"];
 			$Lote=$data["Lote"];
 			$Vencimiento=$data["FechaVencimiento"];
@@ -91,7 +91,7 @@ $ConsumoMesPasado=0;
 			$divExis="existenciaActual".$IdMedicina;
 
 			$TotalConsumo=$existencia;
-		if($respDivisor=mysql_fetch_array(Obtencion::ValorDivisor($IdMedicina))){
+		if($respDivisor=pg_fetch_array(Obtencion::ValorDivisor($IdMedicina))){
 		$Divisor=$respDivisor[0];
 
 		if($TotalConsumo < 1){
@@ -141,8 +141,8 @@ echo $ConsumoMesActual;
 </td>
 			</tr>
 <?php
- }while($Datos=mysql_fetch_array($resp));//while
- }//If mysql_fetch_array
+ }while($Datos=pg_fetch_array($resp));//while
+ }//If pg_fetch_array
 }//while Teraputico
  
  ?>

@@ -10,7 +10,7 @@ switch($Bandera){
 		
 		$medicinasGeneral=$proceso->ObtenerMedicinasGeneral();
 		
-		while($row=mysql_fetch_array($medicinasGeneral)){
+		while($row=pg_fetch_array($medicinasGeneral)){
 			$IdMedicina=$row["IdMedicina"];
 			
 			$Existencia=$proceso->VerificaExistencia($IdMedicina,$Ano);
@@ -41,7 +41,7 @@ switch($Bandera){
 		$IdPersonal=$_GET["IdPersonal"];
 
 		$verificacion=$proceso->VerificarPeriodo($Periodo);
-		if($resp=mysql_fetch_array($verificacion)){
+		if($resp=pg_fetch_array($verificacion)){
 			echo "El Periodo ".$Periodo." ya fue cerrado por el usuario ".$resp["Nombre"]." en la fecha ".$resp["Fecha"];
 		}else{
 			$proceso->CierreMes($Periodo,$IdPersonal);

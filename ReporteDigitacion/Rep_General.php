@@ -24,7 +24,7 @@ require('../Clases/class.php');
 
 function generaSelect2(){ //creacioon de combo para las Regiones
 	conexion::conectar();
-	$consulta=mysql_query("select distinct farm_usuarios.IdPersonal, Nombre
+	$consulta=pg_query("select distinct farm_usuarios.IdPersonal, Nombre
                         from farm_usuarios
                         inner join farm_recetas
                         on farm_recetas.IdPersonalIntro=farm_usuarios.IdPersonal
@@ -35,7 +35,7 @@ function generaSelect2(){ //creacioon de combo para las Regiones
 	// Voy imprimiendo el primer select compuesto por los paises
 	echo "<select name='IdPersonal' id='IdPersonal'>";
 	echo "<option value='0'>[General ...]</option>";
-	while($registro=mysql_fetch_row($consulta)){
+	while($registro=pg_fetch_row($consulta)){
 		echo "<option value='".$registro[0]."'> ".$registro[1]." </option>";
 	}
 	echo "</select>";

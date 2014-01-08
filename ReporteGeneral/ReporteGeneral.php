@@ -58,7 +58,7 @@ $F2 = explode('-', $FechaFinal);
 
         $respSubEspecialidad = $general->SubEspecialidad($IdSubEspecialidad, $FechaInicial, $FechaFinal, $IdEstablecimiento, $IdModalidad);
 
-        while ($rowEspecialidad = mysql_fetch_array($respSubEspecialidad)) {
+        while ($rowEspecialidad = pg_fetch_array($respSubEspecialidad)) {
             $NumeroRecetasSubTotal = 0;
             $CostoFarmacias = 0;
             $reporte.='<tr class="MYTABLE">
@@ -77,15 +77,15 @@ $F2 = explode('-', $FechaFinal);
 
 
 
-            while ($rowFarma = mysql_fetch_array($respFarmacias)) {
+            while ($rowFarma = pg_fetch_array($respFarmacias)) {
 
                 $IdFarmacia=$rowFarma["IdFarmacia"];
                 $NombreFarmacia = $rowFarma["Farmacia"];
 
                 $resp1 = $general->ObtenerNumeroRecetasFarmacia($rowEspecialidad["IdSubServicioxEstablecimiento"],$IdFarmacia, $FechaInicial, $FechaFinal, $IdEstablecimiento, $IdModalidad);
-                $TotalRecetasFarmacia = mysql_fetch_array($resp1);
+                $TotalRecetasFarmacia = pg_fetch_array($resp1);
                 $resp2 = $general->ObtenerRecetasFarmacia($rowEspecialidad["IdSubServicioxEstablecimiento"],$IdFarmacia, $FechaInicial, $FechaFinal, $IdEstablecimiento, $IdModalidad);
-                $TotalCosto = mysql_fetch_array($resp2);
+                $TotalCosto = pg_fetch_array($resp2);
 
                 if ($TotalRecetasFarmacia["Recetas"] != null) {
                     $TotalRecetasFarmacia1 = $TotalRecetasFarmacia["Recetas"];
@@ -110,8 +110,8 @@ $F2 = explode('-', $FechaFinal);
                 $NumeroRecetasSubTotal+=$TotalRecetasFarmacia1;
                 $CostoFarmacias+=$costoFarmacia;
 
-                $TotalRecetasFarmacia = mysql_fetch_array($resp1);
-                $TotalCosto = mysql_fetch_array($resp2);
+                $TotalRecetasFarmacia = pg_fetch_array($resp1);
+                $TotalCosto = pg_fetch_array($resp2);
             }
 
 

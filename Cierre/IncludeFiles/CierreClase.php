@@ -10,14 +10,14 @@ class Proceso{
 				where AnoCierre='$Ano'
                                 and farm_cierre.IdEstablecimiento=".$IdEstablecimiento." 
                                 and farm_cierre.IdModalidad=$IdModalidad";
-		$resp=mysql_query($query);
+		$resp=pg_query($query);
 		return($resp);
 	}
 
 	function Cierre($Ano,$IdPersonal,$IdEstablecimiento,$IdModalidad){
 		$query="insert into farm_cierre (AnoCierre,IdUsuarioReg,FechaHoraReg,IdEstablecimiento,IdModalidad) 
                                           values('$Ano','$IdPersonal',now(),$IdEstablecimiento,$IdModalidad)";
-		mysql_query($query);
+		pg_query($query);
 		
 	}//Cierre
 
@@ -31,14 +31,14 @@ class Proceso{
 				where MesCierre='$Periodo'
                                 and farm_cierre.IdEstablecimiento=".$IdEstablecimiento."
                                 and farm_cierre.IdModalidad=$IdModalidad";
-		$resp=mysql_query($query);
+		$resp=pg_query($query);
 		return($resp);
 	}
 
 	function CierreMes($Periodo,$IdPersonal,$IdEstablecimiento,$IdModalidad){
 		$query="insert into farm_cierre (MesCierre,IdUsuarioReg,FechaHoraReg,IdEstablecimiento,IdModalidad) 
                                           values('$Periodo','$IdPersonal',now(),$IdEstablecimiento,$IdModalidad)";
-		mysql_query($query);
+		pg_query($query);
 		
 	}//Cierre
 

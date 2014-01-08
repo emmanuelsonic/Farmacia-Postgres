@@ -56,7 +56,7 @@ $querySelect="select id
 			from mnt_areamedicina
 			order by id desc
 			limit 1";
-$resp=mysql_fetch_array(mysql_query($querySelect));
+$resp=pg_fetch_array(pg_query($querySelect));
 echo 'Area Asignada<br><input type="hidden" id="IdAreaMedicina" name="IdAreaMedicina" value="'.$resp[0].'">';
 break;
 
@@ -66,7 +66,7 @@ $IdArea=$_GET["idarea"];
 $IdAreaMedicina=$_GET["id"];
 
 $queryUpdate="update mnt_areamedicina set dispensada='$IdArea' where id='$IdAreaMedicina'";
-mysql_query($queryUpdate);
+pg_query($queryUpdate);
 echo "OK";
 break;
 }//switch

@@ -10,7 +10,7 @@ class ReporteFarmacias{
 				from mnt_grupoterapeutico
 				where GrupoTerapeutico <> '--'
 				".$Complemento;
-		$resp=mysql_query($query);
+		$resp=pg_query($query);
 		return($resp);				
 	}//GruposTerapeutics
 	
@@ -20,7 +20,7 @@ class ReporteFarmacias{
 				from farm_catalogoproductos
 				where IdTerapeutico='$IdTerapeutico'
 				";
-		$resp=mysql_query($query);
+		$resp=pg_query($query);
 		return($resp);
 	}
 	
@@ -41,7 +41,7 @@ class ReporteFarmacias{
 				".$Complemento."
 				order by Codigo
 				";
-		$resp=mysql_query($query);
+		$resp=pg_query($query);
 		return($resp);
 	}
 
@@ -72,7 +72,7 @@ class ReporteFarmacias{
 				and IdMedicina='$IdMedicina'
 				and IdPersonalIntro is null
 				group by IdMedicina";
-		$resp=mysql_fetch_array(mysql_query($query));
+		$resp=pg_fetch_array(pg_query($query));
 		return($resp[0]);		
 	}
 	
@@ -81,7 +81,7 @@ class ReporteFarmacias{
 				from farm_preciosxano
 				where IdMedicina='$IdMedicina'
 				and Ano	='$Ano'";
-		$resp=mysql_fetch_array(mysql_query($query));
+		$resp=pg_fetch_array(pg_query($query));
 		if($resp[0]!=NULL){$Respuesta=$resp[0];}else{$Respuesta=0;}
 		return($Respuesta);
 	}
@@ -112,7 +112,7 @@ class ReporteFarmacias{
 				and farm_medicinarecetada.IdMedicina='$IdMedicina'
 				and farm_recetas.Fecha between '$FechaInicial' and '$FechaFinal'
 				".$Complemento;
-		$resp=mysql_fetch_array(mysql_query($query));
+		$resp=pg_fetch_array(pg_query($query));
 		return($resp[0]);
 	}
 	
@@ -141,7 +141,7 @@ class ReporteFarmacias{
 				and farm_recetas.Fecha between '$FechaInicial' and '$FechaFinal'
 				and (farm_medicinarecetada.IdEstado='S' or farm_medicinarecetada.IdEstado='')
 				".$Complemento;
-		$resp=mysql_fetch_array(mysql_query($query));
+		$resp=pg_fetch_array(pg_query($query));
 		return($resp[0]);
 	}
 	
@@ -170,7 +170,7 @@ class ReporteFarmacias{
 				and farm_recetas.Fecha between '$FechaInicial' and '$FechaFinal'
 				and farm_medicinarecetada.IdEstado='I'
 				".$Complemento;
-		$resp=mysql_fetch_array(mysql_query($query));
+		$resp=pg_fetch_array(pg_query($query));
 		return($resp[0]);
 		
 	}
@@ -203,7 +203,7 @@ class ReporteFarmacias{
 				and farm_recetas.IdEstado<>'D'
 				and mnt_grupoterapeutico.IdTerapeutico='$IdTerapeutico'
 				".$Complemento;
-		$resp=mysql_query($query);
+		$resp=pg_query($query);
 		return($resp);
 	}//Ingreso por Grupo
 	

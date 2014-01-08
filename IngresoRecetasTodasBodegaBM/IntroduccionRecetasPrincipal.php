@@ -68,7 +68,7 @@ require('../Clases/class.php');
 		<option value="0">[Seleccione ...]</option>
 		<?php conexion::conectar();
 		if($_SESSION["TipoFarmacia"]==2){
-		$resp=mysql_query("select * 
+		$resp=pg_query("select * 
                                     from mnt_farmacia mf
                                     inner join mnt_farmaciaxestablecimiento mfxe
                                     on mfxe.IdFarmacia = mf.IdFarmacia
@@ -76,7 +76,7 @@ require('../Clases/class.php');
                                     and mfxe.IdEstablecimiento=$IdEstablecimiento
                                     and mfxe.IdModalidad=$IdModalidad");
 		}else{
-		$resp=mysql_query("select * 
+		$resp=pg_query("select * 
                                     from mnt_farmacia mf
                                     inner join mnt_farmaciaxestablecimiento mfxe
                                     on mfxe.IdFarmacia = mf.IdFarmacia
@@ -85,7 +85,7 @@ require('../Clases/class.php');
                                     and mfxe.IdModalidad=$IdModalidad");
 		}
 			  conexion::desconectar();
-			while($row=mysql_fetch_array($resp)){
+			while($row=pg_fetch_array($resp)){
 		?>
 			<option value="<?php echo $row[0];?>"><?php echo $row[1];?></option>
 		<?php

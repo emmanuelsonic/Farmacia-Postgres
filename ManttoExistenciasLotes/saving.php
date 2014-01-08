@@ -7,7 +7,7 @@ function ValorDivisor($IdMedicina, $IdEstablecimiento, $IdModalidad) {
     $SQL = "select DivisorMedicina from farm_divisores 
                  where IdMedicina=" . $IdMedicina . " and IdEstablecimiento=" . $IdEstablecimiento . " 
                      and IdModalidad=$IdModalidad";
-    $resp = mysql_query($SQL);
+    $resp = pg_query($SQL);
     return($resp);
 }
 ?>
@@ -32,8 +32,8 @@ function ValorDivisor($IdMedicina, $IdEstablecimiento, $IdModalidad) {
 
         if ($bandera == 2) {//comprobacion de fechas
             $TestFecha = $_GET["TestFecha"];
-            $querySelect = "select left('$TestFecha',7)<left(curdate(),7)";
-            $resp = mysql_fetch_array(mysql_query($querySelect));
+            $querySelect = "select left('$TestFecha',7)<left(to_char(current_date,'YYYY-MM-DD'),7)";
+            $resp = pg_fetch_array(pg_query($querySelect));
             if ($resp != 1) {
                 echo "SI";
             } else {
@@ -50,21 +50,21 @@ function ValorDivisor($IdMedicina, $IdEstablecimiento, $IdModalidad) {
 
                 $IdTerapeuticoCombo = $_POST["Terapeutico"];
 
-                $querySelect = "select farm_catalogoproductos.IdMedicina,Codigo ,
+                $querySelect = "select farm_catalogoproductos.id as IdMedicina,Codigo ,
                       farm_catalogoproductos.Nombre,farm_catalogoproductos.FormaFarmaceutica,
 	farm_catalogoproductos.Concentracion
 	from farm_catalogoproductos
 	inner join farm_catalogoproductosxestablecimiento cpe
-	on cpe.IdMedicina=farm_catalogoproductos.IdMedicina
+	on cpe.IdMedicina=farm_catalogoproductos.Id
 	
 	where cpe.Condicion='H'
 	and cpe.IdEstablecimiento=" . $_SESSION["IdEstablecimiento"] . "
         and cpe.IdModalidad=$IdModalidad
-	and IdTerapeutico=" . $IdTerapeuticoCombo;
-                $resp = mysql_query($querySelect);
+	and cpe.Id=" . $IdTerapeuticoCombo;
+                $resp = pg_query($querySelect);
 
-                while ($Datos = mysql_fetch_array($resp)) {
-                    $IdMedicina = $Datos["IdMedicina"];
+                while ($Datos = pg_fetch_array($resp)) {
+                    $IdMedicina = $Datos["idmedicina"];
                     $Lote_ = "Lote" . $IdMedicina;
                     /**/
                     $mes = "mes" . $IdMedicina;
@@ -130,25 +130,25 @@ function ValorDivisor($IdMedicina, $IdEstablecimiento, $IdModalidad) {
             /* REFRESCAMIENTO DE LA EXISTENCIAS DESPUES DE UTILIZAR AJAX */
             conexion::conectar();
             $data = '';
-            $querySelect = " select farm_catalogoproductos.IdMedicina,farm_catalogoproductos.Nombre,farm_catalogoproductos.FormaFarmaceutica,
+            $querySelect = " select farm_catalogoproductos.id as IdMedicina,farm_catalogoproductos.Nombre,farm_catalogoproductos.FormaFarmaceutica,
 			farm_catalogoproductos.Concentracion, farm_entregamedicamento.*,farm_lotes.*,
 			farm_unidadmedidas.Descripcion,farm_unidadmedidas.UnidadesContenidas as Divisor
 			from farm_catalogoproductos
 			inner join farm_entregamedicamento
-			on farm_entregamedicamento.IdMedicina=farm_catalogoproductos.IdMedicina
+			on farm_entregamedicamento.IdMedicina=farm_catalogoproductos.Id
 			inner join farm_unidadmedidas
-			on farm_unidadmedidas.IdUnidadMedida=farm_catalogoproductos.IdUnidadMedida
+			on farm_unidadmedidas.Id=farm_catalogoproductos.IdUnidadMedida
 			inner join farm_lotes
-			on farm_lotes.IdLote=farm_entregamedicamento.IdLote
-			where farm_catalogoproductos.IdMedicina='$IdMedicina' 
+			on farm_lotes.Id=farm_entregamedicamento.IdLote
+			where farm_catalogoproductos.Id='$IdMedicina' 
 			and farm_entregamedicamento.Existencia <> 0
                         and farm_entregamedicamento.IdEstablecimiento=" . $_SESSION["IdEstablecimiento"] . "
                         and farm_entregamedicamento.IdModalidad=$IdModalidad
-			and left(FechaVencimiento,7) > left(curdate(),7)
+			and left(to_char(FechaVencimiento,'YYYY-MM-DD'),7) > left(to_char(current_date,'YYYY-MM-DD'),7)
 			order by farm_lotes.FechaVencimiento";
-            $resp = mysql_query($querySelect);
+            $resp = pg_query($querySelect);
 
-            while ($Datos = mysql_fetch_array($resp)) {
+            while ($Datos = pg_fetch_array($resp)) {
                 $Existencia = $Datos["Existencia"];
                 if ($Existencia != '') {
 
@@ -157,7 +157,7 @@ function ValorDivisor($IdMedicina, $IdEstablecimiento, $IdModalidad) {
                     $Divisor = $Datos['Divisor'];
                     $Script = 'javascript:popUp("ActualizaLotes.php?Lote=' . $Datos["Lote"] . '&IdMedicina=' . $Datos["IdMedicina"] . '")';
 
-                    if ($respDivisor = mysql_fetch_array(ValorDivisor($IdMedicina, $_SESSION["IdEstablecimiento"],$IdModalidad))) {
+                    if ($respDivisor = pg_fetch_array(ValorDivisor($IdMedicina, $_SESSION["IdEstablecimiento"],$IdModalidad))) {
                         $Divisor = $respDivisor[0];
 
                         if ($Existencia < 1) {

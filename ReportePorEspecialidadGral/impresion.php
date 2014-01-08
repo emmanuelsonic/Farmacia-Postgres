@@ -110,7 +110,7 @@ echo"$DateNow";?>
 //*************************************
 //******************************* QUERIES Y RECORRIDOS
 $respServicios=Servicios($IdSubEspecialidad,$FechaInicio,$FechaFin);
-while($rowServicios=mysql_fetch_array($respServicios)){
+while($rowServicios=pg_fetch_array($respServicios)){
 	$IdSubEspecialidad=$rowServicios[0];
 	$NombreSubEspecialidad=$rowServicios[1];?>
 			
@@ -120,7 +120,7 @@ while($rowServicios=mysql_fetch_array($respServicios)){
 
 	<?php 
 	$nombreTera=NombreTera($IdGrupoTerapeutico,$IdSubEspecialidad,$FechaInicio,$FechaFin);
-	while($grupos=mysql_fetch_array($nombreTera)){
+	while($grupos=pg_fetch_array($nombreTera)){
 		$NombreTerapeutico=$grupos["GrupoTerapeutico"];
 		$IdTerapeutico=$grupos["IdTerapeutico"];
 		?>
@@ -143,7 +143,7 @@ while($rowServicios=mysql_fetch_array($respServicios)){
 			</tr>
 			<?php
 		$resp1=QueryExterna($IdTerapeutico,$IdMedicina,$IdSubEspecialidad,$FechaInicio,$FechaFin);
-			while($row=mysql_fetch_array($resp1)){
+			while($row=pg_fetch_array($resp1)){
 		$GrupoTerapeutico=$IdTerapeutico;
 		$Medicina=$row["IdMedicina"];
 		$codigoMedicina=$row["Codigo"];
@@ -157,13 +157,13 @@ while($rowServicios=mysql_fetch_array($respServicios)){
 		
 		$respuesta=ObtenerReporteGrupoTerapeutico($IdTerapeutico,$Medicina,$FechaInicio,$FechaFin,$IdSubEspecialidad);
 			
-				if($row2=mysql_fetch_array($respuesta)){ /* verificacion de datos */
+				if($row2=pg_fetch_array($respuesta)){ /* verificacion de datos */
 		$precioActual=0;
 		$respuesta2=ObtenerReporteGrupoTerapeutico($IdTerapeutico,$Medicina,$FechaInicio,$FechaFin,$IdSubEspecialidad); 
-		$Nrecetas=mysql_num_rows($respuesta2); 
-		//		while($row3=mysql_fetch_array($respuesta2)){
+		$Nrecetas=pg_num_rows($respuesta2); 
+		//		while($row3=pg_fetch_array($respuesta2)){
 		//IdReceta
-		$row3=mysql_fetch_array($respuesta2);
+		$row3=pg_fetch_array($respuesta2);
 		$IdReceta=$row3["IdReceta"];
 		$Divisor=$row3["Divisor"];//Divisor de conversion
 		$UnidadMedida=$row3["Descripcion"];//Tipo de unidad de Medida
@@ -178,7 +178,7 @@ while($rowServicios=mysql_fetch_array($respServicios)){
 		
 		$i=0;//Posicion inicial de los vectores
 		$j=0;
-					while($rowLotes=mysql_fetch_array($respLotes)){//OBTENGO LOTES RECETAS ETC
+					while($rowLotes=pg_fetch_array($respLotes)){//OBTENGO LOTES RECETAS ETC
 						$Cantidad1=$rowLotes["TotalLote1"];
 						$Lote1=$rowLotes["Lote1"];
 						
@@ -287,7 +287,7 @@ while($rowServicios=mysql_fetch_array($respServicios)){
 		//$cantidad=$row3["Cantidad"];
 		
 		//$VerSatisfecha=verificaSatisfecha($Medicina,$IdReceta,$IdHistorialClinico);
-		//if($vector=mysql_fetch_array($VerSatisfecha)){$consumo=$consumo+$cantidad;}
+		//if($vector=pg_fetch_array($VerSatisfecha)){$consumo=$consumo+$cantidad;}
 					
 		//$costo=$consumo*$precioActual;//}//while row3
 		$Cantidad_Total=ObtenerConsumoTotalMedicamento($Medicina,$FechaInicio,$FechaFin,$IdSubEspecialidad);//CANTIDAD TOTAL DE RECETAS SATIS. Y NO SATIS.

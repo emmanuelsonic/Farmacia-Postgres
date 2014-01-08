@@ -170,7 +170,7 @@ $reporte='<table width="968" border="1">';
 //*************************************
 //******************************* QUERIES Y RECORRIDOS
 $respServicios=Servicios($IdSubEspecialidad,$FechaInicio,$FechaFin);
-while($rowServicios=mysql_fetch_array($respServicios)){
+while($rowServicios=pg_fetch_array($respServicios)){
 	$IdSubEspecialidad=$rowServicios[0];
 	$NombreSubEspecialidad=$rowServicios[1];
 		$SubTotalServicio=0;
@@ -198,7 +198,7 @@ while($rowServicios=mysql_fetch_array($respServicios)){
 
 	 
 	$nombreTera=NombreTera($IdGrupoTerapeutico,$IdSubEspecialidad,$FechaInicio,$FechaFin);
-	if($grupos=mysql_fetch_array($nombreTera)){
+	if($grupos=pg_fetch_array($nombreTera)){
 	do{
 		$NombreTerapeutico=$grupos["GrupoTerapeutico"];
 		$IdTerapeutico=$grupos["IdTerapeutico"];
@@ -227,7 +227,7 @@ while($rowServicios=mysql_fetch_array($respServicios)){
 			</tr>';
 			
 		$resp1=QueryExterna($IdTerapeutico,$IdMedicina,$IdSubEspecialidad,$FechaInicio,$FechaFin);
-			while($row=mysql_fetch_array($resp1)){
+			while($row=pg_fetch_array($resp1)){
 		$GrupoTerapeutico=$IdTerapeutico;
 		$Medicina=$row["IdMedicina"];
 		$codigoMedicina=$row["Codigo"];
@@ -241,7 +241,7 @@ while($rowServicios=mysql_fetch_array($respServicios)){
 		
 		$respuesta=ObtenerReporteGrupoTerapeutico($IdTerapeutico,$Medicina,$FechaInicio,$FechaFin,$IdSubEspecialidad);
 			
-				if($row2=mysql_fetch_array($respuesta)){ /* verificacion de datos */
+				if($row2=pg_fetch_array($respuesta)){ /* verificacion de datos */
 		$precioActual=0;
 		
 		//$IdReceta=$row2["IdReceta"];
@@ -309,7 +309,7 @@ while($rowServicios=mysql_fetch_array($respServicios)){
 					$TotalInsat+=$SubTotalInsat;
 					$TotalConsumo+=$SubTotalConsu;
 		
-	}while($grupos=mysql_fetch_array($nombreTera));//while de nombreTera
+	}while($grupos=pg_fetch_array($nombreTera));//while de nombreTera
 	$Total+=$SubTotalServicio;
     $reporte.='<tr class="FONDO2" style="background:#CCCCCC;">
       <td colspan="4" align="right"><em><strong> Total de '.$NombreSubEspecialidad.':</strong></em></td>

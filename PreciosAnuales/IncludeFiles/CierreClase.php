@@ -8,7 +8,7 @@ class Proceso{
 				on farm_cierre.IdUsuarioReg=farm_usuarios.IdPersonal
 				
 				where AnoCierre='$Ano'";
-		$resp=mysql_query($query);
+		$resp=pg_query($query);
 		return($resp);
 	}
 
@@ -18,7 +18,7 @@ class Proceso{
 		$query="select IdMedicina 
 				from farm_catalogoproductos
 				where IdHospital <> 0";
-		$resp=mysql_query($query);
+		$resp=pg_query($query);
 		return($resp);
 		
 	}//obtener medicina general
@@ -29,9 +29,9 @@ class Proceso{
 				from farm_preciosxano 
 				where Ano = $Ano
 				and IdMedicina=".$IdMedicina;
-		$resp=mysql_query($query);
+		$resp=pg_query($query);
 		
-		if($row=mysql_fetch_array($resp)){
+		if($row=pg_fetch_array($resp)){
 			return true;
 		}else{
 			return false;
@@ -46,7 +46,7 @@ class Proceso{
 				from farm_preciosxano 
 				where Ano = year(curdate())
 				and IdMedicina=".$IdMedicina;
-		$resp=mysql_fetch_array(mysql_query($query));
+		$resp=pg_fetch_array(pg_query($query));
 			
 			return($resp["Precio"]);
 	
@@ -54,7 +54,7 @@ class Proceso{
 
 	function ConfigurarPrecio($IdMedicina,$Precio,$IdPersonal,$Ano){
 		$query="insert into farm_preciosxano (IdMedicina,Precio,Ano,IdUsuarioReg,FechaHoraReg) values('$IdMedicina','$Precio','$Ano','$IdPersonal',now())";
-		$resp=mysql_query($query);
+		$resp=pg_query($query);
 		
 	}
 
@@ -65,13 +65,13 @@ class Proceso{
 				on farm_cierre.IdUsuarioReg=farm_usuarios.IdPersonal
 				
 				where MesCierre='$Periodo'";
-		$resp=mysql_query($query);
+		$resp=pg_query($query);
 		return($resp);
 	}
 
 	function CierreMes($Periodo,$IdPersonal){
 		$query="insert into farm_cierre (MesCierre,IdUsuarioReg,FechaHoraReg) values('$Periodo','$IdPersonal',now())";
-		mysql_query($query);
+		pg_query($query);
 		
 	}//Cierre
 

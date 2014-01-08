@@ -83,13 +83,13 @@ $selectDestino=$_REQUEST["select"]; $opcionSeleccionada=$_REQUEST["opcion"];
 	if ($tabla == "mnt_subespecialidad"){
 	$conexion=new conexion;
 	$conexion->conectar();
-	$consulta=mysql_query("SELECT IdSubEspecialidad,NombreSubEspecialidad FROM mnt_subespecialidad order by NombreSubEspecialidad") or die(mysql_error());
+	$consulta=pg_query("SELECT IdSubEspecialidad,NombreSubEspecialidad FROM mnt_subespecialidad order by NombreSubEspecialidad") or die(pg_error());
 	$conexion->desconectar();
 	
 	// Comienzo a imprimir el select
 	echo "<select name='".$selectDestino."' id='".$selectDestino."' onChange='cargaContenido8(this.id)'>";
 	echo "<option value='0'>[Seleccione ...]</option>";
-	while($registro=mysql_fetch_row($consulta))
+	while($registro=pg_fetch_row($consulta))
 	{
 		// Convierto los caracteres conflictivos a sus entidades HTML correspondientes para su correcta visualizacion
 		$registro[1]=htmlentities($registro[1]);
@@ -103,18 +103,18 @@ $selectDestino=$_REQUEST["select"]; $opcionSeleccionada=$_REQUEST["opcion"];
 	if($tabla=="mnt_empleados"){
 	$conexion=new conexion;	
 	$conexion->conectar();
-	$consulta=mysql_query("select mnt_empleados.IdEmpleado,mnt_empleados.NombreEmpleado
+	$consulta=pg_query("select mnt_empleados.IdEmpleado,mnt_empleados.NombreEmpleado
 							from mnt_empleados
 							inner join mnt_subespecialidad
 							on mnt_subespecialidad.IdSubEspecialidad=mnt_empleados.IdSubEspecialidad
-							where mnt_empleados.IdSubEspecialidad='$opcionSeleccionada' order by mnt_empleados.NombreEmpleado") or die(mysql_error());
+							where mnt_empleados.IdSubEspecialidad='$opcionSeleccionada' order by mnt_empleados.NombreEmpleado") or die(pg_error());
 	
 	$conexion->desconectar();
 	
 	// Comienzo a imprimir el select
 	echo "<select name='".$selectDestino."' id='".$selectDestino."'>";
 	echo "<option value='0'>[Seleccione ...]</option>";
-	while($registro=mysql_fetch_row($consulta))
+	while($registro=pg_fetch_row($consulta))
 	{
 		// Convierto los caracteres conflictivos a sus entidades HTML correspondientes para su correcta visualizacion
 		$registro[1]=htmlentities($registro[1]);
@@ -128,9 +128,9 @@ $selectDestino=$_REQUEST["select"]; $opcionSeleccionada=$_REQUEST["opcion"];
 
     $conexion=new conexion;
 	$conexion->conectar();
-	//$consulta2=mysql_query("SELECT NOMBRE FROM $tabla WHERE sib='$opcionSeleccionada' ORDER BY nombre") or die(mysql_error());
+	//$consulta2=pg_query("SELECT NOMBRE FROM $tabla WHERE sib='$opcionSeleccionada' ORDER BY nombre") or die(pg_error());
 
-	$consulta2=mysql_query("select distinct farm_catalogoproductos.IdMedicina, farm_catalogoproductos.Nombre, 							
+	$consulta2=pg_query("select distinct farm_catalogoproductos.IdMedicina, farm_catalogoproductos.Nombre, 							
 							farm_catalogoproductos.FormaFarmaceutica
 							from farm_catalogoproductos
 							inner join farm_medicinarecetada
@@ -144,13 +144,13 @@ $selectDestino=$_REQUEST["select"]; $opcionSeleccionada=$_REQUEST["opcion"];
 							where mnt_empleados.IdEmpleado='$opcionSeleccionada' 
 							and year(farm_recetas.Fecha)=year(curdate())
 							and (farm_recetas.IdEstado='E' OR farm_recetas.IdEstado='T' OR farm_recetas.IdEstado='ER' OR farm_recetas.IdEstado='RT')	
-							order by farm_catalogoproductos.Nombre") or die(mysql_error());
+							order by farm_catalogoproductos.Nombre") or die(pg_error());
 	$conexion->desconectar();
 	
 	// Comienzo a imprimir el select
 	echo "<select name='".$selectDestino."' id='".$selectDestino."' onChange='cargaContenido8(this.id)' onmouseover=\"Tip('Selecci&oacute;n de Medicamentos')\" onmouseout=\"UnTip()\">";
 	echo "<option value='0'>TODAS LAS MEDICINAS</option>";
-	while($registro2=mysql_fetch_row($consulta2)){?>
+	while($registro2=pg_fetch_row($consulta2)){?>
 		<option value="<?php echo $registro2[0]; ?>"><?php echo $registro2[1].", ".$registro2[2]; ?></option>;
 <?php
 	}			

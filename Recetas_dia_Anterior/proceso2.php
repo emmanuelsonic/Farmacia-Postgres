@@ -21,7 +21,7 @@ if (isset($_SESSION["nivel"])) {
           y la bandera de la receta pasa a Lista (L) */
         $resp = $query2->MedicinaReceta($IdReceta);
 
-        while ($row = mysql_fetch_array($resp)) {
+        while ($row = pg_fetch_array($resp)) {
             $IdMedicina = $row["IdMedicina"];
             $IdReceta = $row["IdReceta"];
             $satisfecha = $row["IdEstado"];
@@ -39,7 +39,7 @@ if (isset($_SESSION["nivel"])) {
 
 
 
-        mysql_query("update farm_recetas set IdEstado='L' where IdReceta='$IdReceta'");
+        pg_query("update farm_recetas set IdEstado='L' where IdReceta='$IdReceta'");
 
         conexion::desconectar();
     }//IF Listo

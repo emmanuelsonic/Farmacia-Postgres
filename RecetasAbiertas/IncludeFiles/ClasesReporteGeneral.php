@@ -2,12 +2,18 @@
 include($path.'../Clases/class.php');
 class RecetasAbiertas{
     function CierreMes($Periodo,$IdEstablecimiento,$IdModalidad){
+<<<<<<< HEAD
         $query="SELECT MesCierre 
                 FROM farm_cierre 
                 WHERE MesCierre='".$Periodo."'
                 AND IdEstablecimiento=$IdEstablecimiento
                 AND IdModalidad=$IdModalidad";
              
+=======
+        $query="select MesCierre from farm_cierre 
+                where MesCierre='".$Periodo."'
+                and IdEstablecimiento=$IdEstablecimiento and IdModalidad=$IdModalidad";
+>>>>>>> b828137fda9ad3e0fabfa24c69e6cc9738584735
         $resp=pg_fetch_array(pg_query($query));
         return($resp[0]);
     }
@@ -22,7 +28,7 @@ class RecetasAbiertas{
                 where left(Fecha,7)='".$Periodo."' and IdEstado <> 'E'
                 and fr.IdEstablecimiento=$IdEstablecimiento
                 and fr.IdModalidad=$IdModalidad";
-        $resp=mysql_query($query);
+        $resp=pg_query($query);
         return($resp);
     }
     
@@ -31,7 +37,7 @@ class RecetasAbiertas{
                 where IdReceta=".$IdReceta."
                 and IdEstablecimiento=$IdEstablecimiento
                 and IdModalidad=$IdModalidad";
-        mysql_query($query);
+        pg_query($query);
     }
 }//Clase Reporte Farmacias
 ?>

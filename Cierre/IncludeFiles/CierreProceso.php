@@ -13,7 +13,7 @@ switch($Bandera){
 		$IdPersonal=$_GET["IdPersonal"];
 		
 		$verificacion=$proceso->Verificar($Ano,$_SESSION["IdEstablecimiento"],$IdModalidad);
-		if($resp=mysql_fetch_array($verificacion)){
+		if($resp=pg_fetch_array($verificacion)){
 			echo "El año ".$Ano." ya fue cerrado por el usuario ".$resp["Nombre"]." en la fecha ".$resp["Fecha"];
 		}else{
 			$proceso->Cierre($Ano,$IdPersonal,$_SESSION["IdEstablecimiento"],$IdModalidad);
@@ -28,7 +28,7 @@ switch($Bandera){
 		$IdPersonal=$_GET["IdPersonal"];
 
 		$verificacion=$proceso->VerificarPeriodo($Periodo,$_SESSION["IdEstablecimiento"],$IdModalidad);
-		if($resp=mysql_fetch_array($verificacion)){
+		if($resp=pg_fetch_array($verificacion)){
 			echo "El Periodo ".$Periodo." ya fue cerrado por el usuario ".$resp["Nombre"]." en la fecha ".$resp["Fecha"];
 		}else{
 			$proceso->CierreMes($Periodo,$IdPersonal,$_SESSION["IdEstablecimiento"],$IdModalidad);

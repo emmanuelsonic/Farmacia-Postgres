@@ -13,7 +13,7 @@ switch ($_GET["Combo"]) {
     case "mnt_areafarmacia":
         $conexion = new conexion;
         $conexion->conectar();
-        $consulta = mysql_query("SELECT mafe.IdArea,maf.Area
+        $consulta = pg_query("SELECT mafe.IdArea,maf.Area
 				FROM mnt_areafarmacia maf
                                 inner join mnt_areafarmaciaxestablecimiento mafe
                                 on mafe.IdArea=maf.IdArea
@@ -23,14 +23,14 @@ switch ($_GET["Combo"]) {
 				and maf.IdArea <> '7'
 				and mafe.Habilitado='S'
                                 and mafe.IdEstablecimiento=$IdEstablecimiento
-                                and mafe.IdModalidad=$IdModalidad") or die(mysql_error());
+                                and mafe.IdModalidad=$IdModalidad") or die(pg_error());
 
         $conexion->desconectar();
 
         // Comienzo a imprimir el select
         echo "<select name='area' id='area'>";
         echo "<option value='0'>TODAS LAS AREAS</option>";
-        while ($registro = mysql_fetch_row($consulta)) {
+        while ($registro = pg_fetch_row($consulta)) {
             // Convierto los caracteres conflictivos a sus entidades HTML correspondientes para su correcta visualizacion
             $registro[1] = htmlentities($registro[1]);
             // Imprimo las opciones del select
@@ -45,7 +45,7 @@ switch ($_GET["Combo"]) {
     case "farm_catalogoproductos":
         $conexion = new conexion;
         $conexion->conectar();
-        $consulta = mysql_query("SELECT farm_catalogoproductos.IdMedicina,farm_catalogoproductos.Nombre,Concentracion,farm_catalogoproductos.FormaFarmaceutica,Presentacion, Codigo
+        $consulta = pg_query("SELECT farm_catalogoproductos.IdMedicina,farm_catalogoproductos.Nombre,Concentracion,farm_catalogoproductos.FormaFarmaceutica,Presentacion, Codigo
 			FROM farm_catalogoproductos
 			inner join mnt_grupoterapeutico 
 			on mnt_grupoterapeutico.IdTerapeutico=farm_catalogoproductos.IdTerapeutico
@@ -54,14 +54,14 @@ switch ($_GET["Combo"]) {
 			WHERE mnt_grupoterapeutico.IdTerapeutico='$opcionSeleccionada' 
 			and fcpe.IdEstablecimiento=$IdEstablecimiento
                         and fcpe.IdModalidad=$IdModalidad
-			order by farm_catalogoproductos.Codigo") or die(mysql_error());
+			order by farm_catalogoproductos.Codigo") or die(pg_error());
 
         $conexion->desconectar();
 
         // Comienzo a imprimir el select
         echo "<select name='IdMedicina' id='IdMedicina'>";
         echo "<option value='0'>TODAS LAS MEDICINAS</option>";
-        while ($registro = mysql_fetch_row($consulta)) {
+        while ($registro = pg_fetch_row($consulta)) {
             // Convierto los caracteres conflictivos a sus entidades HTML correspondientes para su correcta visualizacion
             $registro[1] = htmlentities($registro[1]);
             // Imprimo las opciones del select

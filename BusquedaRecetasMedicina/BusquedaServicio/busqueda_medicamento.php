@@ -34,7 +34,7 @@ $sqlStr=$Classquery->ObtenerQuery($Bandera,$IdArea,"",$_SESSION["IdEstablecimien
 $sqlStrAux=$Classquery->ObtenerQueryTotal($Bandera,$IdArea,"",$_SESSION["IdEstablecimiento"],$IdModalidad);
 }
 $query = pg_query($sqlStr.$limit, $link);
-$aux = Pg_Fetch_Array(mysql_query($sqlStrAux,$link), null, PGSQL_ASSOC);
+$aux = Pg_Fetch_Array(pg_query($sqlStrAux,$link), null, PGSQL_ASSOC);
 ?><br>
 
 <?php
