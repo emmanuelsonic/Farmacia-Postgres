@@ -138,8 +138,7 @@ if ($nivel == 3 or $nivel == 4) {
         </script>
     </head>
 
-    <body onLoad="MonitoreoDigitacion();
-        MonitoreoEnLinea();">
+    <body>
 
 <?php Menu(); ?>
 

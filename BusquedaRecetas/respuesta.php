@@ -15,7 +15,6 @@ switch($Bandera){
                             FROM farm_catalogoproductos AS fcp
                             INNER JOIN farm_catalogoproductosxestablecimiento fcpe ON fcpe.IdMedicina=fcp.Id
                             INNER JOIN farm_medicinaexistenciaxarea fmexa ON fmexa.IdMedicina=fcpe.IdMedicina
-
                             WHERE (Nombre like '%$Busqueda%' or Codigo ='$Busqueda')
                             AND IdArea='$IdArea'
                             AND fcpe.IdEstablecimiento=".$_SESSION["IdEstablecimiento"]."

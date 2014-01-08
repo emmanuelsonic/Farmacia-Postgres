@@ -116,7 +116,7 @@ class RecetasProceso{
 	function ObtenerComboAreas($IdFarmacia,$IdEstablecimiento,$IdModalidad){
 		$filtro='';
 		if($IdFarmacia!=0){$filtro='and farm_recetas.IdFarmacia='.$IdFarmacia;}
-		$query="SELECT DISTINCT mnt_areafarmacia.Id AS AREA
+		$query="SELECT DISTINCT mnt_areafarmacia.Id, area 
                         FROM mnt_areafarmacia
                         INNER JOIN mnt_areafarmaciaxestablecimiento mafxe
                         ON mafxe.IdArea=mnt_areafarmacia.Id
@@ -195,41 +195,48 @@ class RecetasProceso{
 		
 		//****************************
 		
-		$query="select IdMedicinaRecetada,farm_medicinarecetada.IdMedicina,farm_recetas.IdReceta,farm_recetas.IdReceta, 
-                       farm_catalogoproductos.Nombre, Concentracion, FormaFarmaceutica, Presentacion, Cantidad,NombreEmpleado, Fecha, Area, CorrelativoAnual, 
-                        if(farm_usuarios.Nombre is not null,farm_usuarios.Nombre,concat_ws(' ','Dr(a).',NombreEmpleado)) as Digitador,
-		case farm_recetas.IdFarmacia 
-			when 1 then 'Central' 
-			when 2 then 'Con. Externa' 
-			when 3 then 'Emergencias' end as NombreFarmacia
+		$query="SELECT farm_medicinarecetada.Id,farm_recetas.Id,farm_catalogoproductos.Nombre, Concentracion, FormaFarmaceutica, Presentacion, Cantidad,NombreEmpleado, Fecha, Area, CorrelativoAnual, 
+                        username is not null, username,concat_ws(' ','Dr(a).',firstname||' '||lastname) as Digitador,
 
-				from farm_recetas
-				inner join farm_medicinarecetada
-				on farm_medicinarecetada.IdReceta=farm_recetas.IdReceta
-				inner join farm_catalogoproductos
-				on farm_catalogoproductos.IdMedicina=farm_medicinarecetada.IdMedicina
-				inner join sec_historial_clinico
-				on sec_historial_clinico.IdHistorialClinico=farm_recetas.IdHistorialClinico
-				inner join mnt_empleados
-				on mnt_empleados.IdEmpleado=sec_historial_clinico.IdEmpleado
-				inner join mnt_areafarmacia
-				on mnt_areafarmacia.IdArea=farm_recetas.IdAreaOrigen
-				left join farm_usuarios
-				on farm_usuarios.IdPersonal=farm_recetas.IdPersonalIntro
-				inner join mnt_subservicioxestablecimiento
-				on mnt_subservicioxestablecimiento.IdSubServicioxEstablecimiento=sec_historial_clinico.IdSubServicioxEstablecimiento
-				
-				where Fecha between '$FechaInicial' and '$FechaFinal'
-				and farm_recetas.IdFarmacia <> 4
-				$filtro5
-				$filtro1
-				$filtro2
-				$filtro3
-				$filtro4	
-                                and farm_recetas.IdEstablecimiento=$IdEstablecimiento
-                                and farm_recetas.IdModalidad=$IdModalidad
-				order by Area,Fecha";
-		$resp=mysql_query($query);
+                        CASE farm_recetas.IdFarmacia 
+                                WHEN 1 then 'Central' 
+                                WHEN 2 then 'Con. Externa' 
+                                WHEN 3 then 'Emergencias' 
+                        END AS NombreFarmacia
+
+                        FROM farm_recetas
+                        INNER JOIN farm_medicinarecetada
+                        ON farm_medicinarecetada.IdReceta=farm_recetas.Id
+                        INNER JOIN farm_catalogoproductos
+                        ON farm_catalogoproductos.Id=farm_medicinarecetada.IdMedicina
+                        INNER JOIN sec_historial_clinico
+                        ON sec_historial_clinico.IdHistorialClinico=farm_recetas.IdHistorialClinico
+                        INNER JOIN mnt_empleado
+                        ON mnt_empleado.IdEmpleado=sec_historial_clinico.IdEmpleado
+                        INNER JOIN mnt_areafarmacia
+                        ON mnt_areafarmacia.Id=farm_recetas.IdAreaOrigen
+                        LEFT JOIN fos_user_user
+                        ON fos_user_user.Id=farm_recetas.IdPersonalIntro
+
+                        /*==AUN NO ESTA INTEGRADA LA PARTE DE SUBSERVICIO ==*
+
+                        inner join mnt_subservicioxestablecimiento
+                        on mnt_subservicioxestablecimiento.IdSubServicioxEstablecimiento=sec_historial_clinico.IdSubServicioxEstablecimiento
+
+                        */
+
+                        WHERE Fecha between '$FechaInicial' and '$FechaFinal'
+                        AND farm_recetas.IdFarmacia <> 4
+
+                        $filtro5
+                        $filtro1
+                        $filtro2
+                        $filtro3
+                        $filtro4	
+                        AND farm_recetas.IdEstablecimiento=$IdEstablecimiento
+                        AND farm_recetas.IdModalidad=$IdModalidad
+                        ORDER BY Area,Fecha";
+		$resp=pg_query($query);
 		return($resp);
 	}//Obtener Recetas 
 
@@ -378,10 +385,10 @@ class RecetasProceso{
 	}//Cierre
 		
 	function CierreMes($Fecha){
-		$sql="select MesCierre
-			from farm_cierre
-			where MesCierre=left('$Fecha',7)";
-		$resp=mysql_query($sql);
+		$sql="SELECT MesCierre
+                      FROM farm_cierre
+                      WHERE MesCierre=substring('$Fecha',1,7)";
+		$resp=pg_query($sql);
 		return($resp);		
 	}//CierreMes
 

@@ -36,7 +36,7 @@ if($row = pg_fetch_array($result3, null, PGSQL_ASSOC)){
 						$IdArea=$row["idarea"];
 						$IdEstadoCuenta=$row["estadocuenta"];
 						$IdEstablecimiento=$row["id_establecimiento"];
-                        $IdModalidad=$row["id_area_mod_estab"];
+                                                $IdModalidad=$row["id_area_mod_estab"];
 					    //$NombreFarmacia=$row["Farmacia"];
 
 

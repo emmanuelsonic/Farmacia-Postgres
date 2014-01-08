@@ -190,7 +190,7 @@ if (!isset($_SESSION["nivel"])) {
                 <td width="233" class="FONDO"><strong>Especialidad/Servicio: </strong></td>
                 <td colspan="3" class="FONDO">
 
-                    &nbsp;<input id="CodigoSubServicio" name="CodigoSubServicio" type="text" maxlength="4" onBlur="javascript:CargarSubServicio(this.value);" style="width:50px;" onKeyPress="return Saltos(event,this.id);">
+                    &nbsp;<input id="CodigoSubServicio" name="CodigoSubServicio" type="text"IdReceta maxlength="4" onBlur="javascript:CargarSubServicio(this.value);" style="width:50px;" onKeyPress="return Saltos(event,this.id);">
                     <input type="button" id="Buscador2" name="Buscador2" onClick="javascript:VentanaBusqueda();" value="...">
                     <input type="hidden" id="IdSubServicio" name="IdSubServicio" ></td>
 
@@ -214,6 +214,8 @@ if (!isset($_SESSION["nivel"])) {
                         <!-- VALORES DE HISTORIAL CLINICO Y DE ID DE RECETA -->
                         <input type='hidden' id='IdHistorialClinico' name='IdHistorialClinico'>
                         <input type="hidden" id="IdRecetaValor" name="IdRecetaValor">
+                    
+                        
                     </div>	</td>
                 <td class="FONDO"  align="right">Recetas Digitadas Totales: </td><td class="FONDO"><strong><h3><span id="ContadorRecetas">-</span></h3></strong></td>
             </tr>
@@ -254,7 +256,9 @@ if (!isset($_SESSION["nivel"])) {
                 <td colspan="6" class="FONDO"><div id="MedicinaNuevaRepetitiva" align="center"></div></td>
             </tr>
             <tr class="MYTABLE">
-                <td colspan="6" align="right">&nbsp;</td>
+                <td colspan="6" align="left">&nbsp;
+               
+                </td>
             </tr>
         </table>
     </form>

@@ -138,7 +138,7 @@ class RecetasProceso{
 				$querySelect3="select CantidadLote1, Lote1, CantidadLote2, Lote2
 							from farm_medicinarecetada
 							where IdMedicinaRecetada=".$row2["IdMedicinaRecetada"];
-				$resp3=mysql_fetch_array(mysql_query($querySelect3));
+				$resp3=pg_fetch_array(pg_query($querySelect3));
 				$CantidadLote1=$resp3["CantidadLote1"];
 				$IdLote1=$resp3["Lote1"];
 				$CantidadLote2=$resp3["CantidadLote2"];
@@ -149,11 +149,11 @@ class RecetasProceso{
 					$querySelect4="select Existencia
 								from farm_entregamedicamento
 								where IdLote=".$IdLote1;
-					$respExistencia1=mysql_fetch_array(mysql_query($querySelect4));
+					$respExistencia1=pg_fetch_array(pg_query($querySelect4));
 					$Existencia_new1=$CantidadLote1+$respExistencia1["Existencia"];
 					
 					$queryUpdate1="update farm_entregamedicamento set Existencia='$Existencia_new1' where IdLote=".$IdLote1;
-						mysql_query($queryUpdate1);
+						pg_query($queryUpdate1);
 					
 	
 					/***************	LOTE 2	*******************/
@@ -161,11 +161,11 @@ class RecetasProceso{
 						$querySelect4="select Existencia
 									from farm_entregamedicamento
 									where IdLote=".$IdLote2;
-						$respExistencia2=mysql_fetch_array(mysql_query($querySelect4));
+						$respExistencia2=pg_fetch_array(pg_query($querySelect4));
 						$Existencia_new2=$CantidadLote2+$respExistencia2["Existencia"];
 						
 						$queryUpdate2="update farm_entregamedicamento set Existencia='$Existencia_new2' where IdLote=".$IdLote2;
-							mysql_query($queryUpdate2);
+							pg_query($queryUpdate2);
 					}//IdLote != NULL
 				}//IDEstado==S
 			}//While
@@ -244,29 +244,32 @@ class RecetasProceso{
 	
 	
 	function ObtenerMedicinaIntroducida($IdReceta,$IdEstablecimiento,$IdModalidad){
-		$querySelect="select farm_recetas.IdHistorialClinico, FechaConsulta, farm_medicinarecetada.*,farm_catalogoproductos.Nombre,farm_catalogoproductos.Concentracion,IdArea,FormaFarmaceutica,Presentacion,IdFarmacia,
-                                (
-                                    select group_concat(Lote SEPARATOR '-') from farm_lotes fl inner join farm_medicinadespachada fmd on fl.IdLote=fmd.IdLote where fmd.IdMedicinaRecetada=farm_medicinarecetada.IdMedicinaRecetada
-                                ) as Lotes                    
+		$querySelect="SELECT farm_recetas.IdHistorialClinico, FechaConsulta, farm_medicinarecetada.*,farm_catalogoproductos.Nombre,farm_catalogoproductos.Concentracion,IdArea,FormaFarmaceutica,Presentacion,IdFarmacia,
+                                (SELECT	string_agg(lote, '-')
+                                 FROM farm_lotes fl INNER JOIN farm_medicinadespachada fmd ON fl.Id=fmd.IdLote 
+                                 WHERE fmd.IdMedicinaRecetada=farm_medicinarecetada.Id) AS Lotes                    
 
-						from farm_medicinarecetada
-						inner join farm_catalogoproductos
-						on farm_catalogoproductos.IdMedicina=farm_medicinarecetada.IdMedicina
-						inner join farm_recetas
-						on farm_recetas.IdReceta=farm_medicinarecetada.IdReceta
-						inner join sec_historial_clinico
-						on sec_historial_clinico.IdHistorialClinico=farm_recetas.IdHistorialClinico
-						where (farm_recetas.IdReceta like '$IdReceta' or farm_recetas.CorrelativoAnual = '$IdReceta')
-                                                and sec_historial_clinico.IdEstablecimiento=$IdEstablecimiento
-                                                and farm_recetas.IdModalidad=$IdModalidad
-						order by farm_medicinarecetada.IdMedicinaRecetada desc";
-		$resp=mysql_query($querySelect);
+                                 FROM farm_medicinarecetada
+                                 INNER JOIN farm_catalogoproductos
+                                 ON farm_catalogoproductos.Id=farm_medicinarecetada.IdMedicina
+                                 INNER JOIN farm_recetas
+                                 ON farm_recetas.Id=farm_medicinarecetada.IdReceta
+                                 INNER JOIN sec_historial_clinico
+                                 ON sec_historial_clinico.IdHistorialClinico=farm_recetas.IdHistorialClinico
+                                 WHERE (farm_recetas.numeroreceta='$IdReceta' OR farm_recetas.CorrelativoAnual = '$IdReceta')
+                                 AND sec_historial_clinico.IdEstablecimiento=$IdEstablecimiento
+                                 AND farm_recetas.IdModalidad=$IdModalidad
+                                 ORDER BY farm_medicinarecetada.Id DESC";
+               // var_dump($querySelect);
+		$resp=pg_query($querySelect);
 		return($resp);
 	}//Obtener Medicina Introducida
 	
 	
 	function ObtenerDatosGenerales($IdReceta,$IdEstablecimiento,$IdModalidad){
-		$query="select farm_recetas.IdArea,
+		$query="/*======QUERY INVOLUCRA TABLAS SERVICIO Y SUBSERVICIO=======*/
+
+                        select farm_recetas.IdArea,
                             (select Area from mnt_areafarmacia where IdArea=farm_recetas.IdArea) as Area, 
                             NombreEmpleado, mss.NombreSubServicio,
 
@@ -275,7 +278,7 @@ class RecetasProceso{
                                 inner join mnt_servicioxestablecimiento mse on ms.IdServicio=mse.IdServicio 
                                 inner join mnt_subservicioxestablecimiento msse on msse.IdServicioxEstablecimiento = mse.IdServicioxEstablecimiento 
                                 inner join mnt_subservicio mss on mss.IdSubServicio = msse.IdSubServicio
-                                where   msse.IdEstablecimiento=$IdEstablecimiento and mse.IdServicio != 'CONBMG' and msse.IdModalidad=$IdModalidad 
+                                where   msse.IdEstablecimiento=$IdEstablecimiento and mse.IdServicio != 'CONBMG' and msse.IdModalidad='1'
                                         and msse.IdSubServicioxEstablecimiento = sec_historial_clinico.IdSubServicioxEstablecimiento
                             )  as Origen,
 
@@ -290,17 +293,21 @@ class RecetasProceso{
                                 WHERE b.IdNumeroExp=sec_historial_clinico.IdNumeroExp
                             ) AS Nombre
 
-                    from farm_recetas
-                    inner join sec_historial_clinico on sec_historial_clinico.IdHistorialClinico=farm_recetas.IdHistorialClinico
-                    inner join mnt_empleados on mnt_empleados.IdEmpleado=sec_historial_clinico.IdEmpleado
-                    inner join mnt_subservicioxestablecimiento on mnt_subservicioxestablecimiento.IdSubServicioxEstablecimiento=sec_historial_clinico.IdSubServicioxEstablecimiento
-                    inner join mnt_subservicio mss on mss.IdSubServicio= mnt_subservicioxestablecimiento.IdSubServicio
+                        from farm_recetas
+                        inner join sec_historial_clinico on sec_historial_clinico.IdHistorialClinico=farm_recetas.IdHistorialClinico
+                        inner join mnt_empleado on mnt_empleado.IdEmpleado=sec_historial_clinico.IdEmpleado
+                        /*======JOIN CON TABLAS SERVICIO Y SUBSERVICIO=======
+
+                        inner join mnt_subservicioxestablecimiento on mnt_subservicioxestablecimiento.IdSubServicioxEstablecimiento=sec_historial_clinico.IdSubServicioxEstablecimiento
+                        inner join mnt_subservicio mss on mss.IdSubServicio= mnt_subservicioxestablecimiento.IdSubServicio
+
+                        */
 
                     where IdReceta=".$IdReceta."
                     and sec_historial_clinico.IdEstablecimiento=".$IdEstablecimiento."
                     and farm_recetas.IdModalidad=$IdModalidad";
 		
-                $resp=mysql_fetch_array(mysql_query($query));
+                $resp=pg_fetch_array(pg_query($query));
 		return($resp);		
 	}
 	
@@ -1167,24 +1174,19 @@ function ActualizarAreaOrigen($IdArea,$IdReceta,$IdEstablecimiento,$IdModalidad)
 	}
 	
 	
-	function Cierre($Fecha,$IdEstablecimiento,$IdModalidad){
-		$sql="select AnoCierre
-			from farm_cierre
-			where AnoCierre=year('".$Fecha."')
-                        and IdEstablecimiento=".$IdEstablecimiento."
-                        and IdModalidad=$IdModalidad";
-		$resp=mysql_query($sql);
+	function Cierre($Fecha){
+		$sql="SELECT AnoCierre
+                      FROM farm_cierre
+                      WHERE  AnoCierre=substring('".$Fecha."',1,4)::int";
+		$resp=pg_query($sql);
 		return($resp);		
 	}//Cierre
-	
-
-	function CierreMes($Fecha,$IdEstablecimiento,$IdModalidad){
-		$sql="select MesCierre
-			from farm_cierre
-			where MesCierre=left('$Fecha',7)
-                        and IdEstablecimiento=".$IdEstablecimiento."
-                        and IdModalidad=$IdModalidad";
-		$resp=mysql_query($sql);
+		
+	function CierreMes($Fecha){
+		$sql="SELECT MesCierre
+                      FROM farm_cierre
+                      WHERE MesCierre=substring('$Fecha',1,7)";
+		$resp=pg_query($sql);
 		return($resp);		
 	}//CierreMes
 

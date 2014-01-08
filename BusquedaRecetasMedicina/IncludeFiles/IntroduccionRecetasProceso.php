@@ -60,9 +60,9 @@ case 1:
 			<td width="10%" align="center"><strong>Ubicacion de Receta</strong></td>
 			<td width="14%" align="center"><strong>Digitado Por</strong></td>
 			</tr>';
-	while($row=mysql_fetch_array($resp)){
+	while($row=pg_fetch_array($resp)){
 
-	if($respDivisor=mysql_fetch_array($proceso->ValorDivisor($row["IdMedicina"],$IdEstablecimiento,$IdModalidad))){
+	if($respDivisor=pg_fetch_array($proceso->ValorDivisor($row["IdMedicina"],$IdEstablecimiento,$IdModalidad))){
 		$Divisor=$respDivisor[0];
 
 		if($row["Cantidad"] < 1){

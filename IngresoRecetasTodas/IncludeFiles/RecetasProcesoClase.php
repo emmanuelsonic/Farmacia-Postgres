@@ -2,32 +2,40 @@
 require('../../Clases/class.php');
 
 class RecetasProceso{
-/*ACTUALIZACION DE HISTORIAL CLINICO*/ 
-	function IntroducirHistorialClinico($Expediente,$IdMedico,$IdSubServicio,$FechaConsulta,$IdPersonal,$IdEstablecimiento,$IdModalidad){
+/*ACTUALIZACION DE HISTORIAL CLINICO*/ //($Expediente,$IdMedico,$IdSubServicio,$FechaConsulta,$IdPersonal,$IdEstablecimiento,$IdModalidad){
+	function IntroducirHistorialClinico($Expediente,$IdMedico,$FechaConsulta,$IdPersonal,$IdEstablecimiento){
 		
-				$Ip=$_SERVER['REMOTE_ADDR'];
+		$Ip=$_SERVER['REMOTE_ADDR'];
 		
-		$queryInsert="insert into sec_historial_clinico (IdNumeroExp,FechaConsulta,IdEmpleado,IdSubServicioxEstablecimiento,IdUsuarioReg,FechaHoraReg,Piloto,IpAddress,IdEstablecimiento,IdModalidad) 
+                /*** A ESTA CONSULTA SE LE QUITARON 2 CAMPOS DE INSERCION 
+                   insert into sec_historial_clinico (IdNumeroExp,FechaConsulta,IdEmpleado,IdSubServicioxEstablecimiento,IdUsuarioReg,FechaHoraReg,Piloto,IpAddress,IdEstablecimiento,IdModalidad) 
                               values('$Expediente','$FechaConsulta','$IdMedico','$IdSubServicio','$IdPersonal',now(),'V','$Ip','$IdEstablecimiento',$IdModalidad)";
+                
+                 ***/            
+                
+		$queryInsert="insert into sec_historial_clinico (IdNumeroExp,FechaConsulta,IdEmpleado,IdUsuarioReg,FechaHoraReg,Piloto,IpAddress,IdEstablecimiento) 
+                                                          values('$Expediente','$FechaConsulta','$IdMedico','$IdPersonal',now(),'V','$Ip','$IdEstablecimiento')";
 		     //$queryInsert="insert into sec_historial_clinico (IdNumeroExp,FechaConsulta,IdEmpleado,IdSubServicio,IdSubEspecialidad,IdUsuarioReg,FechaHoraReg,Piloto) values('$Expediente','$FechaConsulta','$IdMedico','$IdSubServicio','$IdSubEspecialidad','$IdPersonal',now(),'V')";
-		mysql_query($queryInsert);
+		pg_query($queryInsert);
 
-
+/******* EN LA SIGUIENTE QUERYS SE QUITARON 2 CAMPOS QUE GENERABAN ERROR
+    and IdSubServicioxEstablecimiento='$IdSubServicio'
+    and IdModalidad=$IdModalidad   *********/
+                        
 		$querySelect="select IdHistorialClinico 
 						from sec_historial_clinico
 						where IdNumeroExp='$Expediente'
 						and IdUsuarioReg='$IdPersonal'
 						and FechaConsulta='$FechaConsulta'
 						and IdEmpleado='$IdMedico'
-						and IdSubServicioxEstablecimiento='$IdSubServicio'
-						and IdUsuarioReg='$IdPersonal'
+				
 						and Piloto='V'
                                                 and IdEstablecimiento=$IdEstablecimiento
-                                                and IdModalidad=$IdModalidad
+                                                
 						order by IdHistorialClinico desc limit 1";
 		
 		
-		$resp=mysql_fetch_array(mysql_query($querySelect));
+		$resp=pg_fetch_array(pg_query($querySelect));
 		return($resp[0]);		
 	}//Introducir Historial Clinico
 
@@ -43,17 +51,17 @@ class RecetasProceso{
                                         and IdModalidad=$IdModalidad
 					order by farm_recetas.NumeroReceta desc
 					limit 1";
-		$resp=mysql_fetch_array(mysql_query($querySelect));
+		$resp=pg_fetch_array(pg_query($querySelect));
 		return($resp[0]);
 	}
 
 	function ObtenerIdReceta($IdHistorialClinico,$IdPersonal){
-		$querySelect="select farm_recetas.IdReceta
-					from farm_recetas
-					where farm_recetas.IdHistorialClinico='$IdHistorialClinico'
-					and farm_recetas.IdEstado='E'
-					and IdPersonalIntro='$IdPersonal'";
-		$resp=mysql_fetch_array(mysql_query($querySelect));
+		$querySelect="select Id
+                                from farm_recetas
+                                where IdHistorialClinico='$IdHistorialClinico'
+                                and IdEstado='E'
+                                and IdPersonalIntro='$IdPersonal'";
+		$resp=pg_fetch_array(pg_query($querySelect));
 		return($resp[0]);
 	}
 	function ObtenerExpediente($Expediente){
@@ -149,21 +157,23 @@ class RecetasProceso{
 
 		$queryInsert="insert into farm_medicinarecetada(IdReceta,IdMedicina,Cantidad,Dosis,FechaEntrega,IdEstado,IdEstablecimiento,IdModalidad) 
                                                          values('$IdReceta','$IdMedicina','$Cantidad','$Dosis','$Fecha','$Satisfecha',$IdEstablecimiento,$IdModalidad)";
-		mysql_query($queryInsert);
+		echo $queryInsert;
+                pg_query($queryInsert);
 
-		$IdMedicinaRecetada=mysql_insert_id();
+		$IdMedicinaRecetada=pg_insert_id();
 		return($IdMedicinaRecetada);
 		
 	}//Introducir Medicina Receta
 
 
 	function ValorDivisor($IdMedicina,$IdEstablecimiento,$IdModalidad){
-	   $SQL="select DivisorMedicina 
-                 from farm_divisores 
-                 where IdMedicina=".$IdMedicina." 
-                 and IdEstablecimiento=".$IdEstablecimiento." and IdModalidad=$IdModalidad";
+	   $SQL="SELECT DivisorMedida 
+                 FROM farm_divisores 
+                 WHERE IdMedicina=".$IdMedicina." 
+                 AND IdEstablecimiento=".$IdEstablecimiento."
+                 AND IdModalidad=".$IdModalidad."";
            
-	   $resp=mysql_query($SQL);
+	   $resp=pg_query($SQL);
 	   return($resp);
     	}
 //****************************************************************
@@ -271,9 +281,9 @@ class RecetasProceso{
                         and fme.IdModalidad=$IdModalidad
 			order by FechaVencimiento asc,IdExistencia asc";
                 
-		$lotes=mysql_query($queryLote);
+		$lotes=pg_query($queryLote);
                 //Se recorren los siguiente lotes... Modo iterativo
-                while($lotesA=mysql_fetch_array($lotes)){
+                while($lotesA=pg_fetch_array($lotes)){
                         if($Cantidad <= $lotesA["Existencia"]){
                             //****** Si la cantidad de medicamento no exede el total del primer lote a descagar...
                             $IdLote=$lotesA["IdLote"];
@@ -285,7 +295,7 @@ class RecetasProceso{
                             //se actualiza la existencia del lote en uso
                             $actualiza="update farm_medicinaexistenciaxarea set Existencia='$existencia_new' 
                                         where IdExistencia='$IdExistenciaTabla' and IdEstablecimiento=$IdEstablecimiento and IdModalidad=$IdModalidad";
-                            mysql_query($actualiza);
+                            pg_query($actualiza);
 
                             //se ingresa el lote utilizado
                             $query="insert into farm_medicinadespachada (IdMedicinaRecetada,IdLote,CantidadDespachada,IdEstablecimiento,IdModalidad) 
@@ -576,30 +586,30 @@ class RecetasProceso{
 	}
 	
 	function VerificaRecetas($IdReceta){
-		$query="select IdMedicinaRecetada from farm_medicinarecetada where IdReceta=".$IdReceta;
-		$resp=mysql_fetch_array(mysql_query($query));
+		$query="select Id from farm_medicinarecetada where IdReceta= ".$IdReceta;
+		$resp=pg_fetch_array(pg_query($query));
 		return($resp[0]);		
 	}//verifica recetas
 
 	
 	function Cierre($Fecha,$IdEstablecimiento,$IdModalidad){
-		$sql="select AnoCierre
-			from farm_cierre
-			where AnoCierre=year('".$Fecha."')
-                        and IdEstablecimiento=".$IdEstablecimiento."
-                        and IdModalidad=$IdModalidad";
-		$resp=mysql_query($sql);
+		$sql="SELECT AnoCierre
+                      FROM farm_cierre
+                      WHERE  AnoCierre=substring('".$Fecha."',1,4)::int
+                      AND IdEstablecimiento=".$IdEstablecimiento."
+                      AND IdModalidad=$IdModalidad";
+		$resp=pg_query($sql);
 		return($resp);		
 	}//Cierre
 	
 
 	function CierreMes($Fecha,$IdEstablecimiento,$IdModalidad){
-		$sql="select MesCierre
-			from farm_cierre
-			where MesCierre=left('$Fecha',7)
-                        and IdEstablecimiento=".$IdEstablecimiento." 
-                        and IdModalidad=$IdModalidad";
-		$resp=mysql_query($sql);
+		$sql="SELECT MesCierre
+                      FROM farm_cierre
+                      WHERE MesCierre=substring('$Fecha',1,7)
+                      AND IdEstablecimiento=".$IdEstablecimiento." 
+                      AND IdModalidad=$IdModalidad";
+		$resp=pg_query($sql);
 		return($resp);		
 	}//CierreMes
 
@@ -674,7 +684,7 @@ class RecetasProceso{
                                 and farm_recetas.IdModalidad=$IdModalidad
 group by farm_recetas.IdPersonalIntro
 order by farm_recetas.IdPersonalIntro";
-		$resp=mysql_fetch_array(mysql_query($query));
+		$resp=pg_fetch_array(pg_query($query));
 		return($resp[0]);
 	}//Informacion
 
@@ -693,21 +703,21 @@ order by farm_recetas.IdPersonalIntro";
                 inner join sec_historial_clinico shc
                 on shc.IdHistorialClinico=farm_recetas.IdHistorialClinico
 		where CorrelativoAnual like '%$Letra%'
-		and year(Fecha)=year('$Fecha')
+		and EXTRACT(YEAR FROM Fecha)=EXTRACT(YEAR FROM '$Fecha'::DATE)
                 and shc.IdEstablecimiento=$IdEstablecimiento
                 and farm_recetas.IdModalidad=$IdModalidad
 		order by Correlativo desc";
-	   $resp=mysql_fetch_array(mysql_query($SQL));
+	   $resp=pg_fetch_array(pg_query($SQL));
 		
            $tail="select right('".$date[0]."',2) as tail";
-            $tt=mysql_fetch_array(mysql_query($tail));
+            $tt=pg_fetch_array(pg_query($tail));
            
 		$correlativo=$resp[0]+1;
 		
 		$correlativoAnual=$correlativo."".$Letra."".$tt[0];
 		
-		$SQL_u="update farm_recetas set Correlativo='$correlativo', CorrelativoAnual='$correlativoAnual' where IdReceta=".$IdReceta;
-			mysql_query($SQL_u);
+		$SQL_u="update farm_recetas set Correlativo='$correlativo', CorrelativoAnual='$correlativoAnual' where Id=".$IdReceta;
+			pg_query($SQL_u);
 		return($correlativoAnual);
 	}
 

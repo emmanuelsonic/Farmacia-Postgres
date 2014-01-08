@@ -9,25 +9,25 @@ switch($Bandera){
     case 1:// busqueda de medicamentos
                 $IdArea = $_GET["IdArea"];
 
-                $querySelect = "select distinct Codigo, Nombre, Concentracion, fcp.IdMedicina, FormaFarmaceutica,Presentacion
-                                        from farm_catalogoproductos fcp
-                                        inner join farm_catalogoproductosxestablecimiento fcpe
-                                        on fcpe.IdMedicina=fcp.IdMedicina
-                                        inner join farm_medicinaexistenciaxarea fmexa
-                                        on fmexa.IdMedicina=fcpe.IdMedicina
-                where (Nombre like '%$Busqueda%' or Codigo ='$Busqueda')
-                and fcpe.Condicion='H'
-                and fmexa.IdArea='$IdArea'
-                and fmexa.IdEstablecimiento=" . $_SESSION["IdEstablecimiento"] . "
-                and fmexa.IdModalidad=".$_SESSION["IdModalidad"]."
-                and IdTerapeutico is not null
-                order by fcp.IdMedicina";
+                $querySelect = "SELECT DISTINCT Codigo, Nombre, Concentracion, fcp.Id, FormaFarmaceutica,Presentacion
+                                FROM farm_catalogoproductos fcp
+                                INNER JOIN farm_catalogoproductosxestablecimiento fcpe
+                                ON fcpe.IdMedicina=fcp.Id
+                                INNER JOIN farm_medicinaexistenciaxarea fmexa
+                                ON fmexa.IdMedicina=fcpe.IdMedicina
+                                WHERE (Nombre LIKE '%$Busqueda%' or Codigo ='$Busqueda')
+                                AND fcpe.Condicion='H'
+                                AND fmexa.IdArea='$IdArea'
+                                AND fmexa.IdEstablecimiento=" . $_SESSION["IdEstablecimiento"] . "
+                                AND fmexa.IdModalidad=".$_SESSION["IdModalidad"]."
+                                AND IdTerapeutico is not null
+                                ORDER BY fcp.Id";
 
-                $resp = mysql_query($querySelect);
-                while ($row = mysql_fetch_array($resp)) {
-                    $Nombre = $row["Nombre"] . " - " . $row["Concentracion"] . " - " . $row["FormaFarmaceutica"] . " - " . $row["Presentacion"];
-                    $IdMedicina = $row["IdMedicina"];
-                    $Codigo = $row["Codigo"];
+                $resp = pg_query($querySelect);
+                while ($row = pg_fetch_array($resp)) {
+                    $Nombre = $row["nombre"] . " - " . $row["concentracion"] . " - " . $row["formafarmaceutica"] . " - " . $row["presentacion"];
+                    $IdMedicina = $row["id"]; //Estaba IdMedicina
+                    $Codigo = $row["codigo"];
                     ?>
                     <li onselect="this.text.value = '<?php echo htmlentities($Nombre); ?>';$('IdMedicina').value='<?php echo $IdMedicina; ?>';ObtenerExistenciaTotal();"> 
                         <span><?php echo $Codigo; ?></span>

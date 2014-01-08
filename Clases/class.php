@@ -26,8 +26,11 @@ class encabezado {
 class conexion {
 	//public $coneccion;
     function conectar()
-      {
-         $coneccion=pg_connect("host=192.168.100.253 port=5432 dbname=SIAP user=postgres password=b4s3s14p");
+      {     
+      // Conexiones a las Bases de Datos
+      // $coneccion=pg_connect("host=192.168.100.253 port=5432 dbname=SIAP user=postgres password=b4s3s14p");       //Conexion Local SIAP
+         $coneccion=pg_connect("host=192.168.100.253 port=5432 dbname=SIAP2.0 user=postgres password=b4s3s14p");    //Conexion Local SIAP2.0
+      // $coneccion=pg_connect("host=192.168.10.23 port=5432 dbname=siap user=siap password=s14p");                 //Conexion siap MINSAL
          return $coneccion;
       }
       
@@ -580,7 +583,7 @@ and farm_recetas.IdArea='$IdArea'";
 
     function ActualizaFechaEntregaMedicina($IdReceta, $Fecha) {
         $queryUpdate = "update farm_medicinarecetada set FechaEntrega='$Fecha' where IdReceta='$IdReceta'";
-        $resp = mysql_query($queryUpdate);
+        $resp = pg_query($queryUpdate);
     }
 
 //ActualizaFechaEntregaMedicina
@@ -591,8 +594,8 @@ and farm_recetas.IdArea='$IdArea'";
      * ***** */
 
     function PersonalEncargado($IdPersonal, $IdReceta) {
-        $queryUpdate = "update farm_recetas set IdPersonal='$IdPersonal' where IdReceta='$IdReceta'";
-        mysql_query($queryUpdate);
+        $queryUpdate = "update farm_recetas set IdPersonal='$IdPersonal' where Id='$IdReceta'";//Antes estaba where Idreceta='$IdReceta
+        pg_query($queryUpdate);
     }
 
 //PersonalEncargado

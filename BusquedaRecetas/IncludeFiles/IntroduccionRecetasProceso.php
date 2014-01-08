@@ -22,20 +22,21 @@ if (isset($_SESSION["IdPersonal"])) {
             $IdReceta = $_GET["IdReceta"];
             /* DESPLEGAR DATOS DE RECETA */
             $resp = $proceso->ObtenerMedicinaIntroducida($IdReceta, $_SESSION["IdEstablecimiento"], $IdModalidad);
-
-            if (!$test = mysql_fetch_array($resp)) {
+             
+            if (!$test = pg_fetch_array($resp)) {
+                
                 echo "NO~";
             } else {
 
-                if ($test["IdFarmacia"] == 4) {
+                if ($test["idfarmacia"] == 4) {
                     echo "NO~";
                 } else {
 
-                    $IdReceta = $test["IdReceta"];
-                    $Cierre = $proceso->Cierre($test["FechaConsulta"], $_SESSION["IdEstablecimiento"], $IdModalidad);
-                    $CierreMes = $proceso->CierreMes($test["FechaConsulta"], $_SESSION["IdEstablecimiento"], $IdModalidad);
-                    $respCierre = mysql_fetch_array($Cierre);
-                    $respCierreMes = mysql_fetch_array($CierreMes);
+                    $IdReceta = $test["idreceta"];
+                    $Cierre = $proceso->Cierre($test["fechaconsulta"], $_SESSION["IdEstablecimiento"], $IdModalidad);
+                    $CierreMes = $proceso->CierreMes($test["fechaconsulta"], $_SESSION["IdEstablecimiento"], $IdModalidad);
+                    $respCierre = pg_fetch_array($Cierre);
+                    $respCierreMes = pg_fetch_array($CierreMes);
                     if (($respCierre[0] != NULL and $respCierre[0] != '') || ($respCierreMes[0] != NULL and $respCierreMes[0] != '')) {
 
                         if ($respCierre[0] != NULL and $respCierre[0] != '') {
@@ -47,9 +48,10 @@ if (isset($_SESSION["IdPersonal"])) {
                     } else {
 
 
-                        $Fecha = $test["FechaEntrega"];
-                        $IdArea = $test["IdArea"];
+                        $Fecha = $test["fechaentrega"];
+                        $IdArea = $test["idarea"];
                         $resp = $proceso->ObtenerMedicinaIntroducida($IdReceta, $_SESSION["IdEstablecimiento"], $IdModalidad);
+                    
                         $proceso->CambiarEstado($IdReceta, $_SESSION["IdEstablecimiento"], $IdModalidad);
                         $tabla = '<table width="744">
 			<tr><td colspan="5" align="center"><strong>DETALLE DE RECETA</strong></td></tr>
@@ -60,7 +62,7 @@ if (isset($_SESSION["IdPersonal"])) {
 			<td width="275" align="center"><strong>Insatisfecha</strong></td>
 			<td width="275" align="center"><strong>Eliminar</strong></td>
 			</tr>';
-                        while ($row = mysql_fetch_array($resp)) {
+                        while ($row = pg_fetch_array($resp)) {
                             $IdHistorialClinico = $row["IdHistorialClinico"];
                             if ($row["IdEstado"] == 'I') {
                                 $check = '<input id="Insa' . $row["IdMedicinaRecetada"] . '" name="Insa' . $row["IdMedicinaRecetada"] . '" type="checkbox" value="I" onclick="javascript:CambioEstado(' . $row["IdMedicinaRecetada"] . ',' . $row["IdMedicina"] . ')" checked="checked">';
@@ -68,7 +70,7 @@ if (isset($_SESSION["IdPersonal"])) {
                                 $check = '<input id="Insa' . $row["IdMedicinaRecetada"] . '" name="Insa' . $row["IdMedicinaRecetada"] . '" type="checkbox" value="I" onclick="javascript:CambioEstado(' . $row["IdMedicinaRecetada"] . ',' . $row["IdMedicina"] . ')">';
                             }
 
-                            if ($respDivisor = mysql_fetch_array($proceso->ValorDivisor($row["IdMedicina"], $_SESSION["IdEstablecimiento"], $IdModalidad))) {
+                            if ($respDivisor = pg_fetch_array($proceso->ValorDivisor($row["IdMedicina"], $_SESSION["IdEstablecimiento"], $IdModalidad))) {
                                 $Divisor = $respDivisor[0];
 
                                 if ($row["Cantidad"] < 1) {
@@ -127,7 +129,6 @@ if (isset($_SESSION["IdPersonal"])) {
                         $NombrePaciente=$Datos["Nombre"];//2013-09-16 Alvarenga-.
 
                         /*                         * ********************************** */
-
 
 
                         echo $Fecha . "~" . $tabla . "~" . $NombreArea . "~" . $NombreMedico . "~" . $Especialidad . "~" . $IdHistorialClinico . "~" . $NombreFarmacia . "~" . $NombreAreaOrigen . "~" . $IdReceta . "~" . $IdNumeroExp . "~" . $NombrePaciente;
@@ -285,7 +286,7 @@ if (isset($_SESSION["IdPersonal"])) {
                             $Quebrado = "";
                         } else {
 
-                            $Quebrado = number_format(($Decimal / 100) * $Divisor, 0, '.', ',');
+                            $Quebradmysqlo = number_format(($Decimal / 100) * $Divisor, 0, '.', ',');
                             $Quebrado = '[' . $Quebrado . '/' . $Divisor . ']';
                         }
 

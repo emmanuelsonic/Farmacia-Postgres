@@ -2,10 +2,13 @@
 include($path.'../Clases/class.php');
 class RecetasAbiertas{
     function CierreMes($Periodo,$IdEstablecimiento,$IdModalidad){
-        $query="select MesCierre from farm_cierre 
-                where MesCierre='".$Periodo."'
-                and IdEstablecimiento=$IdEstablecimiento and IdModalidad=$IdModalidad";
-        $resp=mysql_fetch_array(mysql_query($query));
+        $query="SELECT MesCierre 
+                FROM farm_cierre 
+                WHERE MesCierre='".$Periodo."'
+                AND IdEstablecimiento=$IdEstablecimiento
+                AND IdModalidad=$IdModalidad";
+             
+        $resp=pg_fetch_array(pg_query($query));
         return($resp[0]);
     }
     
